@@ -2,318 +2,472 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Reflection — See your business clearly</title>
-<meta name="description" content="A real-time financial health scorecard for Indian SMEs. Connects Tally, your bank, and GST into one live view — cash, receivables, payables, margin, and runway.">
-<meta name="theme-color" content="#F6F5F2">
+<title>Margyn — Your margin, live.</title>
+<meta name="description" content="Real-time financial health for Indian SME founders. Margyn connects Tally, your bank, and GST into one live scorecard — cash, receivables, payables, margin, and runway.">
+<meta name="theme-color" content="#0E1B2C">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,450;0,9..144,500;0,9..144,600;1,9..144,450&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#191B1F;
-    --paper-dim:#5D6068;
-    --bg:#F6F5F2;
-    --card:#FFFFFF;
-    --lav:#E8E9F5;
-    --lav-line:#D6D8ED;
-    --blue:#E3EDF7;
-    --blue-line:#CEDFF0;
-    --sage:#E6EEE8;
-    --sage-line:#CFE0D5;
-    --sand:#F3EDE3;
-    --sand-line:#E6D9C4;
-    --yellow:#E7F26B;
-    --yellow-dark:#4B4E10;
-    --line: rgba(25,27,31,0.08);
-    --line-strong: rgba(25,27,31,0.13);
+    --ink:#0E1B2C;
+    --ink-soft:#1A2A3F;
+    --steel:#3E5875;
+    --sky:#F0F4FA;
+    --emerald:#1F6F54;
+    --emerald-light:#E8F5F0;
+    --emerald-bright:#2E9873;
+    --gold:#B08D57;
+    --rose:#A3435C;
+    --rose-light:#FBEAEE;
+    --white:#FFFFFF;
+    --line: rgba(14,27,44,0.08);
+    --line-strong: rgba(14,27,44,0.14);
+    --shadow-sm: 0 2px 8px rgba(14,27,44,0.06), 0 1px 2px rgba(14,27,44,0.04);
+    --shadow-md: 0 8px 24px rgba(14,27,44,0.08), 0 2px 6px rgba(14,27,44,0.05);
+    --shadow-lg: 0 24px 64px -12px rgba(14,27,44,0.18), 0 8px 24px rgba(14,27,44,0.08);
+    --shadow-xl: 0 50px 120px -24px rgba(14,27,44,0.32), 0 16px 40px rgba(14,27,44,0.12);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
-  body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family:'Inter', sans-serif;
-    font-size:16px;
-    line-height:1.55;
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
-  .serif{ font-family:'Fraunces', serif; }
+  body{ background:var(--white); color:var(--ink); font-family:'Manrope', sans-serif; font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  .display{ font-family:'Space Grotesk', sans-serif; }
   .mono{ font-family:'IBM Plex Mono', monospace; }
-  .wrap{ max-width:1240px; margin:0 auto; padding:0 48px; }
+  .wrap{ max-width:1320px; margin:0 auto; padding:0 48px; }
   a{ color:inherit; text-decoration:none; }
+  .reveal{ opacity:0; transform:translateY(32px) scale(0.98); transition:opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
+  .reveal.in{ opacity:1; transform:translateY(0) scale(1); }
+  .stagger-1.in{ transition-delay:.05s; }
+  .stagger-2.in{ transition-delay:.12s; }
+  .stagger-3.in{ transition-delay:.19s; }
+  .stagger-4.in{ transition-delay:.26s; }
+  section{ opacity:1; }
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ transition:none; opacity:1; transform:none; }
+  }
 
-  .reveal{ opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; }
-  .reveal.in{ opacity:1; transform:translateY(0); }
+  .crescent{ position:relative; border-radius:50%; overflow:hidden; flex-shrink:0; background:var(--emerald); }
+  .crescent::after{ content:''; position:absolute; top:0; left:-42%; width:100%; height:100%; border-radius:50%; background:var(--bg-cut, var(--white)); }
 
-  nav{ position:sticky; top:0; z-index:50; background:rgba(246,245,242,0.9); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
-  .nav-inner{ max-width:1240px; margin:0 auto; padding:22px 48px; display:flex; align-items:center; justify-content:space-between; }
-  .nav-logo{ font-family:'Fraunces', serif; font-size:21px; font-weight:500; }
-  .nav-links{ display:flex; align-items:center; gap:38px; font-size:14.5px; color:var(--paper-dim); }
-  .nav-links a:hover{ color:var(--ink); }
-  .nav-cta{ background:var(--yellow); color:var(--yellow-dark); padding:10px 20px; border-radius:8px; font-size:14.5px; font-weight:600; }
+  nav{ position:sticky; top:0; z-index:100; background:rgba(255,255,255,0.85); backdrop-filter:blur(16px) saturate(1.4); border-bottom:1px solid var(--line); }
+  .nav-inner{ max-width:1320px; margin:0 auto; padding:18px 48px; display:flex; align-items:center; justify-content:space-between; }
+  .nav-brand{ display:flex; align-items:center; gap:10px; }
+  .nav-brand .crescent{ width:22px; height:22px; }
+  .nav-logo{ font-family:'Space Grotesk', sans-serif; font-size:19px; font-weight:700; letter-spacing:-0.01em; }
+  .nav-links{ display:flex; align-items:center; gap:36px; font-size:14.5px; color:var(--steel); font-weight:600; }
+  .nav-links a:not(.nav-cta):hover{ color:var(--ink); }
+  .nav-cta{ background:var(--ink); color:var(--white); padding:10px 20px; border-radius:8px; font-size:14px; font-weight:700; box-shadow:var(--shadow-sm); transition:all .25s cubic-bezier(.16,1,.3,1); }
+  .nav-cta:hover{ transform:translateY(-1px); box-shadow:var(--shadow-md); background:var(--emerald); }
 
-  .hero{ padding:88px 0 0; }
-  .hero-top{ max-width:640px; margin-bottom:64px; }
-  .hero-eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--paper-dim); margin-bottom:20px; }
-  .hero h1{ font-family:'Inter', sans-serif; font-weight:700; font-size:60px; line-height:1.04; letter-spacing:-0.025em; margin-bottom:24px; color:var(--ink); }
-  .hero-sub{ font-size:19px; color:var(--paper-dim); max-width:480px; margin-bottom:34px; line-height:1.6; }
-  .hero-ctas{ display:flex; align-items:center; gap:24px; }
-  .btn-primary{ background:var(--yellow); color:var(--yellow-dark); padding:15px 28px; border-radius:8px; font-size:15.5px; font-weight:600; display:inline-block; }
-  .btn-ghost{ font-size:15px; color:var(--ink); border-bottom:1px solid var(--line-strong); padding-bottom:2px; font-weight:500; }
+  .hero{ padding:90px 0 0; }
+  .hero-grid{ display:grid; grid-template-columns:1.2fr 0.8fr; gap:40px; align-items:center; margin-bottom:56px; }
+  .hero-top{ max-width:600px; }
+  .hero-side{ position:relative; height:340px; }
+  .hs-card{ position:absolute; background:var(--white); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow-lg); }
+  .hs-main{ top:10px; right:0; width:88%; padding:24px 26px; z-index:3; }
+  .hs-label{ display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--steel); text-transform:uppercase; letter-spacing:0.06em; font-weight:700; margin-bottom:10px; }
+  .hs-pill{ background:var(--emerald-light); color:var(--emerald); font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:20px; }
+  .hs-val{ font-family:'Space Grotesk', sans-serif; font-size:38px; font-weight:700; letter-spacing:-0.02em; margin-bottom:14px; }
+  .hs-chart{ height:52px; margin-bottom:14px; }
+  .hs-foot{ display:flex; justify-content:space-between; padding-top:12px; border-top:1px solid var(--line); font-size:11px; color:var(--steel); font-weight:600; }
+  .hs-small{ bottom:10px; left:0; width:180px; padding:16px 18px; z-index:2; transform:rotate(-3deg); }
+  .hs-small .hst{ font-size:10px; color:var(--rose); text-transform:uppercase; font-weight:700; letter-spacing:0.05em; margin-bottom:6px; }
+  .hs-small .hsv{ font-family:'IBM Plex Mono', monospace; font-size:19px; font-weight:600; }
+  @media (max-width:960px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero-side{ display:none; }
+  }
+  .hero-eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--emerald); margin-bottom:22px; font-weight:600; display:flex; align-items:center; gap:8px; }
+  .hero-eyebrow::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--emerald-bright); box-shadow:0 0 0 4px var(--emerald-light); }
+  .hero h1{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:64px; line-height:1.03; letter-spacing:-0.03em; margin-bottom:26px; color:var(--ink); }
+  .hero-sub{ font-size:19px; color:var(--steel); max-width:520px; margin-bottom:38px; line-height:1.6; }
+  .hero-ctas{ display:flex; align-items:center; gap:26px; }
+  .btn-primary{ background:var(--ink); color:var(--white); padding:16px 30px; border-radius:10px; font-size:15.5px; font-weight:700; display:inline-flex; align-items:center; gap:8px; box-shadow:var(--shadow-md); transition:all .3s cubic-bezier(.16,1,.3,1); }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:var(--shadow-lg); background:var(--emerald); }
+  .btn-ghost{ font-size:15px; color:var(--ink); font-weight:700; display:flex; align-items:center; gap:6px; }
+  .btn-ghost svg{ transition:transform .25s ease; }
+  .btn-ghost:hover svg{ transform:translateX(3px); }
 
+  /* DEVICE SCENE - restored laptop + phone wireframes, with depth */
   .device-scene{
     position:relative;
-    background:var(--lav);
-    border-radius:24px;
-    padding:80px 60px 0;
+    background:linear-gradient(160deg, #F4F7FB 0%, #EAF0F7 100%);
+    border-radius:26px;
+    padding:84px 60px 0;
     display:flex; align-items:flex-end; justify-content:center; gap:36px;
     min-height:600px;
     overflow:hidden;
+    border:1px solid rgba(14,27,44,0.05);
+    box-shadow:inset 0 2px 12px rgba(14,27,44,0.02);
   }
-  .laptop{ position:relative; width:66%; max-width:760px; }
+  .device-scene::before{
+    content:''; position:absolute; width:340px; height:340px; border-radius:50%;
+    background:radial-gradient(circle, rgba(31,111,84,0.10) 0%, transparent 70%);
+    top:-100px; right:80px; pointer-events:none;
+  }
+
+  .laptop{ position:relative; width:66%; max-width:760px; z-index:2; }
   .laptop-screen{
-    background:var(--ink); border-radius:14px 14px 4px 4px; padding:14px 14px 40px;
-    box-shadow:0 40px 80px -20px rgba(25,27,31,0.35);
+    background:var(--ink); border-radius:16px 16px 4px 4px; padding:14px 14px 40px;
+    box-shadow:var(--shadow-xl);
   }
-  .laptop-inner{ background:var(--card); border-radius:6px; overflow:hidden; }
-  .laptop-topbar{ display:flex; align-items:center; gap:10px; padding:13px 18px; border-bottom:1px solid var(--line); }
-  .lt-wm{ width:20px; height:20px; border-radius:5px; background:var(--ink); display:flex; align-items:center; justify-content:center; }
-  .lt-wm svg{ width:11px; height:11px; }
-  .lt-title{ font-size:13.5px; font-weight:600; }
+  .laptop-inner{ background:var(--white); border-radius:8px; overflow:hidden; }
+  .laptop-topbar{ display:flex; align-items:center; gap:10px; padding:14px 20px; border-bottom:1px solid var(--line); }
+  .lt-wm{ width:22px; height:22px; }
+  .lt-title{ font-family:'Space Grotesk', sans-serif; font-size:13.5px; font-weight:700; }
   .lt-topbar-right{ margin-left:auto; display:flex; align-items:center; gap:10px; }
-  .lt-search{ width:130px; height:26px; background:var(--bg); border-radius:6px; }
-  .lt-avatar{ width:24px; height:24px; border-radius:50%; background:var(--lav-line); }
-  .laptop-body{ display:flex; min-height:330px; }
-  .lt-sidebar{ width:132px; border-right:1px solid var(--line); padding:16px 10px; display:flex; flex-direction:column; gap:2px; }
-  .lt-nav-item{ font-size:12px; color:var(--paper-dim); padding:8px 10px; border-radius:7px; display:flex; align-items:center; gap:8px; }
+  .lt-search{ width:140px; height:28px; background:var(--sky); border-radius:7px; border:1px solid var(--line); }
+  .lt-avatar{ width:26px; height:26px; border-radius:50%; background:var(--gold); opacity:0.85; }
+  .laptop-body{ display:flex; min-height:340px; }
+  .lt-sidebar{ width:138px; border-right:1px solid var(--line); padding:18px 12px; display:flex; flex-direction:column; gap:3px; background:#FAFBFD; }
+  .lt-nav-item{ font-size:12.5px; color:var(--steel); padding:9px 12px; border-radius:8px; display:flex; align-items:center; gap:9px; font-weight:600; transition:all .2s ease; }
   .lt-nav-item svg{ width:14px; height:14px; opacity:0.7; flex-shrink:0; }
-  .lt-nav-item.active{ background:var(--bg); color:var(--ink); font-weight:600; }
+  .lt-nav-item.active{ background:var(--ink); color:var(--white); }
   .lt-nav-item.active svg{ opacity:1; }
   .lt-sidebar-divider{ height:1px; background:var(--line); margin:10px 4px; }
-  .lt-main{ flex:1; padding:24px 28px; }
-  .lt-score-row{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; }
-  .lt-label{ font-size:10.5px; color:var(--paper-dim); text-transform:uppercase; letter-spacing:0.07em; margin-bottom:8px; font-weight:500; }
-  .lt-score{ font-family:'Fraunces', serif; font-size:36px; font-weight:500; line-height:1; display:flex; align-items:baseline; gap:8px; }
-  .lt-score .delta{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:#2F5E45; font-weight:500; }
-  .lt-badge{ background:var(--sage); color:#2F5E45; font-size:10.5px; font-weight:600; padding:6px 12px; border-radius:20px; display:flex; align-items:center; gap:5px; }
-  .lt-badge::before{ content:''; width:5px; height:5px; border-radius:50%; background:#2F5E45; }
+  .lt-main{ flex:1; padding:26px 30px; }
+  .lt-score-row{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:22px; }
+  .lt-label{ font-size:11px; color:var(--steel); text-transform:uppercase; letter-spacing:0.07em; margin-bottom:8px; font-weight:700; }
+  .lt-score{ font-family:'Space Grotesk', sans-serif; font-size:38px; font-weight:700; line-height:1; display:flex; align-items:baseline; gap:10px; }
+  .lt-score .delta{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--emerald); font-weight:600; }
+  .lt-badge{ background:var(--emerald); color:var(--white); font-size:11px; font-weight:700; padding:7px 14px; border-radius:20px; display:flex; align-items:center; gap:6px; box-shadow:0 6px 16px -4px rgba(31,111,84,0.4); }
+  .lt-badge::before{ content:''; width:5px; height:5px; border-radius:50%; background:var(--white); }
 
-  .lt-chart{ background:var(--bg); border-radius:10px; padding:16px 18px; margin-bottom:14px; }
-  .lt-chart-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-  .lt-chart-label{ font-size:11px; color:var(--paper-dim); font-weight:500; }
-  .lt-chart-val{ font-family:'IBM Plex Mono', monospace; font-size:13px; font-weight:500; }
+  .lt-chart{ background:#FAFBFD; border-radius:12px; padding:18px 20px; margin-bottom:16px; border:1px solid var(--line); }
+  .lt-chart-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .lt-chart-label{ font-size:11.5px; color:var(--steel); font-weight:600; }
+  .lt-chart-val{ font-family:'IBM Plex Mono', monospace; font-size:14px; font-weight:700; }
 
-  .lt-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
-  .lt-tile{ background:var(--bg); border-radius:9px; padding:13px 14px; }
-  .lt-tile .l{ font-size:10px; color:var(--paper-dim); margin-bottom:7px; font-weight:500; }
-  .lt-tile .v{ font-family:'IBM Plex Mono', monospace; font-size:15px; font-weight:500; }
-  .lt-tile .v.warn{ color:#A3435C; }
-  .lt-tile .v.good{ color:#2F5E45; }
-  .laptop-base{ height:14px; background:linear-gradient(var(--ink), #0c0d0f); border-radius:0 0 10px 10px; margin:0 -6px; position:relative; }
-  .laptop-base::after{ content:''; position:absolute; left:50%; top:0; transform:translateX(-50%); width:70px; height:5px; background:#0c0d0f; border-radius:0 0 6px 6px; }
+  .lt-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:11px; }
+  .lt-tile{ background:#FAFBFD; border-radius:10px; padding:14px 15px; border:1px solid var(--line); }
+  .lt-tile .l{ font-size:10.5px; color:var(--steel); margin-bottom:8px; font-weight:600; }
+  .lt-tile .v{ font-family:'IBM Plex Mono', monospace; font-size:16px; font-weight:700; }
+  .lt-tile .v.warn{ color:var(--rose); }
+  .lt-tile .v.good{ color:var(--emerald); }
+  .laptop-base{ height:14px; background:linear-gradient(var(--ink), #060a10); border-radius:0 0 10px 10px; margin:0 -6px; position:relative; }
+  .laptop-base::after{ content:''; position:absolute; left:50%; top:0; transform:translateX(-50%); width:70px; height:5px; background:#060a10; border-radius:0 0 6px 6px; }
 
-  .phone{ position:relative; width:186px; margin-bottom:-24px; }
-  .phone-body{
-    background:var(--ink); border-radius:28px; padding:9px;
-    box-shadow:0 30px 60px -16px rgba(25,27,31,0.4);
-  }
-  .phone-notch{ position:absolute; top:9px; left:50%; transform:translateX(-50%); width:70px; height:18px; background:var(--ink); border-radius:0 0 12px 12px; z-index:2; }
-  .phone-screen{ background:var(--card); border-radius:21px; padding:0; min-height:360px; overflow:hidden; position:relative; }
-  .ps-status{ display:flex; justify-content:space-between; padding:14px 18px 4px; font-size:10px; font-weight:600; color:var(--ink); }
-  .ps-header{ padding:18px 18px 0; display:flex; align-items:center; justify-content:space-between; }
-  .ps-header .wm{ font-family:'Fraunces', serif; font-size:14px; font-weight:600; }
-  .ps-header .bell{ width:22px; height:22px; border-radius:50%; background:var(--bg); display:flex; align-items:center; justify-content:center; }
-  .ps-score{ text-align:center; padding:18px 0 16px; margin:14px 14px 0; background:var(--lav); border-radius:14px; }
-  .ps-score .l{ font-size:10px; color:var(--paper-dim); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px; font-weight:500; }
-  .ps-score .v{ font-family:'Fraunces', serif; font-size:32px; line-height:1; }
-  .ps-score .d{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:#2F5E45; margin-top:6px; font-weight:500; }
-  .ps-list{ padding:14px 18px 18px; }
-  .ps-row{ display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line); font-size:12px; }
-  .ps-row .rl{ color:var(--paper-dim); display:flex; align-items:center; gap:8px; }
+  .phone{ position:relative; width:190px; margin-bottom:-24px; z-index:3; }
+  .phone-body{ background:var(--ink); border-radius:30px; padding:9px; box-shadow:var(--shadow-xl); }
+  .phone-notch{ position:absolute; top:9px; left:50%; transform:translateX(-50%); width:72px; height:18px; background:var(--ink); border-radius:0 0 12px 12px; z-index:2; }
+  .phone-screen{ background:var(--white); border-radius:23px; padding:0; min-height:370px; overflow:hidden; position:relative; }
+  .ps-status{ display:flex; justify-content:space-between; padding:14px 18px 4px; font-size:10px; font-weight:700; color:var(--ink); }
+  .ps-header{ padding:16px 18px 0; display:flex; align-items:center; justify-content:space-between; }
+  .ps-header .wm{ font-family:'Space Grotesk', sans-serif; font-size:15px; font-weight:700; display:flex; align-items:center; gap:6px; }
+  .ps-header .wm .crescent{ width:16px; height:16px; }
+  .ps-header .bell{ width:24px; height:24px; border-radius:50%; background:var(--sky); display:flex; align-items:center; justify-content:center; }
+  .ps-score{ text-align:center; padding:20px 0 18px; margin:16px 14px 0; background:linear-gradient(135deg, var(--sky), #E8EEF7); border-radius:16px; box-shadow:inset 0 1px 3px rgba(14,27,44,0.04); }
+  .ps-score .l{ font-size:10.5px; color:var(--steel); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px; font-weight:700; }
+  .ps-score .v{ font-family:'Space Grotesk', sans-serif; font-size:34px; font-weight:700; line-height:1; }
+  .ps-score .d{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--emerald); margin-top:8px; font-weight:600; }
+  .ps-list{ padding:16px 18px 20px; }
+  .ps-row{ display:flex; align-items:center; justify-content:space-between; padding:11px 0; border-bottom:1px solid var(--line); font-size:12.5px; }
+  .ps-row .rl{ color:var(--steel); display:flex; align-items:center; gap:8px; font-weight:600; }
   .ps-row .rl .dot{ width:6px; height:6px; border-radius:50%; }
-  .ps-row .rv{ font-family:'IBM Plex Mono', monospace; font-weight:500; }
+  .ps-row .rv{ font-family:'IBM Plex Mono', monospace; font-weight:700; }
 
-  section{ padding:100px 0; }
-  .section-head{ max-width:600px; margin-bottom:52px; }
-  .section-eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--paper-dim); margin-bottom:18px; }
-  .section-head h2{ font-family:'Inter', sans-serif; font-weight:700; font-size:38px; line-height:1.15; letter-spacing:-0.015em; margin-bottom:16px; }
-  .section-head p{ color:var(--paper-dim); font-size:17px; line-height:1.6; }
-
-  .problem-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
-  .problem-card{ background:var(--lav); border-radius:18px; padding:40px 38px; min-height:190px; display:flex; flex-direction:column; justify-content:space-between; }
-  .problem-card:nth-child(2){ background:var(--blue); }
-  .problem-card:nth-child(3){ background:var(--sand); }
-  .problem-card:nth-child(4){ background:var(--sage); }
-  .problem-tag{ font-size:13px; font-weight:600; color:var(--paper-dim); margin-bottom:18px; }
-  .problem-card p{ font-size:19px; line-height:1.4; font-weight:500; color:var(--ink); letter-spacing:-0.01em; }
-
-  .vitals-blocks{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-  .vblock{ background:var(--card); border:1px solid var(--line); border-radius:18px; padding:34px 36px; }
-  .vblock.wide{ grid-column:1 / 3; background:var(--lav); border:none; padding:44px 46px; display:flex; justify-content:space-between; align-items:center; }
-  .vblock .vtag{ font-size:13px; font-weight:600; color:var(--paper-dim); margin-bottom:14px; }
-  .vblock h4{ font-size:21px; font-weight:700; letter-spacing:-0.01em; margin-bottom:18px; }
-  .vblock .vval{ font-family:'IBM Plex Mono', monospace; font-size:32px; font-weight:500; margin-bottom:8px; }
-  .vblock .vsub{ font-size:13.5px; color:var(--paper-dim); }
-  .vblock .vsub.warn{ color:#A3435C; }
-  .vblock .vsub.good{ color:#2F5E45; }
-  .vbar{ height:6px; background:var(--line); border-radius:4px; overflow:hidden; margin-top:16px; }
-  .vbar-fill{ height:100%; border-radius:4px; }
-
-  .try-scene{
-    background:var(--sand); border-radius:24px; padding:70px 60px;
-    display:grid; grid-template-columns:1fr 0.9fr; gap:60px; align-items:center;
+  @keyframes drift{
+    0%, 100%{ transform:translate(0,0) scale(1); }
+    33%{ transform:translate(24px,-18px) scale(1.06); }
+    66%{ transform:translate(-16px,14px) scale(0.97); }
   }
-  .try-scene h2{ font-family:'Inter', sans-serif; font-weight:700; font-size:36px; letter-spacing:-0.015em; margin-bottom:16px; }
-  .try-scene p{ color:var(--paper-dim); font-size:17px; margin-bottom:32px; line-height:1.6; }
+  @keyframes drift2{
+    0%, 100%{ transform:translate(0,0) scale(1); }
+    50%{ transform:translate(-28px,20px) scale(1.08); }
+  }
+  .ambient-blob{ position:fixed; border-radius:50%; filter:blur(80px); pointer-events:none; z-index:0; opacity:0.55; }
+  .ambient-1{ width:420px; height:420px; background:var(--emerald-light); top:8%; left:-8%; animation:drift 22s ease-in-out infinite; }
+  .ambient-2{ width:360px; height:360px; background:var(--sky); top:55%; right:-6%; animation:drift2 26s ease-in-out infinite; }
+  .ambient-3{ width:300px; height:300px; background:#F7EEE1; top:85%; left:12%; animation:drift 30s ease-in-out infinite reverse; }
+  .page-transition{
+    position:fixed; inset:0; background:var(--ink); z-index:9999;
+    transform:scaleY(0); transform-origin:bottom; pointer-events:none;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .page-transition.exiting{ animation:wipe-in .5s cubic-bezier(.76,0,.24,1) forwards; pointer-events:all; }
+  .page-transition .pt-mark{ opacity:0; }
+  .page-transition.exiting .pt-mark{ animation:pt-mark-in .3s ease .25s forwards; }
+  @keyframes wipe-in{ from{ transform:scaleY(0); transform-origin:bottom; } to{ transform:scaleY(1); transform-origin:bottom; } }
+  @keyframes pt-mark-in{ from{ opacity:0; transform:scale(0.8); } to{ opacity:1; transform:scale(1); } }
+  body.loaded .page-load-veil{ animation:wipe-out .6s cubic-bezier(.76,0,.24,1) forwards; }
+  .page-load-veil{ position:fixed; inset:0; background:var(--ink); z-index:9998; transform:scaleY(1); transform-origin:top; }
+  @keyframes wipe-out{ from{ transform:scaleY(1); transform-origin:top; } to{ transform:scaleY(0); transform-origin:top; } }
+  @media (prefers-reduced-motion: reduce){
+    .page-load-veil, .page-transition{ display:none; }
+  }
+
+  @keyframes orbit-spin{
+    from{ transform:rotate(0deg); }
+    to{ transform:rotate(360deg); }
+  }
+  @keyframes orbit-spin-rev{
+    from{ transform:rotate(0deg); }
+    to{ transform:rotate(-360deg); }
+  }
+  @keyframes bob{
+    0%, 100%{ transform:translateY(0); }
+    50%{ transform:translateY(-8px); }
+  }
+  @keyframes pulse-core{
+    0%, 100%{ box-shadow:0 0 0 0 rgba(31,111,84,0.25), var(--shadow-xl); }
+    50%{ box-shadow:0 0 0 22px rgba(31,111,84,0), var(--shadow-xl); }
+  }
+  @keyframes bubble-emerge{
+    from{ opacity:0; transform:translate(-50%,-50%) scale(0.2); }
+    to{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+  }
+
+  .orbit-wrap{ position:relative; width:100%; max-width:640px; height:560px; margin:20px auto 0; }
+  .orbit-ring{ position:absolute; top:50%; left:50%; width:100%; height:100%; margin:-50% 0 0 -50%; }
+  .orbit-ring.r1{ animation:orbit-spin 90s linear infinite; }
+  .orbit-ring.r2{ animation:orbit-spin-rev 110s linear infinite; }
+
+  .orbit-core{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:150px; height:150px; border-radius:50%;
+    background:linear-gradient(135deg, var(--ink) 0%, var(--ink-soft) 100%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    box-shadow:var(--shadow-xl); z-index:10; text-align:center;
+    animation:pulse-core 3.5s ease-in-out infinite;
+  }
+  .orbit-core .oc-label{ font-size:10px; color:#8FA0B5; text-transform:uppercase; letter-spacing:0.08em; font-weight:700; margin-bottom:6px; }
+  .orbit-core .oc-val{ font-family:'Space Grotesk', sans-serif; font-size:32px; font-weight:700; color:var(--white); line-height:1; }
+  .orbit-core .oc-sub{ font-size:10.5px; color:#6FCDA8; font-weight:600; margin-top:6px; }
+
+  .bubble{
+    position:absolute; border-radius:50%; background:var(--white); border:1px solid var(--line);
+    box-shadow:var(--shadow-lg); display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:10px; animation:bubble-emerge .6s cubic-bezier(.34,1.56,.64,1) backwards, bob 5s ease-in-out infinite;
+    cursor:default;
+  }
+  .bubble .b-icon{ width:26px; height:26px; border-radius:50%; background:var(--accent-bg); display:flex; align-items:center; justify-content:center; margin-bottom:6px; }
+  .bubble .b-icon svg{ width:13px; height:13px; stroke:var(--accent); }
+  .bubble .b-tag{ font-size:9px; font-weight:700; color:var(--steel); text-transform:uppercase; letter-spacing:0.03em; line-height:1.2; margin-bottom:3px; }
+  .bubble .b-val{ font-family:'IBM Plex Mono', monospace; font-size:14px; font-weight:700; color:var(--ink); }
+  .bubble:hover{ z-index:15; box-shadow:var(--shadow-xl); }
+
+  .b1{ width:132px; height:132px; top:2%; left:50%; margin-left:-66px; animation-delay:.1s, 0s; }
+  .b2{ width:120px; height:120px; top:20%; right:4%; animation-delay:.2s, .5s; }
+  .b3{ width:128px; height:128px; bottom:16%; right:8%; animation-delay:.3s, 1s; }
+  .b4{ width:132px; height:132px; bottom:0%; left:50%; margin-left:-66px; animation-delay:.4s, 1.5s; }
+  .b5{ width:128px; height:128px; bottom:16%; left:6%; animation-delay:.5s, 2s; }
+  .b6{ width:120px; height:120px; top:20%; left:2%; animation-delay:.6s, 2.5s; }
+
+  .orbit-connector{ position:absolute; top:50%; left:50%; width:1px; height:1px; }
+  .oc-line{ position:absolute; background:var(--line-strong); height:1px; transform-origin:0 0; opacity:0.5; }
+
+  .orbit-deco-ring{ position:absolute; top:50%; left:50%; border:1.5px dashed var(--line-strong); border-radius:50%; pointer-events:none; }
+  .odr-1{ width:340px; height:340px; margin:-170px 0 0 -170px; animation:orbit-spin 60s linear infinite; }
+  .odr-2{ width:460px; height:460px; margin:-230px 0 0 -230px; animation:orbit-spin-rev 80s linear infinite; opacity:0.6; }
+  @media (max-width:960px){
+    .orbit-deco-ring{ display:none; }
+    .orbit-wrap{ height:auto; max-width:100%; }
+    .orbit-core{ position:static; transform:none; margin:0 auto 20px; }
+    .bubble{ position:static; width:100% !important; height:auto !important; margin:0 0 12px 0 !important; border-radius:14px; flex-direction:row; justify-content:flex-start; gap:12px; padding:16px 18px; animation:none; text-align:left; }
+    .bubble .b-icon{ margin-bottom:0; }
+  }
+  .hero-visual{ position:relative; height:480px; }
+  .hv-blob{ position:absolute; border-radius:50%; filter:blur(70px); opacity:0.55; }
+  .hv-blob1{ width:300px; height:300px; background:var(--emerald-light); top:-20px; right:20px; animation:drift 20s ease-in-out infinite; }
+  .hv-blob2{ width:220px; height:220px; background:var(--sky); bottom:20px; left:0; animation:drift2 24s ease-in-out infinite; }
+
+  .hv-ring{ position:absolute; border:1.5px dashed var(--line-strong); border-radius:50%; opacity:0.5; }
+  .hv-ring1{ width:380px; height:380px; top:40px; right:-10px; animation:orbit-spin 70s linear infinite; }
+  .hv-ring2{ width:280px; height:280px; top:90px; right:40px; animation:orbit-spin-rev 55s linear infinite; opacity:0.4; }
+
+  .hv-card{ position:absolute; background:var(--white); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow-xl); z-index:2; right:0; width:270px; }
+  .hv-main{ top:0; height:148px; padding:22px 24px; animation:bob 6s ease-in-out infinite; }
+  .hv-label{ font-size:11px; color:var(--steel); text-transform:uppercase; letter-spacing:0.07em; font-weight:700; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+  .hv-pill{ background:var(--emerald-light); color:var(--emerald); font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; }
+  .hv-val{ font-family:'Space Grotesk', sans-serif; font-size:32px; font-weight:700; letter-spacing:-0.02em; margin-bottom:8px; }
+  .hv-chart{ height:34px; }
+
+  .hv-tag{ padding:14px 18px; display:flex; align-items:center; gap:12px; animation:bob 5.5s ease-in-out infinite; height:70px; }
+  .hv-tag1{ top:180px; left:20px; width:230px; animation-delay:.4s; z-index:3; }
+  .hv-tag2{ top:282px; left:60px; width:230px; animation-delay:1s; }
+  .hv-tag-icon{ width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .hv-tag-icon svg{ width:16px; height:16px; }
+  .hv-tag-label{ font-size:10.5px; color:var(--steel); font-weight:700; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:2px; }
+  .hv-tag-val{ font-family:'IBM Plex Mono', monospace; font-size:15px; font-weight:700; color:var(--ink); }
+
+  @media (max-width:960px){
+    .hero-visual{ height:auto; margin-top:20px; }
+    .hv-card{ position:static !important; width:100% !important; height:auto !important; margin-bottom:14px; animation:none !important; }
+    .hv-ring{ display:none; }
+  }
+  section{ padding:100px 0; position:relative; z-index:1; }
+  .section-eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--emerald); margin-bottom:18px; font-weight:600; }
+  .section-head{ max-width:620px; margin-bottom:52px; }
+  .section-head h2{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:44px; line-height:1.1; letter-spacing:-0.02em; margin-bottom:18px; }
+  .section-head p{ color:var(--steel); font-size:17.5px; line-height:1.6; }
+
+  .split-cards{ display:grid; grid-template-columns:1fr 1fr; gap:60px; padding:10px 10px 30px; position:relative; }
+  .split-cards::before{ content:''; position:absolute; top:8px; bottom:8px; left:50%; width:1px; background:var(--line); }
+  @media (max-width:960px){ .split-cards::before{ display:none; } }
+  .split-card{ transition:transform .35s cubic-bezier(.16,1,.3,1); animation:bob 6s ease-in-out infinite; }
+  .split-card:hover{ transform:translateY(-6px) !important; }
+  .split-card.without{ animation-delay:.2s; }
+  .split-card.with{ animation-delay:.8s; }
+  .split-tag{ font-size:12.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .split-card.without .split-tag{ color:var(--rose); }
+  .split-card.with .split-tag{ color:var(--emerald); }
+  .split-card p{ font-size:19px; line-height:1.5; font-weight:600; color:var(--ink); margin-bottom:24px; }
+  .split-icon{ width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .split-card.without .split-icon{ background:rgba(163,67,92,0.12); }
+  .split-card.with .split-icon{ background:rgba(31,111,84,0.12); }
+  .split-icon svg{ width:16px; height:16px; }
+  .split-graphic{ height:60px; position:relative; }
+  .split-graphic svg{ width:100%; height:100%; }
+  @media (max-width:960px){
+    .split-card{ animation:none !important; transform:none !important; }
+  }
+
+  .vitals-hero{ background:linear-gradient(135deg, var(--sky) 0%, #E8EEF7 100%); border-radius:20px; padding:40px 44px; margin-bottom:22px; display:flex; justify-content:space-between; align-items:center; box-shadow:var(--shadow-md); border:1px solid rgba(14,27,44,0.04); }
+  .vitals-hero-label{ font-size:12.5px; color:var(--steel); text-transform:uppercase; letter-spacing:0.07em; font-weight:700; margin-bottom:10px; }
+  .vitals-hero-val{ font-family:'Space Grotesk', sans-serif; font-size:52px; font-weight:700; letter-spacing:-0.02em; }
+  .vitals-hero-badge{ background:var(--emerald); color:var(--white); font-size:13px; font-weight:700; padding:8px 16px; border-radius:20px; display:flex; align-items:center; gap:6px; box-shadow:0 8px 20px -4px rgba(31,111,84,0.4); }
+
+  .vitals-row3{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-bottom:18px; }
+  .vitals-row2{ display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
+  .vital-card{ background:var(--white); border:1px solid var(--line); border-radius:14px; padding:18px 20px; box-shadow:var(--shadow-sm); position:relative; overflow:hidden; transition:transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s ease; display:flex; align-items:center; gap:16px; }
+  .vital-card::before{ content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:var(--accent); }
+  .vital-card:hover{ transform:translateY(-4px); box-shadow:var(--shadow-md); }
+  .vital-icon{ width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; background:var(--accent-bg); flex-shrink:0; }
+  .vital-icon svg{ width:18px; height:18px; stroke:var(--accent); }
+  .vital-body{ flex:1; min-width:0; }
+  .vital-tag{ font-size:11px; font-weight:700; color:var(--steel); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:3px; }
+  .vital-val-row{ display:flex; align-items:baseline; gap:9px; }
+  .vital-val{ font-family:'IBM Plex Mono', monospace; font-size:21px; font-weight:600; }
+  .vital-sub{ font-size:12px; color:var(--steel); }
+  .vital-sub.warn{ color:var(--rose); font-weight:600; }
+  .vital-sub.good{ color:var(--emerald); font-weight:600; }
+  .vital-mini{ width:64px; height:28px; flex-shrink:0; }
+  .vital-mini svg{ width:100%; height:100%; }
+  .vital-mini-bar{ width:64px; height:6px; background:var(--sky); border-radius:4px; overflow:hidden; flex-shrink:0; }
+  .vital-mini-bar-fill{ height:100%; border-radius:4px; background:var(--accent); }
+
+  .steps{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+  .step-card{ position:relative; padding:32px 26px; background:var(--white); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow-sm); transition:all .3s ease; }
+  .step-card:hover{ box-shadow:var(--shadow-md); transform:translateY(-4px); border-color:var(--emerald-light); }
+  .step-num{ font-family:'Space Grotesk', sans-serif; font-size:32px; font-weight:700; color:var(--emerald-light); margin-bottom:16px; -webkit-text-stroke:1.5px var(--emerald); -webkit-text-fill-color:transparent; }
+  .step-card h4{ font-size:15.5px; font-weight:700; margin-bottom:8px; }
+  .step-card p{ font-size:13.5px; color:var(--steel); line-height:1.5; }
+
+  .cta-section{ background:linear-gradient(135deg, var(--ink) 0%, var(--ink-soft) 100%); border-radius:24px; padding:90px 70px; text-align:center; position:relative; overflow:hidden; box-shadow:var(--shadow-xl); }
+  .cta-section::before{ content:''; position:absolute; width:400px; height:400px; border-radius:50%; background:radial-gradient(circle, rgba(31,111,84,0.25) 0%, transparent 70%); top:-150px; right:-100px; }
+  .cta-section h2{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:42px; color:var(--white); margin-bottom:16px; letter-spacing:-0.02em; position:relative; }
+  .cta-section p{ color:#8FA0B5; font-size:17px; margin-bottom:36px; position:relative; }
+  .cta-section .btn-primary{ background:var(--emerald); position:relative; }
+  .cta-section .btn-primary:hover{ background:var(--emerald-bright); }
 
   .trust-strip{ padding:0 0 100px; }
   .trust-inner{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:24px; padding-top:52px; border-top:1px solid var(--line); }
-  .trust-label{ font-size:12px; color:var(--paper-dim); font-family:'IBM Plex Mono', monospace; letter-spacing:0.05em; }
-  .trust-marks{ display:flex; gap:40px; align-items:center; flex-wrap:wrap; }
-  .trust-mark{ font-size:16px; font-weight:600; color:var(--paper-dim); }
-
-  .final-cta{ background:var(--ink); border-radius:24px; padding:90px 60px; text-align:center; margin-bottom:80px; }
-  .final-cta h2{ font-family:'Inter', sans-serif; font-weight:700; font-size:38px; color:var(--bg); margin-bottom:18px; letter-spacing:-0.015em; }
-  .final-cta p{ color:#9A9DA5; font-size:17px; margin-bottom:36px; }
+  .trust-label{ font-size:12px; color:var(--steel); font-family:'IBM Plex Mono', monospace; letter-spacing:0.05em; font-weight:600; }
+  .trust-marks{ display:flex; gap:44px; align-items:center; flex-wrap:wrap; }
+  .trust-mark{ font-size:15.5px; font-weight:700; color:var(--steel); opacity:0.7; transition:opacity .25s ease; }
+  .trust-mark:hover{ opacity:1; color:var(--ink); }
 
   footer{ border-top:1px solid var(--line); padding:36px 0; }
-  .footer-inner{ display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--paper-dim); flex-wrap:wrap; gap:12px; }
+  .footer-inner{ display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--steel); flex-wrap:wrap; gap:12px; }
+  .footer-brand{ display:flex; align-items:center; gap:8px; font-weight:600; }
+  .footer-brand .crescent{ width:16px; height:16px; }
 
-  @media (max-width:900px){
-    .hero h1{ font-size:40px; }
-    .device-scene{ flex-direction:column; padding:50px 24px 0; }
+  @media (max-width:960px){
+    .hero h1{ font-size:38px; }
+    .device-scene{ flex-direction:column; padding:50px 24px 0; gap:24px; }
     .laptop{ width:100%; }
     .phone{ display:none; }
-    .problem-grid, .vitals-blocks{ grid-template-columns:1fr; }
-    .vblock.wide{ grid-column:1; flex-direction:column; align-items:flex-start; gap:20px; }
-    .try-scene{ grid-template-columns:1fr; padding:44px 28px; }
+    .split-cards, .vitals-row3, .vitals-row2, .steps{ grid-template-columns:1fr; }
+    .vitals-hero{ flex-direction:column; align-items:flex-start; gap:16px; }
+    .cta-section{ padding:56px 30px; }
     .wrap{ padding:0 22px; }
+    .section-head h2{ font-size:30px; }
   }
 </style>
 </head>
 <body>
 
+<div class="page-load-veil"></div>
+<div class="page-transition" id="pageTransition">
+  <div class="pt-mark" style="display:flex; align-items:center; gap:10px;">
+    <div class="crescent" style="width:28px;height:28px;"></div>
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:700; color:#fff;">margyn</span>
+  </div>
+</div>
+
+<div class="ambient-blob ambient-1"></div>
+<div class="ambient-blob ambient-2"></div>
+<div class="ambient-blob ambient-3"></div>
+
 <nav>
   <div class="nav-inner">
-    <div class="nav-logo">Reflection</div>
+    <div class="nav-brand">
+      <div class="crescent" style="width:22px;height:22px;"></div>
+      <div class="nav-logo">margyn</div>
+    </div>
     <div class="nav-links">
       <a href="#vitals">Vitals</a>
-      <a href="#try">Try it</a>
-      <a class="nav-cta" href="/app.html">Try the scorecard</a>
+      <a href="#how">How it works</a>
+      <a class="nav-cta" href="/app.html">Try the app</a>
     </div>
   </div>
 </nav>
 
 <div class="hero">
   <div class="wrap">
-    <div class="hero-top reveal in">
-      <div class="hero-eyebrow">Reflection Labs</div>
-      <h1>See your business,<br>clearly.</h1>
-      <p class="hero-sub">A real-time financial health scorecard for Indian SME CEOs. Connects Tally, your bank, and GST into one live view.</p>
-      <div class="hero-ctas">
-        <a class="btn-primary" href="/app.html">Try the scorecard</a>
-        <a class="btn-ghost" href="#vitals">See how it works</a>
-      </div>
-    </div>
-
-    <div class="device-scene reveal in">
-      <div class="laptop">
-        <div class="laptop-screen">
-          <div class="laptop-inner">
-            <div class="laptop-topbar">
-              <div class="lt-wm">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#F6F5F2" stroke-width="2"><path d="M4 20L20 4M20 4H10M20 4V14"/></svg>
-              </div>
-              <div class="lt-title">Reflection</div>
-              <div class="lt-topbar-right">
-                <div class="lt-search"></div>
-                <div class="lt-avatar"></div>
-              </div>
-            </div>
-            <div class="laptop-body">
-              <div class="lt-sidebar">
-                <div class="lt-nav-item active">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-                  Overview
-                </div>
-                <div class="lt-nav-item">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
-                  Cash
-                </div>
-                <div class="lt-nav-item">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-                  Receivables
-                </div>
-                <div class="lt-nav-item">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-                  Payables
-                </div>
-                <div class="lt-nav-item">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-                  GST / ITC
-                </div>
-                <div class="lt-sidebar-divider"></div>
-                <div class="lt-nav-item">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-                  Settings
-                </div>
-              </div>
-              <div class="lt-main">
-                <div class="lt-score-row">
-                  <div>
-                    <div class="lt-label">Pulse score</div>
-                    <div class="lt-score">78 <span class="delta">▲ 4 pts this month</span></div>
-                  </div>
-                  <div class="lt-badge">Healthy</div>
-                </div>
-                <div class="lt-chart">
-                  <div class="lt-chart-head">
-                    <div class="lt-chart-label">Cash position — last 30 days</div>
-                    <div class="lt-chart-val">₹42.1L</div>
-                  </div>
-                  <svg viewBox="0 0 400 70" style="width:100%; height:56px; display:block;" preserveAspectRatio="none">
-                    <polyline points="0,50 40,46 80,52 120,38 160,42 200,28 240,32 280,20 320,24 360,12 400,16" fill="none" stroke="#B08D57" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <polygon points="0,50 40,46 80,52 120,38 160,42 200,28 240,32 280,20 320,24 360,12 400,16 400,70 0,70" fill="#B08D57" opacity="0.12"/>
-                  </svg>
-                </div>
-                <div class="lt-grid">
-                  <div class="lt-tile"><div class="l">Receivables &gt;90d</div><div class="v warn">₹6.8L</div></div>
-                  <div class="lt-tile"><div class="l">Payables due 30d</div><div class="v">₹11.3L</div></div>
-                  <div class="lt-tile"><div class="l">GST leakage</div><div class="v warn">₹1.2L</div></div>
-                  <div class="lt-tile"><div class="l">WC runway</div><div class="v good">4.2 mo</div></div>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div class="hero-grid">
+      <div class="hero-top reveal in">
+        <div class="hero-eyebrow">Margyn 1.0</div>
+        <h1>Your margin,<br>live.</h1>
+        <p class="hero-sub">Real-time financial health for Indian SME founders. Connect Tally, your bank, and GST — see profitability move as it happens.</p>
+        <div class="hero-ctas">
+          <a class="btn-primary" href="/app.html">
+            Try the app
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn-ghost" href="#vitals">
+            See how it works
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
         </div>
-        <div class="laptop-base"></div>
       </div>
 
-      <div class="phone">
-        <div class="phone-notch"></div>
-        <div class="phone-body">
-          <div class="phone-screen">
-            <div class="ps-status"><span>9:41</span><span>📶</span></div>
-            <div class="ps-header">
-              <div class="wm">Reflection</div>
-              <div class="bell">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#191B1F" stroke-width="2" style="width:11px; height:11px;"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
-              </div>
-            </div>
-            <div class="ps-score">
-              <div class="l">Pulse score</div>
-              <div class="v">78</div>
-              <div class="d">▲ 4 pts this month</div>
-            </div>
-            <div class="ps-list">
-              <div class="ps-row"><span class="rl"><span class="dot" style="background:#B08D57;"></span>Cash</span><span class="rv">₹42.1L</span></div>
-              <div class="ps-row"><span class="rl"><span class="dot" style="background:#A3435C;"></span>Receivables</span><span class="rv">₹18.4L</span></div>
-              <div class="ps-row"><span class="rl"><span class="dot" style="background:#B08D57;"></span>GST leakage</span><span class="rv">₹1.2L</span></div>
-              <div class="ps-row" style="border-bottom:none;"><span class="rl"><span class="dot" style="background:#2F5E45;"></span>Runway</span><span class="rv">4.2 mo</span></div>
-            </div>
+      <div class="hero-visual reveal in">
+        <div class="hv-blob hv-blob1"></div>
+        <div class="hv-blob hv-blob2"></div>
+
+        <div class="hv-card hv-main">
+          <div class="hv-label">
+            <span>Net margin</span>
+            <span class="hv-pill">▲ 2.1%</span>
+          </div>
+          <div class="hv-val">14.6%</div>
+          <div class="hv-chart">
+            <svg viewBox="0 0 260 56" style="width:100%; height:100%;" preserveAspectRatio="none">
+              <polyline points="0,42 26,38 52,44 78,28 104,32 130,16 156,20 182,8 208,12 234,4" fill="none" stroke="#B08D57" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <polygon points="0,42 26,38 52,44 78,28 104,32 130,16 156,20 182,8 208,12 234,4 234,56 0,56" fill="#B08D57" opacity="0.12"/>
+            </svg>
           </div>
         </div>
+
+        <div class="hv-card hv-tag hv-tag1">
+          <div class="hv-tag-icon" style="background:#FBEAEE;"><svg viewBox="0 0 24 24" fill="none" stroke="#A3435C" stroke-width="2.2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+          <div>
+            <div class="hv-tag-label">Receivables</div>
+            <div class="hv-tag-val">₹6.8L</div>
+          </div>
+        </div>
+
+        <div class="hv-card hv-tag hv-tag2">
+          <div class="hv-tag-icon" style="background:#E8F5F0;"><svg viewBox="0 0 24 24" fill="none" stroke="#1F6F54" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <div>
+            <div class="hv-tag-label">GST synced</div>
+            <div class="hv-tag-val">Live</div>
+          </div>
+        </div>
+
+        <div class="hv-ring hv-ring1"></div>
+        <div class="hv-ring hv-ring2"></div>
       </div>
     </div>
   </div>
@@ -323,25 +477,37 @@
   <div class="wrap">
     <div class="section-head reveal">
       <div class="section-eyebrow">The problem</div>
-      <h2>Your Tally knows more than you do.</h2>
-      <p>Most SME CEOs run on numbers that are three to four weeks old by the time they see them — pulled manually, stitched into an Excel sheet, already stale.</p>
+      <h2>Margin is invisible until it's gone.</h2>
+      <p>Most SME founders see profitability once a month, in an email from their accountant. By then, erosion has already happened.</p>
     </div>
-    <div class="problem-grid reveal">
-      <div class="problem-card">
-        <div class="problem-tag">Without Reflection</div>
-        <p>You find out about a cash crunch when the bank calls, not three weeks before it happens.</p>
+    <div class="split-cards">
+      <div class="split-card without reveal stagger-1">
+        <div class="split-tag">
+          <span class="split-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#A3435C" stroke-width="2.5"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+          Without Margyn
+        </div>
+        <p>You find out you're unprofitable when cash runs out, not six weeks before it happens.</p>
+        <div class="split-graphic">
+          <svg viewBox="0 0 400 70" preserveAspectRatio="none">
+            <polyline points="0,15 50,20 100,18 150,30 200,26 250,42 300,38 350,58 400,62" fill="none" stroke="#A3435C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <polygon points="0,15 50,20 100,18 150,30 200,26 250,42 300,38 350,58 400,62 400,70 0,70" fill="#A3435C" opacity="0.1"/>
+            <circle cx="400" cy="62" r="5" fill="#A3435C"/>
+          </svg>
+        </div>
       </div>
-      <div class="problem-card">
-        <div class="problem-tag">Without Reflection</div>
-        <p>Your accountant emails a P&L once a month. Everything in between is a guess.</p>
-      </div>
-      <div class="problem-card">
-        <div class="problem-tag">Without Reflection</div>
-        <p>GST input credit sits unclaimed because no one's watching the leakage in real time.</p>
-      </div>
-      <div class="problem-card">
-        <div class="problem-tag">Without Reflection</div>
-        <p>You're hiring a part-time CFO for visibility a live dashboard could give you today.</p>
+      <div class="split-card with reveal stagger-2">
+        <div class="split-tag">
+          <span class="split-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1F6F54" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span>
+          With Margyn
+        </div>
+        <p>Live Pulse Score from Tally, bank, and GST data. See margin move in real time.</p>
+        <div class="split-graphic">
+          <svg viewBox="0 0 400 70" preserveAspectRatio="none">
+            <polyline points="0,55 50,48 100,52 150,36 200,40 250,22 300,26 350,10 400,8" fill="none" stroke="#1F6F54" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <polygon points="0,55 50,48 100,52 150,36 200,40 250,22 300,26 350,10 400,8 400,70 0,70" fill="#1F6F54" opacity="0.1"/>
+            <circle cx="400" cy="8" r="5" fill="#1F6F54"/>
+          </svg>
+        </div>
       </div>
     </div>
   </div>
@@ -352,83 +518,85 @@
     <div class="section-head reveal">
       <div class="section-eyebrow">The product</div>
       <h2>Six vitals. One score.</h2>
-      <p>Reflection connects to Tally, your bank accounts, and the GST portal — read-only — and turns them into a live executive scorecard.</p>
+      <p>Margyn connects to Tally, your bank accounts, and the GST portal — read-only — and turns them into a live executive scorecard.</p>
     </div>
-    <div class="vitals-blocks reveal">
-      <div class="vblock wide">
-        <div>
-          <div class="vtag">Cash position</div>
-          <h4>Real bank balances, consolidated across accounts.</h4>
-        </div>
-        <div style="text-align:right;">
-          <div class="vval">₹42.1L</div>
-          <div class="vsub good">Across 3 accounts</div>
-        </div>
+
+    <div class="orbit-wrap reveal">
+      <div class="orbit-deco-ring odr-1"></div>
+      <div class="orbit-deco-ring odr-2"></div>
+
+      <div class="orbit-core">
+        <div class="oc-label">Pulse score</div>
+        <div class="oc-val">14.6%</div>
+        <div class="oc-sub">▲ 2.1pp YTD</div>
       </div>
-      <div class="vblock">
-        <div class="vtag">Receivables aging</div>
-        <h4>What's outstanding, and what's overdue.</h4>
-        <div class="vval">₹18.4L</div>
-        <div class="vsub warn">₹6.8L overdue &gt;90d</div>
-        <div class="vbar"><div class="vbar-fill" style="width:37%; background:#A3435C;"></div></div>
+
+      <div class="bubble b1" style="--accent:#B08D57; --accent-bg:#F7EEE1;">
+        <div class="b-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg></div>
+        <div class="b-tag">Cash position</div>
+        <div class="b-val">₹42.1L</div>
       </div>
-      <div class="vblock">
-        <div class="vtag">Payables due soon</div>
-        <h4>What you owe in the next 30 days.</h4>
-        <div class="vval">₹11.3L</div>
-        <div class="vsub">Before it's urgent</div>
-        <div class="vbar"><div class="vbar-fill" style="width:60%; background:#B08D57;"></div></div>
+
+      <div class="bubble b2" style="--accent:#A3435C; --accent-bg:#FBEAEE;">
+        <div class="b-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+        <div class="b-tag">Receivables</div>
+        <div class="b-val">₹18.4L</div>
       </div>
-      <div class="vblock">
-        <div class="vtag">GST / ITC leakage</div>
-        <h4>Input credit available but unclaimed.</h4>
-        <div class="vval">₹1.2L</div>
-        <div class="vsub warn">Flagged this quarter</div>
-        <div class="vbar"><div class="vbar-fill" style="width:18%; background:#A3435C;"></div></div>
+
+      <div class="bubble b3" style="--accent:#3E5875; --accent-bg:#E9EDF3;">
+        <div class="b-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <div class="b-tag">Payables due</div>
+        <div class="b-val">₹11.3L</div>
       </div>
-      <div class="vblock">
-        <div class="vtag">Net margin &amp; runway</div>
-        <h4>Profitability, tracked continuously.</h4>
-        <div class="vval">14.6%</div>
-        <div class="vsub good">4.2 months of runway at current burn</div>
+
+      <div class="bubble b4" style="--accent:#A3435C; --accent-bg:#FBEAEE;">
+        <div class="b-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <div class="b-tag">GST leakage</div>
+        <div class="b-val">₹1.2L</div>
+      </div>
+
+      <div class="bubble b5" style="--accent:#1F6F54; --accent-bg:#E8F5F0;">
+        <div class="b-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <div class="b-tag">WC runway</div>
+        <div class="b-val">4.2 mo</div>
+      </div>
+
+      <div class="bubble b6" style="--accent:#1F6F54; --accent-bg:#E8F5F0;">
+        <div class="b-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
+        <div class="b-tag">Net margin</div>
+        <div class="b-val">14.6%</div>
       </div>
     </div>
   </div>
 </section>
 
-<section id="try">
+<section id="how">
   <div class="wrap">
-    <div class="try-scene reveal">
-      <div>
-        <div class="section-eyebrow">Try it</div>
-        <h2>See it for yourself.</h2>
-        <p>Upload a data export or enter your figures manually — get your Pulse Score in under two minutes.</p>
-        <a class="btn-primary" href="/app.html">Try the scorecard</a>
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Get started</div>
+      <h2>Live in under two minutes.</h2>
+      <p>No integrations to configure on day one. Upload, connect, and see your Pulse Score.</p>
+    </div>
+    <div class="steps">
+      <div class="step-card reveal stagger-1">
+        <div class="step-num">01</div>
+        <h4>Upload Tally export</h4>
+        <p>Or enter figures manually — either way, no setup required.</p>
       </div>
-      <div class="phone" style="justify-self:center; margin-bottom:0;">
-        <div class="phone-notch"></div>
-        <div class="phone-body">
-          <div class="phone-screen">
-            <div class="ps-status"><span>9:41</span><span>📶</span></div>
-            <div class="ps-header">
-              <div class="wm">Reflection</div>
-              <div class="bell">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#191B1F" stroke-width="2" style="width:11px; height:11px;"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
-              </div>
-            </div>
-            <div class="ps-score">
-              <div class="l">Pulse score</div>
-              <div class="v">78</div>
-              <div class="d">▲ 4 pts this month</div>
-            </div>
-            <div class="ps-list">
-              <div class="ps-row"><span class="rl"><span class="dot" style="background:#B08D57;"></span>Cash</span><span class="rv">₹42.1L</span></div>
-              <div class="ps-row"><span class="rl"><span class="dot" style="background:#A3435C;"></span>Receivables</span><span class="rv">₹18.4L</span></div>
-              <div class="ps-row"><span class="rl"><span class="dot" style="background:#B08D57;"></span>GST leakage</span><span class="rv">₹1.2L</span></div>
-              <div class="ps-row" style="border-bottom:none;"><span class="rl"><span class="dot" style="background:#2F5E45;"></span>Runway</span><span class="rv">4.2 mo</span></div>
-            </div>
-          </div>
-        </div>
+      <div class="step-card reveal stagger-2">
+        <div class="step-num">02</div>
+        <h4>Connect your bank</h4>
+        <p>Read-only via RBI Account Aggregator. Nothing you don't control.</p>
+      </div>
+      <div class="step-card reveal stagger-3">
+        <div class="step-num">03</div>
+        <h4>Link GST portal</h4>
+        <p>Automatic ITC reconciliation, no manual cross-checking.</p>
+      </div>
+      <div class="step-card reveal stagger-4">
+        <div class="step-num">04</div>
+        <h4>See your Pulse Score</h4>
+        <p>Live CEO dashboard, updated as your numbers change.</p>
       </div>
     </div>
   </div>
@@ -447,26 +615,46 @@
 </div>
 
 <div class="wrap">
-  <div class="final-cta reveal">
-    <h2>Stop waiting for the monthly email.</h2>
-    <p>Your numbers, live — not three weeks late.</p>
-    <a class="btn-primary" href="/app.html">Try the scorecard</a>
+  <div class="cta-section reveal">
+    <h2>See your margin in 90 seconds.</h2>
+    <p>Free 14-day trial. No credit card. Upload your Tally export to start.</p>
+    <a class="btn-primary" href="/app.html">
+      Try the app
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
   </div>
 </div>
 
 <footer>
   <div class="wrap footer-inner">
-    <div>Reflection · reflectionai.in · Built for Indian SMEs</div>
-    <div>Reflection Labs</div>
+    <div class="footer-brand">
+      <div class="crescent"></div>
+      <span>Margyn 1.0 · margyn.in</span>
+    </div>
+    <div>Margyn Labs · Built for Indian SMEs</div>
   </div>
 </footer>
 
 <script>
+  document.body.classList.add('loaded');
+
   const els = document.querySelectorAll('.reveal:not(.in)');
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold:0.15 });
+  }, { threshold:0.01, rootMargin:'0px 0px -40px 0px' });
   els.forEach(el=>io.observe(el));
+  setTimeout(()=>{ els.forEach(el=>el.classList.add('in')); }, 2200);
+
+  const transitionEl = document.getElementById('pageTransition');
+  document.querySelectorAll('a[href]').forEach(link=>{
+    const href = link.getAttribute('href');
+    if(href.startsWith('#')) return;
+    link.addEventListener('click', (e)=>{
+      e.preventDefault();
+      transitionEl.classList.add('exiting');
+      setTimeout(()=>{ window.location.href = href; }, 550);
+    });
+  });
 </script>
 
 </body>
