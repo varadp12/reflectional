@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#0E1B2C" />
+<title>Reflection — See your business clearly</title>
+<meta name="description" content="A real-time financial health scorecard for Indian SMEs. Connects Tally, your bank, and GST into one live view — cash, receivables, payables, margin, and runway.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,450;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1B2C;
+    --paper:#ECEEF1;
+    --steel:#3E5875;
+    --gold:#B08D57;
+    --emerald:#1F6F54;
+    --rose:#A3435C;
+    --steel-dim: rgba(62,88,117,0.35);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .wrap{max-width:980px; margin:0 auto; padding:0 24px;}
+
+  /* ---------- Hero / animated mirror wordmark ---------- */
+  .hero{
+    min-height:92vh; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center;
+    padding:40px 24px;
+    position:relative;
+  }
+  .hero-stage{position:relative; display:flex; flex-direction:column; align-items:center;}
+
+  .waterline{
+    height:1px; width:0; background:var(--gold);
+    animation: drawLine 1.1s ease-out 0.15s forwards;
+  }
+  @keyframes drawLine{ to { width:180px; } }
+
+  .wordmark{
+    font-family:'Fraunces',serif; font-weight:450;
+    font-size:clamp(40px, 8vw, 72px);
+    letter-spacing:0.5px; color:var(--paper);
+    margin-top:22px;
+    opacity:0; transform:translateY(14px);
+    animation: fadeUp 1s ease-out 1.3s forwards;
+  }
+  @keyframes fadeUp{ to { opacity:1; transform:translateY(0); } }
+
+  .reflected{
+    font-family:'Fraunces',serif; font-weight:450;
+    font-size:clamp(40px, 8vw, 72px);
+    color:var(--steel);
+    transform:scaleY(-1);
+    margin-top:2px;
+    opacity:0;
+    animation: ripple 1s ease-out 2.7s forwards;
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent 85%);
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent 85%);
+  }
+  @keyframes ripple{
+    0% { opacity:0; transform:scaleY(-1) translateY(-6px); }
+    60% { opacity:0.32; }
+    100% { opacity:0.28; transform:scaleY(-1) translateY(0); }
+  }
+
+  .domain-tag{
+    margin-top:30px;
+    opacity:0;
+    animation: fadeUp 0.9s ease-out 3.7s forwards;
+  }
+  .domain{
+    font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--gold);
+    letter-spacing:0.06em;
+  }
+  .tagline{
+    margin-top:10px; font-size:14px; letter-spacing:0.12em;
+    text-transform:uppercase; color:var(--steel);
+  }
+
+  .cta-row{
+    margin-top:44px; display:flex; gap:14px; flex-wrap:wrap; justify-content:center;
+    opacity:0; animation: fadeUp 0.9s ease-out 4.2s forwards;
+  }
+  a.btn{
+    text-decoration:none; display:inline-block;
+    padding:13px 28px; border-radius:6px; font-size:14px; font-weight:600;
+    transition:opacity .15s, transform .15s;
+  }
+  a.btn:hover{ transform:translateY(-1px); }
+  .btn-primary{ background:var(--gold); color:var(--ink); }
+  .btn-primary:hover{ opacity:0.88; }
+  .btn-ghost{ background:transparent; color:var(--paper); border:1px solid var(--steel-dim); }
+
+  @media (prefers-reduced-motion: reduce){
+    .waterline, .wordmark, .reflected, .domain-tag, .cta-row{
+      animation:none !important; opacity:1 !important; width:180px !important; transform:none !important;
+    }
+  }
+
+  /* ---------- Sections ---------- */
+  section{padding:80px 24px;}
+  .section-inner{max-width:900px; margin:0 auto;}
+  h2{
+    font-family:'Fraunces',serif; font-weight:600; font-size:clamp(26px,4vw,36px);
+    margin-bottom:18px;
+  }
+  p.lede{ color:var(--steel); font-size:16px; max-width:560px; }
+
+  .problem{ border-top:1px solid var(--steel-dim); }
+  .problem-grid{
+    margin-top:40px; display:grid; grid-template-columns:1fr 1fr; gap:1px;
+    background:var(--steel-dim); border:1px solid var(--steel-dim);
+  }
+  .problem-cell{ background:var(--ink); padding:28px; }
+  .problem-cell .eyebrow{ font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--rose); margin-bottom:10px;}
+  .problem-cell p{ font-size:14px; color:var(--paper); opacity:0.85; }
+
+  .vitals{ border-top:1px solid var(--steel-dim); }
+  .vitals-list{ margin-top:36px; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .vital-card{
+    border:1px solid var(--steel-dim); border-radius:8px; padding:22px;
+    background:rgba(236,238,241,0.03);
+  }
+  .vital-card .num{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--gold); margin-bottom:10px; }
+  .vital-card h3{ font-family:'Fraunces',serif; font-weight:600; font-size:17px; margin-bottom:8px; }
+  .vital-card p{ font-size:13px; color:var(--steel); }
+
+  .close-cta{
+    border-top:1px solid var(--steel-dim); text-align:center;
+  }
+  .close-cta h2{ margin-bottom:14px; }
+
+  footer{
+    border-top:1px solid var(--steel-dim); padding:32px 24px; text-align:center;
+    font-size:12px; color:var(--steel);
+  }
+
+  @media (max-width:640px){
+    .problem-grid, .vitals-list{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+  <section class="hero">
+    <div class="hero-stage">
+      <div class="waterline"></div>
+      <div class="wordmark">Reflection</div>
+      <div class="reflected" aria-hidden="true">Reflection</div>
+      <div class="domain-tag">
+        <div class="domain">reflectionai.in</div>
+        <div class="tagline">See your business clearly</div>
+      </div>
+    </div>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="/app.html">Try the scorecard</a>
+      <a class="btn btn-ghost" href="#vitals">See how it works</a>
+    </div>
+  </section>
+
+  <section class="problem">
+    <div class="section-inner">
+      <h2>Your Tally knows more than you do.</h2>
+      <p class="lede">Most SME CEOs run on numbers that are three to four weeks old by the time they see them — pulled manually, stitched into an Excel sheet, already stale.</p>
+      <div class="problem-grid">
+        <div class="problem-cell">
+          <div class="eyebrow">Without Reflection</div>
+          <p>You find out about a cash crunch when the bank calls, not three weeks before it happens.</p>
+        </div>
+        <div class="problem-cell">
+          <div class="eyebrow">Without Reflection</div>
+          <p>Your accountant emails a P&amp;L once a month. Everything in between is a guess.</p>
+        </div>
+        <div class="problem-cell">
+          <div class="eyebrow">Without Reflection</div>
+          <p>GST input credit sits unclaimed because no one's watching the leakage in real time.</p>
+        </div>
+        <div class="problem-cell">
+          <div class="eyebrow">Without Reflection</div>
+          <p>You're hiring a part-time CFO for visibility a live dashboard could give you today.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="vitals" id="vitals">
+    <div class="section-inner">
+      <h2>Six vitals. One score.</h2>
+      <p class="lede">Reflection connects to Tally, your bank accounts, and the GST portal — read-only — and turns them into a live executive scorecard.</p>
+      <div class="vitals-list">
+        <div class="vital-card"><div class="num">01</div><h3>Cash Position</h3><p>Real bank balances, consolidated across accounts.</p></div>
+        <div class="vital-card"><div class="num">02</div><h3>Receivables Aging</h3><p>What's outstanding, and what's overdue past 90 days.</p></div>
+        <div class="vital-card"><div class="num">03</div><h3>Payables Due Soon</h3><p>What you owe in the next 30 days, before it's urgent.</p></div>
+        <div class="vital-card"><div class="num">04</div><h3>GST / ITC Leakage</h3><p>Input credit available but unclaimed, flagged automatically.</p></div>
+        <div class="vital-card"><div class="num">05</div><h3>Net Margin</h3><p>Profitability, tracked continuously — not just at month-end.</p></div>
+        <div class="vital-card"><div class="num">06</div><h3>Working Capital Runway</h3><p>How many months your current position actually buys you.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="close-cta">
+    <div class="section-inner">
+      <h2>See it for yourself.</h2>
+      <p class="lede" style="margin:0 auto 28px;">Upload a data export or enter your figures manually — get your Pulse Score in under two minutes.</p>
+      <a class="btn btn-primary" href="/app.html">Try the scorecard</a>
+    </div>
+  </section>
+
+  <footer>
+    Reflection · reflectionai.in · Built for Indian SMEs
+  </footer>
+
+</body>
+</html>

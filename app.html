@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#0E1B2C" />
+<title>Reflection — See your business clearly</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,450;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --ink:#0E1B2C;
+    --paper:#ECEEF1;
+    --steel:#3E5875;
+    --gold:#B08D57;
+    --emerald:#1F6F54;
+    --rose:#A3435C;
+    --steel-dim: rgba(62,88,117,0.35);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    line-height:1.5;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .wrap{max-width:960px; margin:0 auto; padding:48px 24px 96px;}
+
+  /* --- Header / mirror wordmark --- */
+  header{text-align:center; margin-bottom:56px;}
+  .wordmark{
+    font-family:'Fraunces',serif;
+    font-weight:450;
+    font-size:44px;
+    letter-spacing:0.5px;
+    color:var(--paper);
+  }
+  .waterline{
+    height:1px; width:120px; background:var(--gold);
+    margin:14px auto; opacity:0.7;
+  }
+  .reflected{
+    font-family:'Fraunces',serif;
+    font-weight:450;
+    font-size:44px;
+    color:var(--steel);
+    opacity:0.35;
+    transform:scaleY(-1);
+    filter:blur(0.3px);
+  }
+  .tagline{
+    margin-top:18px;
+    font-size:14px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--steel);
+  }
+
+  /* --- Tabs --- */
+  .tabs{display:flex; gap:2px; margin-bottom:28px; border:1px solid var(--steel-dim); border-radius:8px; overflow:hidden;}
+  .tab{
+    flex:1; padding:14px; text-align:center; cursor:pointer;
+    background:transparent; color:var(--steel); font-size:14px; font-weight:500;
+    transition:all .15s ease; border:none;
+  }
+  .tab.active{background:var(--steel-dim); color:var(--paper);}
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  /* --- Card --- */
+  .card{
+    background:rgba(236,238,241,0.03);
+    border:1px solid var(--steel-dim);
+    border-radius:10px;
+    padding:28px;
+    margin-bottom:24px;
+  }
+  .card h2{font-family:'Fraunces',serif; font-weight:600; font-size:20px; margin-bottom:16px; color:var(--paper);}
+  .hint{font-size:13px; color:var(--steel); margin-bottom:20px;}
+
+  /* --- Upload --- */
+  .dropzone{
+    border:1px dashed var(--steel); border-radius:8px; padding:36px;
+    text-align:center; cursor:pointer; transition:border-color .15s;
+  }
+  .dropzone:hover{border-color:var(--gold);}
+  .dropzone input{display:none;}
+  .dz-label{font-size:14px; color:var(--paper);}
+  .dz-sub{font-size:12px; color:var(--steel); margin-top:6px;}
+  .file-name{margin-top:14px; font-size:13px; color:var(--emerald);}
+  .template-link{display:inline-block; margin-top:18px; font-size:13px; color:var(--gold); cursor:pointer; text-decoration:underline;}
+
+  /* --- Manual entry form --- */
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  label{display:block; font-size:12px; color:var(--steel); margin-bottom:6px; text-transform:uppercase; letter-spacing:.06em;}
+  input[type=number], input[type=text]{
+    width:100%; padding:10px 12px; background:rgba(236,238,241,0.05);
+    border:1px solid var(--steel-dim); border-radius:6px; color:var(--paper);
+    font-family:'IBM Plex Mono',monospace; font-size:14px; margin-bottom:16px;
+  }
+  input:focus{outline:none; border-color:var(--gold);}
+
+  button.primary{
+    background:var(--gold); color:var(--ink); border:none;
+    padding:13px 28px; border-radius:6px; font-weight:600; font-size:14px;
+    cursor:pointer; transition:opacity .15s;
+  }
+  button.primary:hover{opacity:0.88;}
+  button.primary:disabled{opacity:0.4; cursor:not-allowed;}
+  button.ghost{
+    background:transparent; color:var(--paper); border:1px solid var(--steel-dim);
+    padding:13px 28px; border-radius:6px; font-size:14px; cursor:pointer;
+  }
+
+  /* --- Vitals grid --- */
+  #results{display:none;}
+  .pulse-score{
+    text-align:center; padding:32px; margin-bottom:24px;
+    border:1px solid var(--gold); border-radius:10px;
+    background:rgba(176,141,87,0.06);
+  }
+  .pulse-score .num{font-family:'Fraunces',serif; font-size:64px; color:var(--gold);}
+  .pulse-score .label{font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--steel); margin-top:6px;}
+
+  .vitals-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px;}
+  .vital{
+    background:rgba(236,238,241,0.03); border:1px solid var(--steel-dim);
+    border-radius:8px; padding:18px;
+  }
+  .vital .v-label{font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--steel); margin-bottom:8px;}
+  .vital .v-value{font-family:'IBM Plex Mono',monospace; font-size:22px; color:var(--paper);}
+  .vital .v-score{font-size:12px; margin-top:6px;}
+  .score-good{color:var(--emerald);}
+  .score-warn{color:var(--gold);}
+  .score-bad{color:var(--rose);}
+
+  #briefing-text{
+    white-space:pre-wrap; font-size:15px; line-height:1.7; color:var(--paper);
+  }
+  .loading{color:var(--steel); font-size:14px; font-style:italic;}
+  .error-box{
+    border:1px solid var(--rose); color:var(--rose); padding:14px; border-radius:6px; font-size:13px; margin-top:14px;
+  }
+  @media (max-width:640px){
+    .vitals-grid{grid-template-columns:1fr 1fr;}
+    .grid-2{grid-template-columns:1fr;}
+    .wordmark, .reflected{font-size:32px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <a href="/" style="display:inline-block; font-size:12px; color:var(--steel); text-decoration:none; margin-bottom:20px;">← reflectionai.in</a>
+    <div class="wordmark">Reflection</div>
+    <div class="waterline"></div>
+    <div class="reflected">Reflection</div>
+    <div class="tagline">See your business clearly</div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="upload">Upload data</button>
+    <button class="tab" data-tab="manual">Quick manual entry</button>
+  </div>
+
+  <div class="panel active" id="panel-upload">
+    <div class="card">
+      <h2>Upload your workbook</h2>
+      <div class="hint">One Excel file with five sheets: <span class="mono">Bank Accounts</span>, <span class="mono">Receivables</span>, <span class="mono">Payables</span>, <span class="mono">P&amp;L Summary</span>, <span class="mono">GST ITC</span>.</div>
+      <div class="dropzone" id="dropzone">
+        <div class="dz-label">Click to choose a file, or drag it here</div>
+        <div class="dz-sub">.xlsx or .csv</div>
+        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" />
+        <div class="file-name" id="fileName"></div>
+      </div>
+      <div class="template-link" id="downloadTemplate">Download the blank template →</div>
+    </div>
+    <button class="primary" id="computeFromFile" disabled>Compute vitals</button>
+  </div>
+
+  <div class="panel" id="panel-manual">
+    <div class="card">
+      <h2>Quick manual entry</h2>
+      <div class="hint">Enter aggregate figures directly — useful for a fast first look before you wire up a full data export.</div>
+      <div class="grid-2">
+        <div><label>Cash in bank (₹)</label><input type="number" id="m-cash" placeholder="e.g. 4200000"></div>
+        <div><label>Monthly operating expenses (₹)</label><input type="number" id="m-burn" placeholder="e.g. 1500000"></div>
+        <div><label>Total receivables outstanding (₹)</label><input type="number" id="m-recv" placeholder="e.g. 3800000"></div>
+        <div><label>Receivables overdue &gt;90 days (₹)</label><input type="number" id="m-recv90" placeholder="e.g. 900000"></div>
+        <div><label>Payables due in next 30 days (₹)</label><input type="number" id="m-pay" placeholder="e.g. 1100000"></div>
+        <div><label>Monthly revenue (₹)</label><input type="number" id="m-rev" placeholder="e.g. 6000000"></div>
+        <div><label>Net profit (this period, ₹)</label><input type="number" id="m-profit" placeholder="e.g. 480000"></div>
+        <div><label>GST ITC available but unclaimed (₹)</label><input type="number" id="m-gst" placeholder="e.g. 65000"></div>
+      </div>
+      <label>Company name (optional, used in the briefing)</label>
+      <input type="text" id="m-company" placeholder="e.g. Kavya Textiles Pvt Ltd">
+    </div>
+    <button class="primary" id="computeFromManual">Compute vitals</button>
+  </div>
+
+  <div id="results">
+    <div class="pulse-score">
+      <div class="num" id="pulseNum">—</div>
+      <div class="label">Pulse Score</div>
+    </div>
+    <div class="vitals-grid" id="vitalsGrid"></div>
+
+    <div class="card">
+      <h2>Executive briefing</h2>
+      <div id="briefing-idle">
+        <button class="primary" id="generateBriefing">Generate AI briefing</button>
+      </div>
+      <div id="briefing-text"></div>
+    </div>
+
+    <button class="ghost" id="resetBtn">Start over</button>
+  </div>
+
+</div>
+
+<script>
+// ---------- Tab switching ----------
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  document.getElementById('panel-' + t.dataset.tab).classList.add('active');
+}));
+
+// ---------- File upload ----------
+let workbookData = null;
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+dropzone.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', handleFile);
+dropzone.addEventListener('dragover', e => e.preventDefault());
+dropzone.addEventListener('drop', e => {
+  e.preventDefault();
+  if (e.dataTransfer.files[0]) { fileInput.files = e.dataTransfer.files; handleFile(); }
+});
+
+function handleFile(){
+  const file = fileInput.files[0];
+  if (!file) return;
+  document.getElementById('fileName').textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const data = new Uint8Array(e.target.result);
+    workbookData = XLSX.read(data, { type: 'array', cellDates: true });
+    document.getElementById('computeFromFile').disabled = false;
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function sheetToRows(wb, name){
+  const sheet = wb.Sheets[name];
+  if (!sheet) return [];
+  return XLSX.utils.sheet_to_json(sheet, { defval: 0 });
+}
+
+document.getElementById('computeFromFile').addEventListener('click', () => {
+  if (!workbookData) return;
+  const bank = sheetToRows(workbookData, 'Bank Accounts');
+  const recv = sheetToRows(workbookData, 'Receivables');
+  const pay  = sheetToRows(workbookData, 'Payables');
+  const pl   = sheetToRows(workbookData, 'P&L Summary');
+  const gst  = sheetToRows(workbookData, 'GST ITC');
+
+  const cash = bank.reduce((s, r) => s + (Number(r['Balance']) || 0), 0);
+
+  const today = new Date();
+  let recvTotal = 0, recv90 = 0;
+  recv.forEach(r => {
+    const outstanding = (Number(r['Amount']) || 0) - (Number(r['Amount Received']) || 0);
+    recvTotal += outstanding;
+    const due = r['Due Date'] ? new Date(r['Due Date']) : null;
+    if (due && (today - due) / 86400000 > 90) recv90 += outstanding;
+  });
+
+  let paySoon = 0;
+  pay.forEach(r => {
+    const due = r['Due Date'] ? new Date(r['Due Date']) : null;
+    const days = due ? (due - today) / 86400000 : 999;
+    if (days <= 30) paySoon += Number(r['Amount']) || 0;
+  });
+
+  const plMap = {};
+  pl.forEach(r => { plMap[r['Line Item']] = Number(r['Amount']) || 0; });
+  const revenue = plMap['Revenue'] || 0;
+  const netProfit = plMap['Net Profit'] || 0;
+  const burn = plMap['Monthly Operating Expenses'] || (revenue - netProfit) || 1;
+
+  let gstLeak = 0;
+  gst.forEach(r => { gstLeak += (Number(r['ITC Available']) || 0) - (Number(r['ITC Claimed']) || 0); });
+
+  runCompute({ cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak, company: '' });
+});
+
+// ---------- Manual entry ----------
+document.getElementById('computeFromManual').addEventListener('click', () => {
+  const v = id => Number(document.getElementById(id).value) || 0;
+  runCompute({
+    cash: v('m-cash'),
+    recvTotal: v('m-recv'),
+    recv90: v('m-recv90'),
+    paySoon: v('m-pay'),
+    revenue: v('m-rev'),
+    netProfit: v('m-profit'),
+    burn: v('m-burn') || 1,
+    gstLeak: v('m-gst'),
+    company: document.getElementById('m-company').value
+  });
+});
+
+// ---------- Scoring ----------
+let lastVitals = null, lastPulse = null, lastCompany = '';
+
+function clamp(n){ return Math.max(0, Math.min(100, n)); }
+
+function runCompute(d){
+  const cashScore = clamp((d.cash / (d.burn * 3)) * 100);
+  const recvScore = d.recvTotal > 0 ? clamp(100 - (d.recv90 / d.recvTotal) * 100) : 100;
+  const payScore  = d.cash > 0 ? clamp(100 - (d.paySoon / d.cash) * 100) : (d.paySoon > 0 ? 0 : 100);
+  const gstScore  = clamp(100 - (d.gstLeak / 1000) * 10);
+  const netMargin = d.revenue > 0 ? (d.netProfit / d.revenue) * 100 : 0;
+  const marginScore = clamp(netMargin * 5);
+  const runwayMonths = d.burn > 0 ? (d.cash + d.recvTotal - d.paySoon) / d.burn : 0;
+  const runwayScore = clamp((runwayMonths / 6) * 100);
+
+  const pulse = Math.round(
+    cashScore * 0.20 + recvScore * 0.15 + payScore * 0.15 +
+    gstScore * 0.15 + marginScore * 0.20 + runwayScore * 0.15
+  );
+
+  const vitals = [
+    { label: 'Cash Position', value: '₹' + d.cash.toLocaleString('en-IN'), score: cashScore },
+    { label: 'Receivables Aging', value: '₹' + d.recv90.toLocaleString('en-IN') + ' over 90d', score: recvScore },
+    { label: 'Payables Due (30d)', value: '₹' + d.paySoon.toLocaleString('en-IN'), score: payScore },
+    { label: 'GST/ITC Leakage', value: '₹' + d.gstLeak.toLocaleString('en-IN'), score: gstScore },
+    { label: 'Net Margin', value: netMargin.toFixed(1) + '%', score: marginScore },
+    { label: 'Working Capital Runway', value: runwayMonths.toFixed(1) + ' months', score: runwayScore }
+  ];
+
+  lastVitals = vitals; lastPulse = pulse; lastCompany = d.company;
+  renderResults(vitals, pulse);
+}
+
+function scoreClass(s){ return s >= 70 ? 'score-good' : s >= 40 ? 'score-warn' : 'score-bad'; }
+
+function renderResults(vitals, pulse){
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('pulseNum').textContent = pulse;
+  const grid = document.getElementById('vitalsGrid');
+  grid.innerHTML = '';
+  vitals.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'vital';
+    el.innerHTML = `<div class="v-label">${v.label}</div>
+      <div class="v-value">${v.value}</div>
+      <div class="v-score ${scoreClass(v.score)}">${Math.round(v.score)}/100</div>`;
+    grid.appendChild(el);
+  });
+  document.getElementById('briefing-idle').style.display = 'block';
+  document.getElementById('briefing-text').textContent = '';
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ---------- AI briefing ----------
+document.getElementById('generateBriefing').addEventListener('click', async () => {
+  const btn = document.getElementById('generateBriefing');
+  const out = document.getElementById('briefing-text');
+  btn.disabled = true;
+  out.innerHTML = '<div class="loading">Generating briefing…</div>';
+  try {
+    const vitalsObj = {};
+    lastVitals.forEach(v => vitalsObj[v.label] = v.value);
+    const res = await fetch('/api/briefing', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ vitals: vitalsObj, pulseScore: lastPulse, companyName: lastCompany })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Unknown error');
+    out.textContent = data.briefing;
+    document.getElementById('briefing-idle').style.display = 'none';
+  } catch (err) {
+    out.innerHTML = `<div class="error-box">Could not generate briefing: ${err.message}</div>`;
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  document.getElementById('results').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ---------- Template download ----------
+document.getElementById('downloadTemplate').addEventListener('click', () => {
+  const wb = XLSX.utils.book_new();
+  const sheets = {
+    'Bank Accounts': [{ 'Account Name': 'HDFC Current A/c', 'Balance': 0 }],
+    'Receivables': [{ 'Customer': '', 'Invoice Date': '', 'Due Date': '', 'Amount': 0, 'Amount Received': 0 }],
+    'Payables': [{ 'Vendor': '', 'Invoice Date': '', 'Due Date': '', 'Amount': 0 }],
+    'P&L Summary': [
+      { 'Line Item': 'Revenue', 'Amount': 0 },
+      { 'Line Item': 'Net Profit', 'Amount': 0 },
+      { 'Line Item': 'Monthly Operating Expenses', 'Amount': 0 }
+    ],
+    'GST ITC': [{ 'Month': '', 'GST Payable': 0, 'ITC Available': 0, 'ITC Claimed': 0 }]
+  };
+  Object.keys(sheets).forEach(name => {
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheets[name]), name);
+  });
+  XLSX.writeFile(wb, 'Reflection_Data_Template.xlsx');
+});
+</script>
+</body>
+</html>
