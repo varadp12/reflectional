@@ -8,166 +8,72 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340..600&family=Manrope:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<!-- supabase-js is loaded programmatically at the bottom of this file, with a CDN fallback -->
+<!-- supabase-js is loaded programmatically at the bottom of this file -->
 <style>
   :root{
-    --ink:#0B1220;
-    --ink-soft:#16233A;
-    --steel:#5C6B7A;
-    --bg:#F0F1F3;
-    --bg-dim:#E6E8EB;
-    --white:#FFFFFF;
-    --emerald:#12805A;
-    --emerald-bright:#1FA374;
-    --mint:#CFEFDD;
-    --gold:#C97F1E;
-    --amber:#FBE7C7;
-    --orange:#D9662A;
-    --peach:#FFE0C7;
-    --rose:#C23B67;
-    --blush:#FBD9E4;
-    --sky:#2E6FA8;
-    --sky-light:#D8E8F7;
-    --line: rgba(11,18,32,0.11);
-    --line-strong: rgba(11,18,32,0.20);
+    --ink:#0B1220; --ink-soft:#16233A; --steel:#5C6B7A;
+    --bg:#F0F1F3; --bg-dim:#E6E8EB; --white:#FFFFFF;
+    --emerald:#12805A; --emerald-bright:#1FA374; --mint:#CFEFDD;
+    --gold:#C97F1E; --amber:#FBE7C7; --orange:#D9662A; --peach:#FFE0C7;
+    --rose:#C23B67; --blush:#FBD9E4; --sky:#2E6FA8; --sky-light:#D8E8F7;
+    --line: rgba(11,18,32,0.11); --line-strong: rgba(11,18,32,0.20);
     --shadow-sm: 0 2px 8px rgba(11,18,32,0.06);
     --shadow-md: 0 12px 32px rgba(11,18,32,0.10);
     --shadow-lg: 0 30px 70px -20px rgba(11,18,32,0.26);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family:'Manrope',sans-serif;
-    min-height:100vh;
-    line-height:1.55;
-    -webkit-font-smoothing:antialiased;
-  }
+  body{ background:var(--bg); color:var(--ink); font-family:'Manrope',sans-serif; min-height:100vh; line-height:1.55; -webkit-font-smoothing:antialiased; }
   .mono{font-family:'IBM Plex Mono',monospace;}
-  .serif{font-family:'Fraunces',serif;}
   a{ color:inherit; text-decoration:none; }
   .wrap{max-width:920px; margin:0 auto; padding:120px 24px 96px;}
+  .hidden{ display:none !important; }
 
   .crescent{ position:relative; border-radius:50%; overflow:hidden; flex-shrink:0; background:var(--emerald); }
   .crescent::after{ content:''; position:absolute; top:0; left:-42%; width:100%; height:100%; border-radius:50%; background:var(--bg); }
 
-  nav{ position:fixed; top:18px; left:50%; transform:translateX(-50%); z-index:100; background:rgba(255,255,255,0.68); backdrop-filter:blur(20px) saturate(1.5); border:1px solid rgba(255,255,255,0.8); border-radius:999px; box-shadow:var(--shadow-md); width:auto; max-width:calc(100% - 32px); }
-  .nav-inner{ margin:0; padding:10px 10px 10px 22px; display:flex; align-items:center; justify-content:space-between; gap:28px; }
-  .nav-brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
-  .nav-brand .crescent{ width:20px; height:20px; }
-  .nav-logo{ font-family:'Fraunces', serif; font-size:18px; font-weight:600; letter-spacing:-0.01em; color:var(--ink); }
-  .nav-back{ display:flex; align-items:center; gap:6px; font-size:13.5px; color:var(--steel); font-weight:600; text-decoration:none; padding:10px 18px; border-radius:999px; transition:all .2s ease; }
-  .nav-back:hover{ background:var(--bg); color:var(--ink); }
+  nav{ position:fixed; top:18px; left:50%; transform:translateX(-50%); z-index:100; background:rgba(255,255,255,0.68); backdrop-filter:blur(20px) saturate(1.5); border:1px solid rgba(255,255,255,0.8); border-radius:999px; box-shadow:var(--shadow-md); max-width:calc(100% - 32px); }
+  .nav-inner{ padding:10px 10px 10px 22px; display:flex; align-items:center; gap:28px; }
+  .nav-brand{ display:flex; align-items:center; gap:10px; }
+  .nav-logo{ font-family:'Fraunces', serif; font-size:18px; font-weight:600; letter-spacing:-0.01em; }
   .nav-user{ display:flex; align-items:center; gap:12px; font-size:13px; color:var(--steel); }
   .nav-logout{ background:transparent; border:1px solid var(--line-strong); color:var(--steel); padding:8px 14px; border-radius:999px; cursor:pointer; font-size:12.5px; font-weight:600; transition:all .2s ease; }
   .nav-logout:hover{ border-color:var(--ink); color:var(--ink); }
 
-  /* Auth gate */
-  .auth-gate{ position:fixed; inset:0; background:var(--bg); z-index:200; display:flex; align-items:center; justify-content:center; }
-  .auth-gate.hidden{ display:none; }
-  .auth-modal{ max-width:440px; width:100%; background:var(--white); border:1px solid var(--line); border-radius:6px; padding:40px 34px; box-shadow:var(--shadow-lg); }
-  .auth-modal .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--emerald); margin-bottom:14px; font-weight:600; }
-  .auth-modal h2{ font-family:'Fraunces',serif; font-weight:500; font-size:28px; letter-spacing:-0.01em; margin-bottom:12px; color:var(--ink); }
-  .auth-modal .sub{ font-size:14px; color:var(--steel); margin-bottom:28px; line-height:1.6; }
-  .auth-tab-bar{ display:flex; gap:4px; margin-bottom:24px; border:1px solid var(--line); border-radius:999px; padding:4px; background:transparent; }
+  .gate{ position:fixed; inset:0; background:var(--bg); z-index:200; display:flex; align-items:center; justify-content:center; padding:24px; overflow-y:auto; }
+  .gate-modal{ max-width:460px; width:100%; background:var(--white); border:1px solid var(--line); border-radius:6px; padding:40px 34px; box-shadow:var(--shadow-lg); }
+  .gate-modal .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--emerald); margin-bottom:14px; font-weight:600; }
+  .gate-modal h2{ font-family:'Fraunces',serif; font-weight:500; font-size:28px; letter-spacing:-0.01em; margin-bottom:12px; }
+  .gate-modal .sub{ font-size:14px; color:var(--steel); margin-bottom:28px; line-height:1.6; }
+  .auth-tab-bar{ display:flex; gap:4px; margin-bottom:24px; border:1px solid var(--line); border-radius:999px; padding:4px; }
   .auth-tab{ flex:1; padding:10px; text-align:center; cursor:pointer; background:transparent; color:var(--steel); font-size:13px; font-weight:700; font-family:'Manrope',sans-serif; transition:all .2s ease; border:none; border-radius:999px; }
   .auth-tab.active{ background:var(--ink); color:var(--white); }
   .auth-form{ display:none; }
   .auth-form.active{ display:block; }
   .auth-field{ margin-bottom:16px; }
   .auth-field label{ display:block; font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); margin-bottom:6px; font-weight:600; }
-  .auth-field input{ width:100%; padding:11px 12px; border:1px solid var(--line-strong); border-radius:4px; font-family:'Manrope',sans-serif; font-size:14px; color:var(--ink); transition:border-color .2s ease; }
-  .auth-field input:focus{ outline:none; border-color:var(--emerald); }
+  .auth-field input, .auth-field select{ width:100%; padding:11px 12px; border:1px solid var(--line-strong); border-radius:4px; font-family:'Manrope',sans-serif; font-size:14px; color:var(--ink); background:var(--white); transition:border-color .2s ease; }
+  .auth-field input:focus, .auth-field select:focus{ outline:none; border-color:var(--emerald); }
   .auth-submit{ width:100%; background:var(--ink); color:var(--white); border:none; padding:12px; border-radius:999px; font-size:14px; font-weight:700; cursor:pointer; transition:all .25s ease; font-family:'Manrope',sans-serif; }
   .auth-submit:hover{ background:var(--emerald); }
   .auth-submit:disabled{ opacity:0.5; cursor:not-allowed; }
   .auth-error{ font-size:12px; color:var(--rose); margin-top:12px; display:none; }
   .auth-error.show{ display:block; }
 
-  header{text-align:center; margin-bottom:48px;}
-  .app-eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--emerald); margin-bottom:14px; font-weight:600; }
-  .app-title{
-    font-family:'Fraunces',serif;
-    font-weight:500;
-    font-size:38px;
-    letter-spacing:-0.01em;
-    color:var(--ink);
-  }
-  .app-sub{
-    margin-top:14px;
-    font-size:14.5px;
-    color:var(--steel);
-  }
+  .dash-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:32px; flex-wrap:wrap; }
+  .dash-eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--emerald); margin-bottom:10px; font-weight:600; }
+  .dash-title{ font-family:'Fraunces',serif; font-weight:500; font-size:36px; letter-spacing:-0.01em; line-height:1.15; }
+  .dash-sub{ margin-top:8px; font-size:14px; color:var(--steel); }
 
-  .tabs{display:flex; gap:4px; margin-bottom:28px; border:1px solid var(--line); border-radius:999px; padding:4px; background:var(--white); box-shadow:var(--shadow-sm);}
-  .tab{
-    flex:1; padding:12px; text-align:center; cursor:pointer;
-    background:transparent; color:var(--steel); font-size:14px; font-weight:700;
-    font-family:'Manrope',sans-serif;
-    transition:all .2s ease; border:none; border-radius:999px;
-  }
-  .tab.active{background:var(--ink); color:var(--white);}
-  .panel{display:none;}
-  .panel.active{display:block;}
-
-  .card{
-    position:relative;
-    background:var(--white);
-    border:1px solid var(--line);
-    border-radius:6px;
-    padding:28px;
-    margin-bottom:24px;
-    box-shadow:var(--shadow-sm);
-  }
-  .card h2{font-family:'Fraunces',serif; font-weight:500; font-size:20px; margin-bottom:16px; color:var(--ink);}
+  .card{ position:relative; background:var(--white); border:1px solid var(--line); border-radius:6px; padding:28px; margin-bottom:24px; box-shadow:var(--shadow-sm); }
+  .card h2{font-family:'Fraunces',serif; font-weight:500; font-size:20px; margin-bottom:16px;}
   .hint{font-size:13px; color:var(--steel); margin-bottom:20px; line-height:1.6;}
 
-  .dropzone{
-    border:1.5px dashed var(--line-strong); border-radius:6px; padding:36px;
-    text-align:center; cursor:pointer; transition:border-color .2s, background .2s;
-  }
-  .dropzone:hover{border-color:var(--gold); background:rgba(201,127,30,0.03);}
-  .dropzone input{display:none;}
-  .dz-label{font-size:14px; color:var(--ink); font-weight:600;}
-  .dz-sub{font-size:12px; color:var(--steel); margin-top:6px;}
-  .file-name{margin-top:14px; font-size:13px; color:var(--emerald); font-weight:600;}
-  .template-link{display:inline-block; margin-top:18px; font-size:13px; color:var(--gold); cursor:pointer; font-weight:600; border-bottom:1px solid rgba(201,127,30,0.3);}
-  .template-link:hover{border-bottom-color:var(--gold);}
+  .empty{ text-align:center; padding:56px 28px; }
+  .empty h2{ font-family:'Fraunces',serif; font-weight:500; font-size:24px; margin-bottom:10px; }
+  .empty p{ font-size:14px; color:var(--steel); margin-bottom:24px; }
 
-  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
-  label{display:block; font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--steel); margin-bottom:7px; text-transform:uppercase; letter-spacing:.06em; font-weight:600;}
-  input[type=number], input[type=text]{
-    width:100%; padding:11px 12px; background:var(--white);
-    border:1px solid var(--line-strong); border-radius:4px; color:var(--ink);
-    font-family:'IBM Plex Mono',monospace; font-size:14px; margin-bottom:16px;
-    transition:border-color .2s ease;
-  }
-  input:focus{outline:none; border-color:var(--emerald);}
-
-  button.primary{
-    background:var(--ink); color:var(--white); border:none;
-    padding:14px 28px; border-radius:999px; font-weight:700; font-size:14.5px;
-    font-family:'Manrope',sans-serif;
-    cursor:pointer; transition:all .25s cubic-bezier(.16,1,.3,1);
-  }
-  button.primary:hover{background:var(--emerald); transform:translateY(-1px); box-shadow:var(--shadow-md);}
-  button.primary:disabled{opacity:0.4; cursor:not-allowed; transform:none; box-shadow:none;}
-  button.ghost{
-    background:transparent; color:var(--ink); border:1.5px solid var(--line-strong);
-    padding:13px 28px; border-radius:999px; font-size:14.5px; cursor:pointer; font-weight:700;
-    font-family:'Manrope',sans-serif; transition:all .2s ease;
-  }
-  button.ghost:hover{ border-color:var(--ink); background:var(--white); }
-
-  #results{display:none;}
   .pulse-wrap{ perspective:1400px; margin-bottom:24px; }
-  .pulse-score{
-    position:relative; text-align:center; padding:38px 28px 32px; 
-    border:1px solid var(--line); border-radius:6px;
-    background:var(--white);
-    box-shadow:0 40px 80px -30px rgba(18,128,90,0.16), var(--shadow-lg);
-    transform-style:preserve-3d; will-change:transform;
-  }
+  .pulse-score{ position:relative; text-align:center; padding:38px 28px 32px; border:1px solid var(--line); border-radius:6px; background:var(--white); box-shadow:0 40px 80px -30px rgba(18,128,90,0.16), var(--shadow-lg); transform-style:preserve-3d; will-change:transform; }
   .pulse-score .tick{ position:absolute; width:14px; height:14px; }
   .pulse-score .tick.tl{ top:-1px; left:-1px; border-top:2px solid var(--gold); border-left:2px solid var(--gold); }
   .pulse-score .tick.tr{ top:-1px; right:-1px; border-top:2px solid var(--gold); border-right:2px solid var(--gold); }
@@ -175,89 +81,129 @@
   .pulse-score .tick.br{ bottom:-1px; right:-1px; border-bottom:2px solid var(--gold); border-right:2px solid var(--gold); }
   .pulse-score .p-label{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--steel); display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:10px; }
   .pulse-score .p-label::before{ content:''; width:5px; height:5px; border-radius:50%; background:var(--emerald-bright); }
-  .pulse-score .num{font-family:'Fraunces',serif; font-weight:500; font-size:64px; color:var(--ink); line-height:1;}
-  .pulse-score .label{font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--steel); margin-top:10px; font-family:'IBM Plex Mono', monospace;}
+  .pulse-score .num{font-family:'Fraunces',serif; font-weight:500; font-size:64px; line-height:1;}
+  .pulse-delta{ font-family:'IBM Plex Mono',monospace; font-size:12.5px; margin-top:10px; font-weight:600; }
+  .pulse-asof{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--steel); margin-top:8px; }
+  .spark{ margin-top:20px; }
 
   .vitals-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px;}
-  .vital{
-    background:var(--white); border:1px solid var(--line);
-    border-radius:6px; padding:18px; position:relative; overflow:hidden;
-    box-shadow:var(--shadow-sm);
-  }
+  .vital{ background:var(--white); border:1px solid var(--line); border-radius:6px; padding:18px; position:relative; overflow:hidden; box-shadow:var(--shadow-sm); }
   .vital::before{ content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--v-accent, var(--steel)); }
   .vital .v-top{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
   .vital .v-dot{ width:8px; height:8px; border-radius:50%; background:var(--v-accent, var(--steel)); flex-shrink:0; }
   .vital .v-label{font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600;}
-  .vital .v-value{font-family:'IBM Plex Mono',monospace; font-size:20px; color:var(--ink); font-weight:600;}
+  .vital .v-value{font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:600;}
   .vital .v-score{font-size:12px; margin-top:6px; font-weight:600;}
-  .score-good{color:var(--emerald);}
-  .score-warn{color:var(--gold);}
-  .score-bad{color:var(--rose);}
+  .score-good{color:var(--emerald);} .score-warn{color:var(--gold);} .score-bad{color:var(--rose);}
 
-  #briefing-text{
-    white-space:pre-wrap; font-size:15px; line-height:1.75; color:var(--ink);
-  }
+  .hist-row{ display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid var(--line); font-size:13.5px; }
+  .hist-row:last-child{ border-bottom:none; }
+  .hist-date{ font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--steel); }
+  .hist-right{ display:flex; align-items:center; gap:14px; }
+  .hist-pulse{ font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:15px; }
+  .hist-src{ font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); border:1px solid var(--line); border-radius:999px; padding:2px 8px; }
+
+  .tabs{display:flex; gap:4px; margin-bottom:28px; border:1px solid var(--line); border-radius:999px; padding:4px; background:var(--white); box-shadow:var(--shadow-sm);}
+  .tab{ flex:1; padding:12px; text-align:center; cursor:pointer; background:transparent; color:var(--steel); font-size:14px; font-weight:700; font-family:'Manrope',sans-serif; transition:all .2s ease; border:none; border-radius:999px; }
+  .tab.active{background:var(--ink); color:var(--white);}
+  .panel{display:none;} .panel.active{display:block;}
+
+  .dropzone{ border:1.5px dashed var(--line-strong); border-radius:6px; padding:36px; text-align:center; cursor:pointer; transition:border-color .2s, background .2s; }
+  .dropzone:hover{border-color:var(--gold); background:rgba(201,127,30,0.03);}
+  .dropzone input{display:none;}
+  .dz-label{font-size:14px; font-weight:600;}
+  .dz-sub{font-size:12px; color:var(--steel); margin-top:6px;}
+  .file-name{margin-top:14px; font-size:13px; color:var(--emerald); font-weight:600;}
+  .template-link{display:inline-block; margin-top:18px; font-size:13px; color:var(--gold); cursor:pointer; font-weight:600; border-bottom:1px solid rgba(201,127,30,0.3);}
+
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  label{display:block; font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--steel); margin-bottom:7px; text-transform:uppercase; letter-spacing:.06em; font-weight:600;}
+  input[type=number], input[type=text]{ width:100%; padding:11px 12px; background:var(--white); border:1px solid var(--line-strong); border-radius:4px; color:var(--ink); font-family:'IBM Plex Mono',monospace; font-size:14px; margin-bottom:16px; transition:border-color .2s ease; }
+  input:focus{outline:none; border-color:var(--emerald);}
+
+  .btn-row{ display:flex; gap:12px; flex-wrap:wrap; }
+  button.primary{ background:var(--ink); color:var(--white); border:none; padding:14px 28px; border-radius:999px; font-weight:700; font-size:14.5px; font-family:'Manrope',sans-serif; cursor:pointer; transition:all .25s cubic-bezier(.16,1,.3,1); }
+  button.primary:hover{background:var(--emerald); transform:translateY(-1px); box-shadow:var(--shadow-md);}
+  button.primary:disabled{opacity:0.4; cursor:not-allowed; transform:none; box-shadow:none;}
+  button.ghost{ background:transparent; color:var(--ink); border:1.5px solid var(--line-strong); padding:13px 28px; border-radius:999px; font-size:14.5px; cursor:pointer; font-weight:700; font-family:'Manrope',sans-serif; transition:all .2s ease; }
+  button.ghost:hover{ border-color:var(--ink); background:var(--white); }
+
+  #briefing-text{ white-space:pre-wrap; font-size:15px; line-height:1.75; }
   .loading{color:var(--steel); font-size:14px; font-style:italic;}
-  .error-box{
-    border:1px solid var(--rose); background:var(--blush); color:var(--rose); padding:14px; border-radius:6px; font-size:13px; margin-top:14px;
-  }
+  .error-box{ border:1px solid var(--rose); background:var(--blush); color:var(--rose); padding:14px; border-radius:6px; font-size:13px; margin-top:14px; }
+  .save-note{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--steel); margin-top:14px; }
 
   footer{ border-top:1px solid var(--line); padding:32px 24px; text-align:center; font-size:12.5px; color:var(--steel); }
 
   @media (max-width:640px){
     .vitals-grid{grid-template-columns:1fr 1fr;}
     .grid-2{grid-template-columns:1fr;}
-    .app-title{font-size:28px;}
+    .dash-title{font-size:27px;}
     .wrap{padding:100px 20px 72px;}
-    .nav-user{ flex-direction:column; align-items:flex-start; }
   }
 </style>
 </head>
 <body>
 
-<!-- Auth Gate (shown before login) -->
-<div class="auth-gate" id="authGate">
-  <div class="auth-modal">
+<!-- ============ AUTH GATE ============ -->
+<div class="gate" id="authGate">
+  <div class="gate-modal">
     <div class="eyebrow">Margyn 1.0</div>
     <h2 id="authTitle">Welcome back.</h2>
     <p class="sub">Log in to your dashboard or create an account to get started.</p>
-
     <div class="auth-tab-bar">
       <button type="button" class="auth-tab active" data-form="login">Log in</button>
       <button type="button" class="auth-tab" data-form="signup">Sign up</button>
     </div>
-
-    <!-- Login form -->
     <form class="auth-form active" id="loginForm">
-      <div class="auth-field">
-        <label for="loginEmail">Email</label>
-        <input type="email" id="loginEmail" required autocomplete="email" placeholder="you@company.com">
-      </div>
-      <div class="auth-field">
-        <label for="loginPassword">Password</label>
-        <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="••••••••">
-      </div>
+      <div class="auth-field"><label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" required autocomplete="email" placeholder="you@company.com"></div>
+      <div class="auth-field"><label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="••••••••"></div>
       <button type="submit" class="auth-submit" id="loginSubmit">Log in</button>
       <div class="auth-error" id="loginError"></div>
     </form>
-
-    <!-- Signup form -->
     <form class="auth-form" id="signupForm">
-      <div class="auth-field">
-        <label for="signupEmail">Email</label>
-        <input type="email" id="signupEmail" required autocomplete="email" placeholder="you@company.com">
-      </div>
-      <div class="auth-field">
-        <label for="signupPassword">Password (min 6 characters)</label>
-        <input type="password" id="signupPassword" required autocomplete="new-password" placeholder="••••••••" minlength="6">
-      </div>
+      <div class="auth-field"><label for="signupEmail">Email</label>
+        <input type="email" id="signupEmail" required autocomplete="email" placeholder="you@company.com"></div>
+      <div class="auth-field"><label for="signupPassword">Password (min 6 characters)</label>
+        <input type="password" id="signupPassword" required autocomplete="new-password" placeholder="••••••••" minlength="6"></div>
       <button type="submit" class="auth-submit" id="signupSubmit">Create account</button>
       <div class="auth-error" id="signupError"></div>
     </form>
   </div>
 </div>
 
-<!-- Main app (shown after login) -->
+<!-- ============ ONBOARDING GATE ============ -->
+<div class="gate hidden" id="onboardGate">
+  <div class="gate-modal">
+    <div class="eyebrow">One-time setup</div>
+    <h2>Tell us about your business.</h2>
+    <p class="sub">This shapes your scorecard and your briefing. You can change it later.</p>
+    <form id="onboardForm">
+      <div class="auth-field"><label for="obCompany">Company name</label>
+        <input type="text" id="obCompany" required placeholder="Kavya Textiles Pvt Ltd"></div>
+      <div class="auth-field"><label for="obRevenue">Annual revenue</label>
+        <select id="obRevenue" required>
+          <option value="">Select a range…</option>
+          <option value="under_5cr">Under ₹5 crore</option>
+          <option value="5_25cr">₹5 – 25 crore</option>
+          <option value="25_50cr">₹25 – 50 crore</option>
+          <option value="50_100cr">₹50 – 100 crore</option>
+          <option value="100_200cr">₹100 – 200 crore</option>
+          <option value="over_200cr">Over ₹200 crore</option>
+        </select></div>
+      <div class="auth-field"><label for="obIndustry">Industry</label>
+        <input type="text" id="obIndustry" placeholder="Textiles, auto components, pharma…"></div>
+      <div class="auth-field"><label for="obCity">City</label>
+        <input type="text" id="obCity" placeholder="Mumbai"></div>
+      <button type="submit" class="auth-submit" id="obSubmit">Continue to dashboard</button>
+      <div class="auth-error" id="obError"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
 <nav>
   <div class="nav-inner">
     <a class="nav-brand" href="/">
@@ -266,7 +212,7 @@
     </a>
     <div style="flex:1;"></div>
     <div class="nav-user">
-      <span id="userEmail" style="color:var(--steel); font-size:13px;"></span>
+      <span id="userEmail"></span>
       <button class="nav-logout" id="logoutBtn">Log out</button>
     </div>
   </div>
@@ -274,139 +220,145 @@
 
 <div class="wrap">
 
-  <header>
-    <div class="app-eyebrow">Margyn 1.0</div>
-    <div class="app-title">Your scorecard</div>
-    <div class="app-sub">Upload your numbers or enter them by hand — see your Pulse Score in under two minutes.</div>
-  </header>
+  <!-- ---------- DASHBOARD ---------- -->
+  <div id="view-dashboard">
+    <div class="dash-head">
+      <div>
+        <div class="dash-eyebrow">Margyn 1.0</div>
+        <div class="dash-title" id="dashCompany">—</div>
+        <div class="dash-sub" id="dashSub"></div>
+      </div>
+      <div class="btn-row">
+        <button class="primary" id="goEntry">Update figures</button>
+      </div>
+    </div>
 
-  <div class="tabs">
-    <button class="tab active" data-tab="upload">Upload data</button>
-    <button class="tab" data-tab="manual">Quick manual entry</button>
+    <div class="card empty hidden" id="dashEmpty">
+      <h2>No figures yet.</h2>
+      <p>Add your first set of numbers and your Pulse Score appears here.</p>
+      <button class="primary" id="emptyCta">Add your first snapshot</button>
+    </div>
+
+    <div id="dashContent" class="hidden">
+      <div class="pulse-wrap">
+        <div class="pulse-score" id="pulseCard">
+          <span class="tick tl"></span><span class="tick tr"></span><span class="tick bl"></span><span class="tick br"></span>
+          <div class="p-label">Pulse score — live</div>
+          <div class="num" id="pulseNum">—</div>
+          <div class="pulse-delta" id="pulseDelta"></div>
+          <div class="pulse-asof" id="pulseAsOf"></div>
+          <div class="spark" id="spark"></div>
+        </div>
+      </div>
+
+      <div class="vitals-grid" id="vitalsGrid"></div>
+
+      <div class="card">
+        <h2>Executive briefing</h2>
+        <div id="briefing-idle"><button class="primary" id="generateBriefing">Generate AI briefing</button></div>
+        <div id="briefing-text"></div>
+      </div>
+
+      <div class="card" id="historyCard">
+        <h2>History</h2>
+        <div class="hint">Every snapshot you record. Depth here is what makes the score meaningful over time.</div>
+        <div id="historyList"></div>
+      </div>
+    </div>
   </div>
 
-  <div class="panel active" id="panel-upload">
-    <div class="card">
-      <h2>Upload your workbook</h2>
-      <div class="hint">One Excel file with five sheets: <span class="mono">Bank Accounts</span>, <span class="mono">Receivables</span>, <span class="mono">Payables</span>, <span class="mono">P&amp;L Summary</span>, <span class="mono">GST ITC</span>.</div>
-      <div class="dropzone" id="dropzone">
-        <div class="dz-label">Click to choose a file, or drag it here</div>
-        <div class="dz-sub">.xlsx or .csv</div>
-        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" />
-        <div class="file-name" id="fileName"></div>
+  <!-- ---------- ENTRY ---------- -->
+  <div id="view-entry" class="hidden">
+    <div class="dash-head">
+      <div>
+        <div class="dash-eyebrow">New snapshot</div>
+        <div class="dash-title">Update your figures</div>
+        <div class="dash-sub">Upload a workbook or type the numbers in. Saved to your account.</div>
       </div>
-      <div class="template-link" id="downloadTemplate">Download the blank template →</div>
-    </div>
-    <button class="primary" id="computeFromFile" disabled>Compute vitals</button>
-  </div>
-
-  <div class="panel" id="panel-manual">
-    <div class="card">
-      <h2>Quick manual entry</h2>
-      <div class="hint">Enter aggregate figures directly — useful for a fast first look before you wire up a full data export.</div>
-      <div class="grid-2">
-        <div><label>Cash in bank (₹)</label><input type="number" id="m-cash" placeholder="e.g. 4200000"></div>
-        <div><label>Monthly operating expenses (₹)</label><input type="number" id="m-burn" placeholder="e.g. 1500000"></div>
-        <div><label>Total receivables outstanding (₹)</label><input type="number" id="m-recv" placeholder="e.g. 3800000"></div>
-        <div><label>Receivables overdue &gt;90 days (₹)</label><input type="number" id="m-recv90" placeholder="e.g. 900000"></div>
-        <div><label>Payables due in next 30 days (₹)</label><input type="number" id="m-pay" placeholder="e.g. 1100000"></div>
-        <div><label>Monthly revenue (₹)</label><input type="number" id="m-rev" placeholder="e.g. 6000000"></div>
-        <div><label>Net profit (this period, ₹)</label><input type="number" id="m-profit" placeholder="e.g. 480000"></div>
-        <div><label>GST ITC available but unclaimed (₹)</label><input type="number" id="m-gst" placeholder="e.g. 65000"></div>
-      </div>
-      <label>Company name (optional, used in the briefing)</label>
-      <input type="text" id="m-company" placeholder="e.g. Kavya Textiles Pvt Ltd">
-    </div>
-    <button class="primary" id="computeFromManual">Compute vitals</button>
-  </div>
-
-  <div id="results">
-    <div class="pulse-wrap">
-      <div class="pulse-score" id="pulseCard">
-        <span class="tick tl"></span><span class="tick tr"></span><span class="tick bl"></span><span class="tick br"></span>
-        <div class="p-label">Pulse score — live</div>
-        <div class="num" id="pulseNum">—</div>
-      </div>
-    </div>
-    <div class="vitals-grid" id="vitalsGrid"></div>
-
-    <div class="card">
-      <h2>Executive briefing</h2>
-      <div id="briefing-idle">
-        <button class="primary" id="generateBriefing">Generate AI briefing</button>
-      </div>
-      <div id="briefing-text"></div>
+      <div class="btn-row"><button class="ghost" id="backToDash">Back</button></div>
     </div>
 
-    <button class="ghost" id="resetBtn">Start over</button>
+    <div class="tabs">
+      <button class="tab active" data-tab="upload">Upload data</button>
+      <button class="tab" data-tab="manual">Quick manual entry</button>
+    </div>
+
+    <div class="panel active" id="panel-upload">
+      <div class="card">
+        <h2>Upload your workbook</h2>
+        <div class="hint">One Excel file with five sheets: <span class="mono">Bank Accounts</span>, <span class="mono">Receivables</span>, <span class="mono">Payables</span>, <span class="mono">P&amp;L Summary</span>, <span class="mono">GST ITC</span>.</div>
+        <div class="dropzone" id="dropzone">
+          <div class="dz-label">Click to choose a file, or drag it here</div>
+          <div class="dz-sub">.xlsx or .csv</div>
+          <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" />
+          <div class="file-name" id="fileName"></div>
+        </div>
+        <div class="template-link" id="downloadTemplate">Download the blank template →</div>
+      </div>
+      <button class="primary" id="computeFromFile" disabled>Compute &amp; save</button>
+    </div>
+
+    <div class="panel" id="panel-manual">
+      <div class="card">
+        <h2>Quick manual entry</h2>
+        <div class="hint">Enter aggregate figures directly — useful for a fast look before you wire up a full export.</div>
+        <div class="grid-2">
+          <div><label>Cash in bank (₹)</label><input type="number" id="m-cash" placeholder="4200000"></div>
+          <div><label>Monthly operating expenses (₹)</label><input type="number" id="m-burn" placeholder="1500000"></div>
+          <div><label>Total receivables outstanding (₹)</label><input type="number" id="m-recv" placeholder="3800000"></div>
+          <div><label>Receivables overdue &gt;90 days (₹)</label><input type="number" id="m-recv90" placeholder="900000"></div>
+          <div><label>Payables due in next 30 days (₹)</label><input type="number" id="m-pay" placeholder="1100000"></div>
+          <div><label>Monthly revenue (₹)</label><input type="number" id="m-rev" placeholder="6000000"></div>
+          <div><label>Net profit (this period, ₹)</label><input type="number" id="m-profit" placeholder="480000"></div>
+          <div><label>GST ITC available but unclaimed (₹)</label><input type="number" id="m-gst" placeholder="65000"></div>
+        </div>
+      </div>
+      <button class="primary" id="computeFromManual">Compute &amp; save</button>
+    </div>
+
+    <div class="save-note" id="saveNote"></div>
   </div>
 
 </div>
 
-<footer>Margyn 1.0 · margyn.in · Built for Indian SMEs</footer>
+<footer>Margyn 1.0 · Built for Indian SMEs</footer>
 
 <script>
-// ---------- Supabase initialization ----------
-// Static HTML, no bundler: env vars are NOT substituted here, so config must be literal.
-// The anon key is public by design — Supabase RLS policies are what enforce access.
+// ============================================================
+// Config — static HTML, no bundler: values must be literal.
+// The anon key is public by design; RLS enforces access.
+// ============================================================
 const SUPABASE_URL = 'https://lmegnxrixlrvyodqfthn.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_TcTCDSECsRxbDVXAnI893w_3BJC0Kgh';
+
+// NOTE: named sbClient, NOT supabase. The UMD library declares a global
+// `var supabase`, and a global `let supabase` here would collide with it
+// and throw SyntaxError before the library could execute.
 let sbClient = null;
 let currentUser = null;
-
-async function initSupabase(){
-  if(!window.supabase){ console.error('Supabase JS not loaded'); return; }
-  const { createClient } = window.supabase;
-  sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  
-  const { data: { session } } = await sbClient.auth.getSession();
-  if(session){ 
-    currentUser = session.user;
-    showApp();
-  } else {
-    showAuthGate();
-  }
-
-  sbClient.auth.onAuthStateChange((event, session) => {
-    if(session){ currentUser = session.user; showApp(); }
-    else { currentUser = null; showAuthGate(); }
-  });
-}
-
-// ---------- Error display: always target the form the user is actually looking at ----------
-// A fatal boot error (library never loaded) must persist across tab switches — otherwise
-// switching tabs wipes the only explanation and leaves a dead button with no message.
+let currentProfile = null;
+let snapshots = [];
 let bootError = null;
 
+// ---------- error helpers ----------
 function showAuthError(msg){
-  const activeForm = document.querySelector('.auth-form.active');
-  const el = activeForm ? activeForm.querySelector('.auth-error')
-                        : document.getElementById('loginError');
+  const f = document.querySelector('.auth-form.active');
+  const el = f ? f.querySelector('.auth-error') : document.getElementById('loginError');
   if(!el) return;
-  el.style.color = '';
-  el.textContent = msg;
-  el.classList.add('show');
+  el.style.color = ''; el.textContent = msg; el.classList.add('show');
 }
-
 function clearAuthErrors(){
   document.querySelectorAll('.auth-error').forEach(e => e.classList.remove('show'));
-  if(bootError) showAuthError(bootError);  // fatal errors are not dismissible
+  if(bootError) showAuthError(bootError);
 }
-
-// Reject a hanging promise instead of leaving the button dead forever.
 function withTimeout(promise, ms, label){
-  return Promise.race([
-    promise,
-    new Promise((_, reject) =>
-      setTimeout(() => reject(new Error(
-        label + ' timed out after ' + (ms/1000) + 's. The Supabase project may be paused ' +
-        '(free projects pause after ~7 days idle) — check your Supabase dashboard.'
-      )), ms)
-    )
-  ]);
+  return Promise.race([ promise,
+    new Promise((_, rej) => setTimeout(() => rej(new Error(
+      label + ' timed out after ' + (ms/1000) + 's. The Supabase project may be paused — check your dashboard.'
+    )), ms)) ]);
 }
 
-// ---------- Load supabase-js with an explicit fallback CDN ----------
+// ---------- library loading ----------
 function loadScript(src){
   return new Promise((resolve, reject) => {
     const s = document.createElement('script');
@@ -416,10 +368,7 @@ function loadScript(src){
     document.head.appendChild(s);
   });
 }
-
 async function bootAuth(){
-  // Same-origin copy first: immune to ad blockers, corporate proxies and filtered DNS.
-  // The CDNs remain only as a backup if the vendored file is ever missing.
   const sources = [
     '/supabase.js',
     'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',
@@ -428,127 +377,251 @@ async function bootAuth(){
   for(const src of sources){
     try {
       await loadScript(src);
-      if(window.supabase){
-        console.log('[margyn] supabase-js loaded from', src);
-        initSupabase();
-        return;
-      }
-      console.warn('[margyn] script loaded but window.supabase undefined:', src);
-    } catch(err){
-      console.warn('[margyn]', err.message);
-    }
+      if(window.supabase){ console.log('[margyn] supabase-js loaded from', src); initSupabase(); return; }
+      console.warn('[margyn] loaded but window.supabase undefined:', src);
+    } catch(err){ console.warn('[margyn]', err.message); }
   }
-  // Every source failed — say so where the user can actually see it, and allow a retry.
-  console.error('[margyn] all supabase-js sources failed. Ad blocker or network filter?');
+  console.error('[margyn] all supabase-js sources failed');
   bootError = 'Could not load the authentication library. Confirm supabase.js is deployed at the site root, then reload.';
   showAuthError(bootError);
   document.getElementById('loginSubmit').disabled = true;
   document.getElementById('signupSubmit').disabled = true;
 }
 
-bootAuth();
+async function initSupabase(){
+  const { createClient } = window.supabase;
+  sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const { data: { session } } = await sbClient.auth.getSession();
+  await routeFor(session);
+  sbClient.auth.onAuthStateChange((_evt, s) => routeFor(s));
+}
 
-// ---------- Auth UI ----------
-function showAuthGate(){ document.getElementById('authGate').classList.remove('hidden'); }
-function showApp(){ document.getElementById('authGate').classList.add('hidden'); document.getElementById('userEmail').textContent = currentUser.email; }
+// ---------- routing: auth -> onboarding -> dashboard ----------
+async function routeFor(session){
+  if(!session){
+    currentUser = null; currentProfile = null; snapshots = [];
+    document.getElementById('authGate').classList.remove('hidden');
+    document.getElementById('onboardGate').classList.add('hidden');
+    return;
+  }
+  currentUser = session.user;
+  document.getElementById('userEmail').textContent = currentUser.email;
+  document.getElementById('authGate').classList.add('hidden');
 
-// ---------- Auth tab switching ----------
+  currentProfile = await loadProfile();
+  if(!currentProfile){
+    document.getElementById('onboardGate').classList.remove('hidden');
+    return;
+  }
+  document.getElementById('onboardGate').classList.add('hidden');
+  await refreshDashboard();
+}
+
+async function loadProfile(){
+  const { data, error } = await sbClient.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
+  if(error){ console.error('[margyn] loadProfile:', error); return null; }
+  return data;
+}
+
+async function loadSnapshots(){
+  const { data, error } = await sbClient.from('snapshots')
+    .select('*').eq('user_id', currentUser.id).order('created_at', { ascending:false }).limit(24);
+  if(error){ console.error('[margyn] loadSnapshots:', error); return []; }
+  return data || [];
+}
+
+// ---------- onboarding ----------
+document.getElementById('onboardForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('obSubmit');
+  const err = document.getElementById('obError');
+  err.classList.remove('show');
+  btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    const row = {
+      id: currentUser.id,
+      company_name: document.getElementById('obCompany').value.trim(),
+      revenue_range: document.getElementById('obRevenue').value,
+      industry: document.getElementById('obIndustry').value.trim() || null,
+      city: document.getElementById('obCity').value.trim() || null
+    };
+    const { error } = await withTimeout(sbClient.from('profiles').upsert(row), 20000, 'Saving profile');
+    if(error) throw error;
+    currentProfile = row;
+    document.getElementById('onboardGate').classList.add('hidden');
+    await refreshDashboard();
+  } catch(e2){
+    console.error('[margyn] onboarding:', e2);
+    err.textContent = e2.message || 'Could not save. Try again.'; err.classList.add('show');
+  } finally { btn.disabled = false; btn.textContent = 'Continue to dashboard'; }
+});
+
+// ---------- dashboard ----------
+const REV_LABEL = { under_5cr:'Under ₹5 cr', '5_25cr':'₹5–25 cr', '25_50cr':'₹25–50 cr',
+  '50_100cr':'₹50–100 cr', '100_200cr':'₹100–200 cr', over_200cr:'Over ₹200 cr' };
+
+async function refreshDashboard(){
+  snapshots = await loadSnapshots();
+  document.getElementById('dashCompany').textContent = currentProfile.company_name;
+  const bits = [REV_LABEL[currentProfile.revenue_range], currentProfile.industry, currentProfile.city].filter(Boolean);
+  document.getElementById('dashSub').textContent = bits.join(' · ');
+  showView('dashboard');
+
+  const empty = document.getElementById('dashEmpty');
+  const content = document.getElementById('dashContent');
+  if(!snapshots.length){ empty.classList.remove('hidden'); content.classList.add('hidden'); return; }
+  empty.classList.add('hidden'); content.classList.remove('hidden');
+
+  const latest = snapshots[0];
+  const prev = snapshots[1];
+  document.getElementById('pulseNum').textContent = latest.pulse_score;
+
+  const deltaEl = document.getElementById('pulseDelta');
+  if(prev){
+    const d = latest.pulse_score - prev.pulse_score;
+    deltaEl.textContent = d === 0 ? 'no change since last' : (d > 0 ? '▲ +' + d : '▼ ' + d) + ' since last';
+    deltaEl.className = 'pulse-delta ' + (d > 0 ? 'score-good' : d < 0 ? 'score-bad' : '');
+  } else { deltaEl.textContent = 'first snapshot'; deltaEl.className = 'pulse-delta'; }
+
+  document.getElementById('pulseAsOf').textContent = 'as of ' + fmtDate(latest.created_at);
+  renderVitals(latest.vitals || []);
+  renderSpark(snapshots.slice().reverse().map(s => s.pulse_score));
+  renderHistory(snapshots);
+  document.getElementById('briefing-idle').style.display = latest.briefing ? 'none' : 'block';
+  document.getElementById('briefing-text').textContent = latest.briefing || '';
+}
+
+function fmtDate(iso){
+  return new Date(iso).toLocaleString('en-IN', { day:'numeric', month:'short', year:'numeric', hour:'numeric', minute:'2-digit' });
+}
+function scoreClass(s){ return s >= 70 ? 'score-good' : s >= 40 ? 'score-warn' : 'score-bad'; }
+const VITAL_ACCENTS = { 'Cash Position':'#C97F1E','Receivables Aging':'#C23B67','Payables Due (30d)':'#5C6B7A',
+  'GST/ITC Leakage':'#C97F1E','Net Margin':'#12805A','Working Capital Runway':'#12805A' };
+
+function renderVitals(vitals){
+  const grid = document.getElementById('vitalsGrid');
+  grid.innerHTML = '';
+  vitals.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'vital';
+    el.style.setProperty('--v-accent', VITAL_ACCENTS[v.label] || '#5C6B7A');
+    el.innerHTML = '<div class="v-top"><span class="v-dot"></span><span class="v-label"></span></div>' +
+                   '<div class="v-value"></div><div class="v-score"></div>';
+    el.querySelector('.v-label').textContent = v.label;
+    el.querySelector('.v-value').textContent = v.value;
+    const sc = el.querySelector('.v-score');
+    sc.textContent = Math.round(v.score) + '/100';
+    sc.className = 'v-score ' + scoreClass(v.score);
+    grid.appendChild(el);
+  });
+}
+
+function renderSpark(series){
+  const host = document.getElementById('spark');
+  if(series.length < 2){ host.innerHTML = ''; return; }
+  const W = 420, H = 54, P = 4;
+  const min = Math.min(...series), max = Math.max(...series);
+  const span = (max - min) || 1;
+  const pts = series.map((v,i) => {
+    const x = P + (i / (series.length - 1)) * (W - 2*P);
+    const y = H - P - ((v - min) / span) * (H - 2*P);
+    return x.toFixed(1) + ',' + y.toFixed(1);
+  }).join(' ');
+  host.innerHTML =
+    '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="' + H + '" preserveAspectRatio="none" aria-label="Pulse score trend">' +
+    '<polyline points="' + pts + '" fill="none" stroke="#12805A" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' +
+    '</svg>';
+}
+
+function renderHistory(rows){
+  const host = document.getElementById('historyList');
+  host.innerHTML = '';
+  rows.forEach((r, i) => {
+    const prev = rows[i+1];
+    const d = prev ? r.pulse_score - prev.pulse_score : null;
+    const row = document.createElement('div');
+    row.className = 'hist-row';
+    row.innerHTML = '<span class="hist-date"></span><span class="hist-right">' +
+      '<span class="hist-src"></span><span class="hist-pulse"></span></span>';
+    row.querySelector('.hist-date').textContent = fmtDate(r.created_at);
+    row.querySelector('.hist-src').textContent = r.source;
+    const p = row.querySelector('.hist-pulse');
+    p.textContent = r.pulse_score + (d === null ? '' : d > 0 ? '  ▲+' + d : d < 0 ? '  ▼' + d : '  —');
+    p.className = 'hist-pulse ' + scoreClass(r.pulse_score);
+    host.appendChild(row);
+  });
+}
+
+function showView(which){
+  document.getElementById('view-dashboard').classList.toggle('hidden', which !== 'dashboard');
+  document.getElementById('view-entry').classList.toggle('hidden', which !== 'entry');
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+document.getElementById('goEntry').addEventListener('click', () => showView('entry'));
+document.getElementById('emptyCta').addEventListener('click', () => showView('entry'));
+document.getElementById('backToDash').addEventListener('click', () => showView('dashboard'));
+
+// ---------- auth ----------
 const authTabs = document.querySelectorAll('.auth-tab');
 const authForms = document.querySelectorAll('.auth-form');
 const authTitle = document.getElementById('authTitle');
-
 authTabs.forEach(tab => {
   tab.addEventListener('click', () => {
-    const formType = tab.dataset.form; // 'login' | 'signup'
-    authTabs.forEach(t => t.classList.remove('active'));
+    const t = tab.dataset.form;
+    authTabs.forEach(x => x.classList.remove('active'));
     authForms.forEach(f => f.classList.remove('active'));
     tab.classList.add('active');
-    document.getElementById(formType + 'Form').classList.add('active');
-    authTitle.textContent = formType === 'signup' ? 'Create your account.' : 'Welcome back.';
+    document.getElementById(t + 'Form').classList.add('active');
+    authTitle.textContent = t === 'signup' ? 'Create your account.' : 'Welcome back.';
     clearAuthErrors();
   });
 });
 
-// ---------- Login and Signup form submission ----------
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const email = document.getElementById('loginEmail').value;
-  const password = document.getElementById('loginPassword').value;
   const btn = document.getElementById('loginSubmit');
-
   clearAuthErrors();
-
-  if(!sbClient){
-    showAuthError('Authentication service not ready yet. Reload the page and try again.');
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = 'Logging in…';
-
+  if(!sbClient){ showAuthError('Not ready yet — reload the page.'); return; }
+  btn.disabled = true; btn.textContent = 'Logging in…';
   try {
-    const { error } = await withTimeout(
-      sbClient.auth.signInWithPassword({ email, password }), 20000, 'Login'
-    );
+    const { error } = await withTimeout(sbClient.auth.signInWithPassword({
+      email: document.getElementById('loginEmail').value,
+      password: document.getElementById('loginPassword').value
+    }), 20000, 'Login');
     if(error) throw error;
     document.getElementById('loginForm').reset();
   } catch(err){
-    console.error('[margyn] login failed:', err);
-    showAuthError(err.message || 'Login failed');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Log in';
-  }
+    console.error('[margyn] login:', err); showAuthError(err.message || 'Login failed');
+  } finally { btn.disabled = false; btn.textContent = 'Log in'; }
 });
 
 document.getElementById('signupForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const email = document.getElementById('signupEmail').value;
-  const password = document.getElementById('signupPassword').value;
-  const errorEl = document.getElementById('signupError');
   const btn = document.getElementById('signupSubmit');
-
+  const errorEl = document.getElementById('signupError');
+  const email = document.getElementById('signupEmail').value;
   clearAuthErrors();
-
-  if(!sbClient){
-    showAuthError('Authentication service not ready yet. Reload the page and try again.');
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = 'Creating account…';
-
+  if(!sbClient){ showAuthError('Not ready yet — reload the page.'); return; }
+  btn.disabled = true; btn.textContent = 'Creating account…';
   try {
-    const { data, error } = await withTimeout(
-      sbClient.auth.signUp({ email, password }), 20000, 'Signup'
-    );
+    const { data, error } = await withTimeout(sbClient.auth.signUp({
+      email, password: document.getElementById('signupPassword').value
+    }), 20000, 'Signup');
     if(error) throw error;
-
-    // Session present => email confirmation is OFF, user is already logged in.
-    // No session => confirmation email sent.
-    if(data && data.session){
-      document.getElementById('signupForm').reset();
-    } else {
+    if(!(data && data.session)){
       errorEl.style.color = 'var(--emerald)';
       errorEl.textContent = 'Account created. Check ' + email + ' for the confirmation link.';
       errorEl.classList.add('show');
-      document.getElementById('signupForm').reset();
     }
+    document.getElementById('signupForm').reset();
   } catch(err){
-    console.error('[margyn] signup failed:', err);
-    errorEl.style.color = '';
-    showAuthError(err.message || 'Signup failed');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Create account';
-  }
+    console.error('[margyn] signup:', err); showAuthError(err.message || 'Signup failed');
+  } finally { btn.disabled = false; btn.textContent = 'Create account'; }
 });
 
-document.getElementById('logoutBtn').addEventListener('click', async () => {
-  await sbClient.auth.signOut();
-});
+document.getElementById('logoutBtn').addEventListener('click', async () => { await sbClient.auth.signOut(); });
 
-// ---------- Tab switching (Upload / Manual entry) ----------
+// ---------- entry tabs ----------
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
   document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
@@ -556,23 +629,23 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () =>
   document.getElementById('panel-' + t.dataset.tab).classList.add('active');
 }));
 
-// ---------- 3D tilt on the Pulse Score card ----------
+// ---------- 3D tilt ----------
 (function(){
   const card = document.getElementById('pulseCard');
   if(!card) return;
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduceMotion || !window.matchMedia('(hover:hover)').matches) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if(!window.matchMedia('(hover:hover)').matches) return;
   const wrap = document.querySelector('.pulse-wrap');
   wrap.addEventListener('mousemove', (e) => {
-    const rect = wrap.getBoundingClientRect();
-    const px = (e.clientX - rect.left) / rect.width - 0.5;
-    const py = (e.clientY - rect.top) / rect.height - 0.5;
-    card.style.transform = `rotateX(${(-py*6).toFixed(2)}deg) rotateY(${(px*8).toFixed(2)}deg)`;
+    const r = wrap.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    card.style.transform = 'rotateX(' + (-py*6).toFixed(2) + 'deg) rotateY(' + (px*8).toFixed(2) + 'deg)';
   });
   wrap.addEventListener('mouseleave', () => { card.style.transform = 'rotateX(0deg) rotateY(0deg)'; });
 })();
 
-// ---------- File upload ----------
+// ---------- file upload ----------
 let workbookData = null;
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('fileInput');
@@ -581,97 +654,74 @@ fileInput.addEventListener('change', handleFile);
 dropzone.addEventListener('dragover', e => e.preventDefault());
 dropzone.addEventListener('drop', e => {
   e.preventDefault();
-  if (e.dataTransfer.files[0]) { fileInput.files = e.dataTransfer.files; handleFile(); }
+  if(e.dataTransfer.files[0]){ fileInput.files = e.dataTransfer.files; handleFile(); }
 });
-
 function handleFile(){
   const file = fileInput.files[0];
-  if (!file) return;
+  if(!file) return;
+  if(typeof XLSX === 'undefined'){
+    document.getElementById('saveNote').textContent = 'Spreadsheet library failed to load — use manual entry, or reload.';
+    return;
+  }
   document.getElementById('fileName').textContent = file.name;
   const reader = new FileReader();
   reader.onload = (e) => {
-    const data = new Uint8Array(e.target.result);
-    workbookData = XLSX.read(data, { type: 'array', cellDates: true });
+    workbookData = XLSX.read(new Uint8Array(e.target.result), { type:'array', cellDates:true });
     document.getElementById('computeFromFile').disabled = false;
   };
   reader.readAsArrayBuffer(file);
 }
-
 function sheetToRows(wb, name){
   const sheet = wb.Sheets[name];
-  if (!sheet) return [];
-  return XLSX.utils.sheet_to_json(sheet, { defval: 0 });
+  return sheet ? XLSX.utils.sheet_to_json(sheet, { defval:0 }) : [];
 }
 
 document.getElementById('computeFromFile').addEventListener('click', () => {
-  if (!workbookData) return;
+  if(!workbookData) return;
   const bank = sheetToRows(workbookData, 'Bank Accounts');
   const recv = sheetToRows(workbookData, 'Receivables');
   const pay  = sheetToRows(workbookData, 'Payables');
   const pl   = sheetToRows(workbookData, 'P&L Summary');
   const gst  = sheetToRows(workbookData, 'GST ITC');
 
-  const cash = bank.reduce((s, r) => s + (Number(r['Balance']) || 0), 0);
-
+  const cash = bank.reduce((s,r) => s + (Number(r['Balance'])||0), 0);
   const today = new Date();
   let recvTotal = 0, recv90 = 0;
   recv.forEach(r => {
-    const outstanding = (Number(r['Amount']) || 0) - (Number(r['Amount Received']) || 0);
-    recvTotal += outstanding;
+    const out = (Number(r['Amount'])||0) - (Number(r['Amount Received'])||0);
+    recvTotal += out;
     const due = r['Due Date'] ? new Date(r['Due Date']) : null;
-    if (due && (today - due) / 86400000 > 90) recv90 += outstanding;
+    if(due && (today - due)/86400000 > 90) recv90 += out;
   });
-
   let paySoon = 0;
   pay.forEach(r => {
     const due = r['Due Date'] ? new Date(r['Due Date']) : null;
-    const days = due ? (due - today) / 86400000 : 999;
-    if (days <= 30) paySoon += Number(r['Amount']) || 0;
+    const days = due ? (due - today)/86400000 : 999;
+    if(days <= 30) paySoon += Number(r['Amount'])||0;
   });
-
   const plMap = {};
-  pl.forEach(r => { plMap[r['Line Item']] = Number(r['Amount']) || 0; });
+  pl.forEach(r => { plMap[r['Line Item']] = Number(r['Amount'])||0; });
   const revenue = plMap['Revenue'] || 0;
   const netProfit = plMap['Net Profit'] || 0;
   const burn = plMap['Monthly Operating Expenses'] || (revenue - netProfit) || 1;
-
   let gstLeak = 0;
-  gst.forEach(r => { gstLeak += (Number(r['ITC Available']) || 0) - (Number(r['ITC Claimed']) || 0); });
+  gst.forEach(r => { gstLeak += (Number(r['ITC Available'])||0) - (Number(r['ITC Claimed'])||0); });
 
-  runCompute({ cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak, company: '' });
+  runCompute({ cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak }, 'upload');
 });
 
-// ---------- Manual entry ----------
 document.getElementById('computeFromManual').addEventListener('click', () => {
   const v = id => Number(document.getElementById(id).value) || 0;
   runCompute({
-    cash: v('m-cash'),
-    recvTotal: v('m-recv'),
-    recv90: v('m-recv90'),
-    paySoon: v('m-pay'),
-    revenue: v('m-rev'),
-    netProfit: v('m-profit'),
-    burn: v('m-burn') || 1,
-    gstLeak: v('m-gst'),
-    company: document.getElementById('m-company').value
-  });
+    cash:v('m-cash'), recvTotal:v('m-recv'), recv90:v('m-recv90'), paySoon:v('m-pay'),
+    revenue:v('m-rev'), netProfit:v('m-profit'), burn:v('m-burn') || 1, gstLeak:v('m-gst')
+  }, 'manual');
 });
 
-// ---------- Scoring ----------
-let lastVitals = null, lastPulse = null, lastCompany = '';
-
+// ---------- scoring ----------
 function clamp(n){ return Math.max(0, Math.min(100, n)); }
 
-const VITAL_ACCENTS = {
-  'Cash Position': '#C97F1E',
-  'Receivables Aging': '#C23B67',
-  'Payables Due (30d)': '#5C6B7A',
-  'GST/ITC Leakage': '#C97F1E',
-  'Net Margin': '#12805A',
-  'Working Capital Runway': '#12805A'
-};
-
-function runCompute(d){
+function computeVitals(d){
   const cashScore = clamp((d.cash / (d.burn * 3)) * 100);
   const recvScore = d.recvTotal > 0 ? clamp(100 - (d.recv90 / d.recvTotal) * 100) : 100;
   const payScore  = d.cash > 0 ? clamp(100 - (d.paySoon / d.cash) * 100) : (d.paySoon > 0 ? 0 : 100);
@@ -681,95 +731,82 @@ function runCompute(d){
   const runwayMonths = d.burn > 0 ? (d.cash + d.recvTotal - d.paySoon) / d.burn : 0;
   const runwayScore = clamp((runwayMonths / 6) * 100);
 
-  const pulse = Math.round(
-    cashScore * 0.20 + recvScore * 0.15 + payScore * 0.15 +
-    gstScore * 0.15 + marginScore * 0.20 + runwayScore * 0.15
-  );
-
+  const pulse = Math.round(cashScore*0.20 + recvScore*0.15 + payScore*0.15 +
+                           gstScore*0.15 + marginScore*0.20 + runwayScore*0.15);
   const vitals = [
-    { label: 'Cash Position', value: '₹' + d.cash.toLocaleString('en-IN'), score: cashScore },
-    { label: 'Receivables Aging', value: '₹' + d.recv90.toLocaleString('en-IN') + ' over 90d', score: recvScore },
-    { label: 'Payables Due (30d)', value: '₹' + d.paySoon.toLocaleString('en-IN'), score: payScore },
-    { label: 'GST/ITC Leakage', value: '₹' + d.gstLeak.toLocaleString('en-IN'), score: gstScore },
-    { label: 'Net Margin', value: netMargin.toFixed(1) + '%', score: marginScore },
-    { label: 'Working Capital Runway', value: runwayMonths.toFixed(1) + ' months', score: runwayScore }
+    { label:'Cash Position', value:'₹' + d.cash.toLocaleString('en-IN'), score:cashScore },
+    { label:'Receivables Aging', value:'₹' + d.recv90.toLocaleString('en-IN') + ' over 90d', score:recvScore },
+    { label:'Payables Due (30d)', value:'₹' + d.paySoon.toLocaleString('en-IN'), score:payScore },
+    { label:'GST/ITC Leakage', value:'₹' + d.gstLeak.toLocaleString('en-IN'), score:gstScore },
+    { label:'Net Margin', value:netMargin.toFixed(1) + '%', score:marginScore },
+    { label:'Working Capital Runway', value:runwayMonths.toFixed(1) + ' months', score:runwayScore }
   ];
-
-  lastVitals = vitals; lastPulse = pulse; lastCompany = d.company;
-  renderResults(vitals, pulse);
+  return { pulse, vitals };
 }
 
-function scoreClass(s){ return s >= 70 ? 'score-good' : s >= 40 ? 'score-warn' : 'score-bad'; }
-
-function renderResults(vitals, pulse){
-  document.getElementById('results').style.display = 'block';
-  document.getElementById('pulseNum').textContent = pulse;
-  const grid = document.getElementById('vitalsGrid');
-  grid.innerHTML = '';
-  vitals.forEach(v => {
-    const el = document.createElement('div');
-    el.className = 'vital';
-    const accent = VITAL_ACCENTS[v.label] || '#5C6B7A';
-    el.style.setProperty('--v-accent', accent);
-    el.innerHTML = `<div class="v-top"><span class="v-dot"></span><span class="v-label">${v.label}</span></div>
-      <div class="v-value">${v.value}</div>
-      <div class="v-score ${scoreClass(v.score)}">${Math.round(v.score)}/100</div>`;
-    grid.appendChild(el);
-  });
-  document.getElementById('briefing-idle').style.display = 'block';
-  document.getElementById('briefing-text').textContent = '';
-  document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+async function runCompute(d, source){
+  const note = document.getElementById('saveNote');
+  const { pulse, vitals } = computeVitals(d);
+  note.textContent = 'Saving snapshot…';
+  try {
+    const row = {
+      user_id: currentUser.id, source,
+      cash:d.cash, recv_total:d.recvTotal, recv_90:d.recv90, pay_soon:d.paySoon,
+      revenue:d.revenue, net_profit:d.netProfit, burn:d.burn, gst_leak:d.gstLeak,
+      pulse_score:pulse, vitals
+    };
+    const { error } = await withTimeout(sbClient.from('snapshots').insert(row), 20000, 'Saving snapshot');
+    if(error) throw error;
+    note.textContent = '';
+    await refreshDashboard();
+  } catch(err){
+    console.error('[margyn] save snapshot:', err);
+    note.textContent = 'Could not save: ' + (err.message || 'unknown error');
+  }
 }
 
 // ---------- AI briefing ----------
 document.getElementById('generateBriefing').addEventListener('click', async () => {
   const btn = document.getElementById('generateBriefing');
   const out = document.getElementById('briefing-text');
+  const latest = snapshots[0];
+  if(!latest) return;
   btn.disabled = true;
   out.innerHTML = '<div class="loading">Generating briefing…</div>';
   try {
     const vitalsObj = {};
-    lastVitals.forEach(v => vitalsObj[v.label] = v.value);
+    (latest.vitals || []).forEach(v => vitalsObj[v.label] = v.value);
     const res = await fetch('/api/briefing', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ vitals: vitalsObj, pulseScore: lastPulse, companyName: lastCompany })
+      method:'POST', headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({ vitals:vitalsObj, pulseScore:latest.pulse_score, companyName:currentProfile.company_name })
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Unknown error');
+    if(!res.ok) throw new Error(data.error || 'Unknown error');
     out.textContent = data.briefing;
     document.getElementById('briefing-idle').style.display = 'none';
-  } catch (err) {
-    out.innerHTML = `<div class="error-box">Could not generate briefing: ${err.message}</div>`;
-  } finally {
-    btn.disabled = false;
-  }
+    await sbClient.from('snapshots').update({ briefing:data.briefing }).eq('id', latest.id);
+    latest.briefing = data.briefing;
+  } catch(err){
+    out.innerHTML = '<div class="error-box">Could not generate briefing: ' + err.message + '</div>';
+  } finally { btn.disabled = false; }
 });
 
-document.getElementById('resetBtn').addEventListener('click', () => {
-  document.getElementById('results').style.display = 'none';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-
-// ---------- Template download ----------
+// ---------- template ----------
 document.getElementById('downloadTemplate').addEventListener('click', () => {
+  if(typeof XLSX === 'undefined'){ alert('Spreadsheet library failed to load. Reload the page.'); return; }
   const wb = XLSX.utils.book_new();
   const sheets = {
-    'Bank Accounts': [{ 'Account Name': 'HDFC Current A/c', 'Balance': 0 }],
-    'Receivables': [{ 'Customer': '', 'Invoice Date': '', 'Due Date': '', 'Amount': 0, 'Amount Received': 0 }],
-    'Payables': [{ 'Vendor': '', 'Invoice Date': '', 'Due Date': '', 'Amount': 0 }],
-    'P&L Summary': [
-      { 'Line Item': 'Revenue', 'Amount': 0 },
-      { 'Line Item': 'Net Profit', 'Amount': 0 },
-      { 'Line Item': 'Monthly Operating Expenses', 'Amount': 0 }
-    ],
-    'GST ITC': [{ 'Month': '', 'GST Payable': 0, 'ITC Available': 0, 'ITC Claimed': 0 }]
+    'Bank Accounts': [{ 'Account Name':'HDFC Current A/c', 'Balance':0 }],
+    'Receivables': [{ 'Customer':'', 'Invoice Date':'', 'Due Date':'', 'Amount':0, 'Amount Received':0 }],
+    'Payables': [{ 'Vendor':'', 'Invoice Date':'', 'Due Date':'', 'Amount':0 }],
+    'P&L Summary': [{ 'Line Item':'Revenue','Amount':0 },{ 'Line Item':'Net Profit','Amount':0 },{ 'Line Item':'Monthly Operating Expenses','Amount':0 }],
+    'GST ITC': [{ 'Month':'', 'GST Payable':0, 'ITC Available':0, 'ITC Claimed':0 }]
   };
-  Object.keys(sheets).forEach(name => {
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheets[name]), name);
-  });
+  Object.keys(sheets).forEach(n => XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheets[n]), n));
   XLSX.writeFile(wb, 'Margyn_Data_Template.xlsx');
 });
+
+bootAuth();
 </script>
 </body>
 </html>
