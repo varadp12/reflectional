@@ -40,6 +40,990 @@
   .nav-logout:hover{ border-color:var(--ink); color:var(--ink); }
 
   .gate{ position:fixed; inset:0; background:var(--bg); z-index:200; display:flex; align-items:center; justify-content:center; padding:24px; overflow-y:auto; }
+  .gate-col{ max-width:460px; width:100%; }
+  .gate-back{ display:block; text-align:center; margin-top:20px; font-size:13px; font-weight:600; color:var(--steel); transition:color .2s ease; }
+  .gate-back:hover{ color:var(--ink); }
+  .gate-modal{ max-width:460px; width:100%; background:var(--white); border:1px solid var(--line); border-radius:6px; padding:40px 34px; box-shadow:var(--shadow-lg); }
+  .gate-modal .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--emerald); margin-bottom:14px; font-weight:600; }
+  .gate-modal h2{ font-family:'Fraunces',serif; font-weight:500; font-size:28px; letter-spacing:-0.01em; margin-bottom:12px; }
+  .gate-modal .sub{ font-size:14px; color:var(--steel); margin-bottom:28px; line-height:1.6; }
+  .auth-tab-bar{ display:flex; gap:4px; margin-bottom:24px; border:1px solid var(--line); border-radius:999px; padding:4px; }
+  .auth-tab{ flex:1; padding:10px; text-align:center; cursor:pointer; background:transparent; color:var(--steel); font-size:13px; font-weight:700; font-family:'Manrope',sans-serif; transition:all .2s ease; border:none; border-radius:999px; }
+  .auth-tab.active{ background:var(--ink); color:var(--white); }
+  .auth-form{ display:none; }
+  .auth-form.active{ display:block; }
+  .auth-field{ margin-bottom:16px; }
+  .auth-field label{ display:block; font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); margin-bottom:6px; font-weight:600; }
+  .auth-field input, .auth-field select{ width:100%; padding:11px 12px; border:1px solid var(--line-strong); border-radius:4px; font-family:'Manrope',sans-serif; font-size:14px; color:var(--ink); background:var(--white); transition:border-color .2s ease; }
+  .auth-field input:focus, .auth-field select:focus{ outline:none; border-color:var(--emerald); }
+  .auth-submit{ width:100%; background:var(--ink); color:var(--white); border:none; padding:12px; border-radius:999px; font-size:14px; font-weight:700; cursor:pointer; transition:all .25s ease; font-family:'Manrope',sans-serif; }
+  .auth-submit:hover{ background:var(--emerald); }
+  .auth-submit:disabled{ opacity:0.5; cursor:not-allowed; }
+  .auth-error{ font-size:12px; color:var(--rose); margin-top:12px; display:none; }
+  .auth-error.show{ display:block; }
+
+  header.app-head{ margin-bottom:26px; }
+  .app-eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--emerald); margin-bottom:10px; font-weight:600; }
+  .app-title{ font-family:'Fraunces',serif; font-weight:500; font-size:36px; letter-spacing:-0.01em; line-height:1.15; }
+  .app-sub{ margin-top:8px; font-size:14px; color:var(--steel); }
+
+  /* three-way page nav */
+  .pagenav{ display:flex; gap:4px; margin-bottom:30px; border:1px solid var(--line); border-radius:999px; padding:4px; background:var(--white); box-shadow:var(--shadow-sm); }
+  .pagenav button{ flex:1; padding:12px 10px; text-align:center; cursor:pointer; background:transparent; color:var(--steel); font-size:13.5px; font-weight:700; font-family:'Manrope',sans-serif; transition:all .2s ease; border:none; border-radius:999px; }
+  .pagenav button.active{ background:var(--ink); color:var(--white); }
+
+  .card{ position:relative; background:var(--white); border:1px solid var(--line); border-radius:6px; padding:28px; margin-bottom:24px; box-shadow:var(--shadow-sm); }
+  .card h2{font-family:'Fraunces',serif; font-weight:500; font-size:20px; margin-bottom:6px;}
+  .hint{font-size:13px; color:var(--steel); margin-bottom:20px; line-height:1.6;}
+
+  .facts{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
+  .fact{ background:var(--white); border:1px solid var(--line); border-radius:6px; padding:18px; box-shadow:var(--shadow-sm); }
+  .fact .f-label{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600; margin-bottom:8px; }
+  .fact .f-value{ font-family:'IBM Plex Mono',monospace; font-size:19px; font-weight:600; }
+
+  .kv{ display:flex; justify-content:space-between; gap:16px; padding:12px 0; border-bottom:1px solid var(--line); font-size:14px; }
+  .kv:last-child{ border-bottom:none; }
+  .kv .k{ font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600; }
+  .kv .v{ font-weight:600; text-align:right; }
+
+  .pulse-wrap{ perspective:1400px; margin-bottom:34px; }
+  .pulse-score{ position:relative; text-align:center; padding:34px 28px 34px; border:none; border-radius:14px; background:var(--ink); box-shadow:0 40px 80px -30px rgba(11,18,32,0.45); transform-style:preserve-3d; will-change:transform; }
+  .pulse-score .p-label{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--emerald-bright); display:flex; align-items:center; justify-content:center; gap:7px; }
+  .pulse-score .p-label::before{ content:''; width:5px; height:5px; border-radius:50%; background:var(--emerald-bright); }
+  .pulse-ring{ width:280px; height:280px; max-width:72vw; max-height:72vw; margin:22px auto 14px; position:relative; border-radius:50%; background:radial-gradient(circle at 50% 40%, rgba(255,255,255,0.055), rgba(255,255,255,0) 68%); }
+  .pulse-ring svg{ width:100%; height:100%; display:block; transform:rotate(-90deg); }
+  .pulse-ring .num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:62px; line-height:1; color:#FFFFFF; }
+  .pulse-score.is-zero .pulse-ring .num{ color:#FFFFFF; }
+  .pulse-delta{ font-family:'Manrope',sans-serif; font-size:13px; font-weight:500; color:rgba(255,255,255,0.52); }
+  .pulse-asof{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,0.34); margin-top:8px; }
+  .spark{ margin-top:18px; }
+
+  .vitals-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:34px 16px; margin-bottom:34px;}
+  .vital{ background:transparent; border:none; border-radius:0; padding:0; position:relative; box-shadow:none; text-align:center; }
+  .vital .v-value{font-family:'IBM Plex Mono',monospace; font-size:21px; font-weight:600; color:var(--ink); margin-bottom:14px;}
+  .v-ring{ width:132px; height:132px; margin:0 auto 16px; position:relative; }
+  .v-ring svg{ width:100%; height:100%; display:block; transform:rotate(-90deg); }
+  .v-ring .rv{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:22px; color:var(--ink); }
+  .vital.is-zero .v-ring .rv{ color:var(--ink); }
+  .vital .v-top{ display:flex; align-items:center; justify-content:center; gap:7px; margin-bottom:7px; }
+  .vital .v-dot{ width:6px; height:6px; border-radius:50%; background:var(--v-accent, var(--steel)); flex-shrink:0; }
+  .vital .v-label{font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600;}
+  .vital .v-score{font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:500; color:var(--steel);}
+  .score-good{color:var(--emerald);} .score-warn{color:var(--gold);} .score-bad{color:var(--rose);}
+  .score-none{color:var(--steel);}
+
+  .hist-row{ display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid var(--line); font-size:13.5px; }
+  .hist-row:last-child{ border-bottom:none; }
+  .hist-date{ font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--steel); }
+  .hist-right{ display:flex; align-items:center; gap:14px; }
+  .hist-pulse{ font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:15px; }
+  .hist-src{ font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); border:1px solid var(--line); border-radius:999px; padding:2px 8px; }
+  .hist-empty{ font-size:13.5px; color:var(--steel); padding:8px 0; }
+
+  .tabs{display:flex; gap:4px; margin-bottom:24px; border:1px solid var(--line); border-radius:999px; padding:4px; background:var(--white); box-shadow:var(--shadow-sm);}
+  .tab{ flex:1; padding:11px; text-align:center; cursor:pointer; background:transparent; color:var(--steel); font-size:13.5px; font-weight:700; font-family:'Manrope',sans-serif; transition:all .2s ease; border:none; border-radius:999px; }
+  .tab.active{background:var(--ink); color:var(--white);}
+  .panel{display:none;} .panel.active{display:block;}
+
+  .dropzone{ border:1.5px dashed var(--line-strong); border-radius:6px; padding:36px; text-align:center; cursor:pointer; transition:border-color .2s, background .2s; }
+  .dropzone:hover{border-color:var(--gold); background:rgba(201,127,30,0.03);}
+  .dropzone input{display:none;}
+  .dz-label{font-size:14px; font-weight:600;}
+  .dz-sub{font-size:12px; color:var(--steel); margin-top:6px;}
+  .file-name{margin-top:14px; font-size:13px; color:var(--emerald); font-weight:600;}
+  .template-link{display:inline-block; margin-top:18px; font-size:13px; color:var(--gold); cursor:pointer; font-weight:600; border-bottom:1px solid rgba(201,127,30,0.3);}
+
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  label{display:block; font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--steel); margin-bottom:7px; text-transform:uppercase; letter-spacing:.06em; font-weight:600;}
+  input[type=number], input[type=text], select{ width:100%; padding:11px 12px; background:var(--white); border:1px solid var(--line-strong); border-radius:4px; color:var(--ink); font-family:'IBM Plex Mono',monospace; font-size:14px; margin-bottom:16px; transition:border-color .2s ease; }
+  input:focus, select:focus{outline:none; border-color:var(--emerald);}
+
+  .btn-row{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+  button.primary{ background:var(--ink); color:var(--white); border:none; padding:14px 28px; border-radius:999px; font-weight:700; font-size:14.5px; font-family:'Manrope',sans-serif; cursor:pointer; transition:all .25s cubic-bezier(.16,1,.3,1); }
+  button.primary:hover{background:var(--emerald); transform:translateY(-1px); box-shadow:var(--shadow-md);}
+  button.primary:disabled{opacity:0.4; cursor:not-allowed; transform:none; box-shadow:none;}
+  button.ghost{ background:transparent; color:var(--ink); border:1.5px solid var(--line-strong); padding:13px 28px; border-radius:999px; font-size:14.5px; cursor:pointer; font-weight:700; font-family:'Manrope',sans-serif; transition:all .2s ease; }
+  button.ghost:hover{ border-color:var(--ink); background:var(--white); }
+
+  #briefing-text{ white-space:pre-wrap; font-size:15px; line-height:1.75; }
+  .loading{color:var(--steel); font-size:14px; font-style:italic;}
+  .error-box{ border:1px solid var(--rose); background:var(--blush); color:var(--rose); padding:14px; border-radius:6px; font-size:13px; margin-top:14px; }
+  .note{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--steel); }
+  .note.ok{ color:var(--emerald); }
+  .note.bad{ color:var(--rose); }
+
+  footer{ border-top:1px solid var(--line); padding:32px 24px; text-align:center; font-size:12.5px; color:var(--steel); }
+
+  @media (max-width:640px){
+    .vitals-grid{grid-template-columns:1fr 1fr;}
+    .facts{grid-template-columns:1fr;}
+    .grid-2{grid-template-columns:1fr;}
+    .app-title{font-size:27px;}
+    .wrap{padding:100px 20px 72px;}
+    .pagenav button{ font-size:12px; padding:11px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ AUTH GATE ============ -->
+<div class="gate" id="authGate">
+  <div class="gate-col">
+  <div class="gate-modal">
+    <div class="eyebrow">Margyn 1.0</div>
+    <h2 id="authTitle">Welcome back.</h2>
+    <p class="sub">Log in to your dashboard or create an account to get started.</p>
+    <div class="auth-tab-bar">
+      <button type="button" class="auth-tab active" data-form="login">Log in</button>
+      <button type="button" class="auth-tab" data-form="signup">Sign up</button>
+    </div>
+    <form class="auth-form active" id="loginForm">
+      <div class="auth-field"><label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" required autocomplete="email" placeholder="you@company.com"></div>
+      <div class="auth-field"><label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="••••••••"></div>
+      <button type="submit" class="auth-submit" id="loginSubmit">Log in</button>
+      <div class="auth-error" id="loginError"></div>
+    </form>
+    <form class="auth-form" id="signupForm">
+      <div class="auth-field"><label for="signupEmail">Email</label>
+        <input type="email" id="signupEmail" required autocomplete="email" placeholder="you@company.com"></div>
+      <div class="auth-field"><label for="signupPassword">Password (min 6 characters)</label>
+        <input type="password" id="signupPassword" required autocomplete="new-password" placeholder="••••••••" minlength="6"></div>
+      <button type="submit" class="auth-submit" id="signupSubmit">Create account</button>
+      <div class="auth-error" id="signupError"></div>
+    </form>
+  </div>
+  <a class="gate-back" href="/">&larr; Back to the website</a>
+  </div>
+</div>
+
+<!-- ============ ONBOARDING GATE ============ -->
+<div class="gate hidden" id="onboardGate">
+  <div class="gate-modal">
+    <div class="eyebrow">One-time setup</div>
+    <h2>Tell us about your business.</h2>
+    <p class="sub">This shapes your scorecard and your briefing. You can change it any time on your profile.</p>
+    <form id="onboardForm">
+      <div class="auth-field"><label for="obCompany">Company name</label>
+        <input type="text" id="obCompany" required placeholder="Kavya Textiles Pvt Ltd"></div>
+      <div class="auth-field"><label for="obRevenue">Annual revenue</label>
+        <select id="obRevenue" required>
+          <option value="">Select a range…</option>
+          <option value="under_5cr">Under ₹5 crore</option>
+          <option value="5_25cr">₹5 – 25 crore</option>
+          <option value="25_50cr">₹25 – 50 crore</option>
+          <option value="50_100cr">₹50 – 100 crore</option>
+          <option value="100_200cr">₹100 – 200 crore</option>
+          <option value="over_200cr">Over ₹200 crore</option>
+        </select></div>
+      <div class="auth-field"><label for="obIndustry">Industry</label>
+        <input type="text" id="obIndustry" placeholder="Textiles, auto components, pharma…"></div>
+      <div class="auth-field"><label for="obCity">City</label>
+        <input type="text" id="obCity" placeholder="Mumbai"></div>
+      <button type="submit" class="auth-submit" id="obSubmit">Continue</button>
+      <div class="auth-error" id="obError"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-brand" href="/">
+      <div class="crescent" style="width:20px;height:20px;"></div>
+      <div class="nav-logo">margyn</div>
+    </a>
+    <div style="flex:1;"></div>
+    <div class="nav-user">
+      <span id="userEmail"></span>
+      <button class="nav-logout" id="logoutBtn">Log out</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="app-head">
+    <div class="app-eyebrow">Margyn 1.0</div>
+    <div class="app-title" id="headCompany">—</div>
+    <div class="app-sub" id="headSub"></div>
+  </header>
+
+  <div class="pagenav">
+    <button data-view="profile">Profile</button>
+    <button data-view="calculate">Upload &amp; calculate</button>
+    <button data-view="scores" class="active">Scores</button>
+  </div>
+
+  <!-- ---------- 1. PROFILE ---------- -->
+  <div id="view-profile" class="hidden">
+    <div class="facts">
+      <div class="fact"><div class="f-label">Snapshots recorded</div><div class="f-value" id="pfCount">0</div></div>
+      <div class="fact"><div class="f-label">Latest pulse</div><div class="f-value" id="pfPulse">0</div></div>
+      <div class="fact"><div class="f-label">Tracking since</div><div class="f-value" id="pfSince">—</div></div>
+    </div>
+
+    <div class="card">
+      <h2>Account</h2>
+      <div class="hint">Read-only. These come from your login.</div>
+      <div class="kv"><span class="k">Email</span><span class="v" id="pfEmail">—</span></div>
+      <div class="kv"><span class="k">Account created</span><span class="v" id="pfCreated">—</span></div>
+      <div class="kv"><span class="k">User ID</span><span class="v mono" id="pfUid" style="font-size:11px;">—</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Business details</h2>
+      <div class="hint">Used in your scorecard and your AI briefing. Edit and save any time.</div>
+      <form id="profileForm">
+        <div class="grid-2">
+          <div><label>Company name</label><input type="text" id="pfCompany" required></div>
+          <div><label>Annual revenue</label>
+            <select id="pfRevenue" required>
+              <option value="">Select a range…</option>
+              <option value="under_5cr">Under ₹5 crore</option>
+              <option value="5_25cr">₹5 – 25 crore</option>
+              <option value="25_50cr">₹25 – 50 crore</option>
+              <option value="50_100cr">₹50 – 100 crore</option>
+              <option value="100_200cr">₹100 – 200 crore</option>
+              <option value="over_200cr">Over ₹200 crore</option>
+            </select></div>
+          <div><label>Industry</label><input type="text" id="pfIndustry"></div>
+          <div><label>City</label><input type="text" id="pfCity"></div>
+        </div>
+        <div class="btn-row">
+          <button type="submit" class="primary" id="pfSave">Save changes</button>
+          <span class="note" id="pfNote"></span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ---------- 2. UPLOAD & CALCULATE ---------- -->
+  <div id="view-calculate" class="hidden">
+    <div class="tabs">
+      <button class="tab active" data-tab="upload">Upload workbook</button>
+      <button class="tab" data-tab="manual">Quick manual entry</button>
+    </div>
+
+    <div class="panel active" id="panel-upload">
+      <div class="card">
+        <h2>Upload your workbook</h2>
+        <div class="hint">One Excel file with five sheets: <span class="mono">Bank Accounts</span>, <span class="mono">Receivables</span>, <span class="mono">Payables</span>, <span class="mono">P&amp;L Summary</span>, <span class="mono">GST ITC</span>.</div>
+        <div class="dropzone" id="dropzone">
+          <div class="dz-label">Click to choose a file, or drag it here</div>
+          <div class="dz-sub">.xlsx or .csv</div>
+          <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" />
+          <div class="file-name" id="fileName"></div>
+        </div>
+        <div class="template-link" id="downloadTemplate">Download the blank template →</div>
+      </div>
+      <div class="btn-row">
+        <button class="primary" id="computeFromFile" disabled>Compute &amp; save</button>
+        <span class="note" id="noteUpload"></span>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-manual">
+      <div class="card">
+        <h2>Quick manual entry</h2>
+        <div class="hint">Enter aggregate figures directly — useful for a fast look before you wire up a full export.</div>
+        <div class="grid-2">
+          <div><label>Cash in bank (₹)</label><input type="number" id="m-cash" placeholder="4200000"></div>
+          <div><label>Monthly operating expenses (₹)</label><input type="number" id="m-burn" placeholder="1500000"></div>
+          <div><label>Total receivables outstanding (₹)</label><input type="number" id="m-recv" placeholder="3800000"></div>
+          <div><label>Receivables overdue &gt;90 days (₹)</label><input type="number" id="m-recv90" placeholder="900000"></div>
+          <div><label>Payables due in next 30 days (₹)</label><input type="number" id="m-pay" placeholder="1100000"></div>
+          <div><label>Monthly revenue (₹)</label><input type="number" id="m-rev" placeholder="6000000"></div>
+          <div><label>Net profit (this period, ₹)</label><input type="number" id="m-profit" placeholder="480000"></div>
+          <div><label>GST ITC available but unclaimed (₹)</label><input type="number" id="m-gst" placeholder="65000"></div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="primary" id="computeFromManual">Compute &amp; save</button>
+        <span class="note" id="noteManual"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- 3. SCORES ---------- -->
+  <div id="view-scores">
+    <div class="pulse-wrap">
+      <div class="pulse-score is-zero" id="pulseCard">
+        <div class="p-label">Pulse score — live</div>
+        <div class="pulse-ring">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="1.2"></circle>
+            <circle id="pulseArc" cx="50" cy="50" r="46" fill="none" stroke="#1FA374" stroke-width="2.4"
+                    stroke-linecap="round" stroke-dasharray="289.03" stroke-dashoffset="289.03"></circle>
+          </svg>
+          <div class="num" id="pulseNum">0</div>
+        </div>
+        <div class="pulse-delta" id="pulseDelta"></div>
+        <div class="pulse-asof" id="pulseAsOf"></div>
+        <div class="spark" id="spark"></div>
+      </div>
+    </div>
+
+    <div class="vitals-grid" id="vitalsGrid"></div>
+
+    <div class="card">
+      <h2>Executive briefing</h2>
+      <div class="hint" id="briefHint">Generated from your latest snapshot.</div>
+      <div id="briefing-idle"><button class="primary" id="generateBriefing">Generate AI briefing</button></div>
+      <div id="briefing-text"></div>
+    </div>
+
+    <div class="card">
+      <h2>Previous scores</h2>
+      <div class="hint">Every snapshot you've recorded. Depth here is what makes the score meaningful over time.</div>
+      <div id="historyList"></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>Margyn 1.0 · Built for Indian SMEs</footer>
+
+<script>
+// ============================================================
+// Config — static HTML, no bundler: values must be literal.
+// Anon key is public by design; RLS enforces access.
+// ============================================================
+const SUPABASE_URL = 'https://lmegnxrixlrvyodqfthn.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_TcTCDSECsRxbDVXAnI893w_3BJC0Kgh';
+
+// Named sbClient, NOT supabase: the UMD library declares a global
+// `var supabase`, and a global `let` of the same name throws SyntaxError
+// before the library can execute.
+let sbClient = null;
+let currentUser = null;
+let currentProfile = null;
+let snapshots = [];
+let bootError = null;
+
+// ---------- helpers ----------
+function showAuthError(msg){
+  const f = document.querySelector('.auth-form.active');
+  const el = f ? f.querySelector('.auth-error') : document.getElementById('loginError');
+  if(!el) return;
+  el.style.color = ''; el.textContent = msg; el.classList.add('show');
+}
+function clearAuthErrors(){
+  document.querySelectorAll('.auth-error').forEach(e => e.classList.remove('show'));
+  if(bootError) showAuthError(bootError);
+}
+function withTimeout(p, ms, label){
+  return Promise.race([ p, new Promise((_, rej) => setTimeout(() => rej(new Error(
+    label + ' timed out after ' + (ms/1000) + 's. The Supabase project may be paused — check your dashboard.'
+  )), ms)) ]);
+}
+function fmtDate(iso){
+  return new Date(iso).toLocaleString('en-IN', { day:'numeric', month:'short', year:'numeric', hour:'numeric', minute:'2-digit' });
+}
+function fmtDay(iso){
+  return new Date(iso).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+}
+function scoreClass(s){ return s >= 70 ? 'score-good' : s >= 40 ? 'score-warn' : 'score-bad'; }
+
+// ---------- library loading ----------
+function loadScript(src){
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = () => resolve(src);
+    s.onerror = () => reject(new Error('blocked or unreachable: ' + src));
+    document.head.appendChild(s);
+  });
+}
+async function bootAuth(){
+  const sources = [
+    '/supabase.js',
+    'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',
+    'https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js'
+  ];
+  for(const src of sources){
+    try {
+      await loadScript(src);
+      if(window.supabase){ console.log('[margyn] supabase-js loaded from', src); initSupabase(); return; }
+      console.warn('[margyn] loaded but window.supabase undefined:', src);
+    } catch(err){ console.warn('[margyn]', err.message); }
+  }
+  console.error('[margyn] all supabase-js sources failed');
+  bootError = 'Could not load the authentication library. Confirm supabase.js is deployed at the site root, then reload.';
+  showAuthError(bootError);
+  document.getElementById('loginSubmit').disabled = true;
+  document.getElementById('signupSubmit').disabled = true;
+}
+
+async function initSupabase(){
+  const { createClient } = window.supabase;
+  sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const { data: { session } } = await sbClient.auth.getSession();
+  await routeFor(session);
+  sbClient.auth.onAuthStateChange((_evt, s) => routeFor(s));
+}
+
+// ---------- routing ----------
+async function routeFor(session){
+  if(!session){
+    currentUser = null; currentProfile = null; snapshots = [];
+    document.getElementById('authGate').classList.remove('hidden');
+    document.getElementById('onboardGate').classList.add('hidden');
+    // Wipe the signed-in view so nothing from the last session is left behind
+    // to flash on the next login.
+    document.getElementById('userEmail').textContent = '';
+    document.getElementById('headCompany').textContent = '—';
+    document.getElementById('headSub').textContent = '';
+    document.getElementById('briefing-text').textContent = '';
+    document.getElementById('historyList').innerHTML = '';
+    renderVitals(ZERO_VITALS, false);
+    document.getElementById('pulseNum').textContent = '0';
+    document.getElementById('loginForm').reset();
+    document.getElementById('signupForm').reset();
+    clearAuthErrors();
+    showView('scores');
+    return;
+  }
+  currentUser = session.user;
+  document.getElementById('userEmail').textContent = currentUser.email;
+  document.getElementById('authGate').classList.add('hidden');
+
+  currentProfile = await loadProfile();
+  if(!currentProfile){
+    document.getElementById('onboardGate').classList.remove('hidden');
+    return;
+  }
+  document.getElementById('onboardGate').classList.add('hidden');
+  await refreshAll();
+}
+
+async function loadProfile(){
+  const { data, error } = await sbClient.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
+  if(error){ console.error('[margyn] loadProfile:', error); return null; }
+  return data;
+}
+async function loadSnapshots(){
+  const { data, error } = await sbClient.from('snapshots')
+    .select('*').eq('user_id', currentUser.id).order('created_at', { ascending:false }).limit(50);
+  if(error){ console.error('[margyn] loadSnapshots:', error); return []; }
+  return data || [];
+}
+
+// ---------- onboarding ----------
+document.getElementById('onboardForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('obSubmit');
+  const err = document.getElementById('obError');
+  err.classList.remove('show');
+  btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    const row = {
+      id: currentUser.id,
+      company_name: document.getElementById('obCompany').value.trim(),
+      revenue_range: document.getElementById('obRevenue').value,
+      industry: document.getElementById('obIndustry').value.trim() || null,
+      city: document.getElementById('obCity').value.trim() || null
+    };
+    const { error } = await withTimeout(sbClient.from('profiles').upsert(row), 20000, 'Saving profile');
+    if(error) throw error;
+    currentProfile = row;
+    document.getElementById('onboardGate').classList.add('hidden');
+    await refreshAll();
+  } catch(e2){
+    console.error('[margyn] onboarding:', e2);
+    err.textContent = e2.message || 'Could not save. Try again.'; err.classList.add('show');
+  } finally { btn.disabled = false; btn.textContent = 'Continue'; }
+});
+
+// ---------- page nav ----------
+const REV_LABEL = { under_5cr:'Under ₹5 cr', '5_25cr':'₹5–25 cr', '25_50cr':'₹25–50 cr',
+  '50_100cr':'₹50–100 cr', '100_200cr':'₹100–200 cr', over_200cr:'Over ₹200 cr' };
+
+function showView(name){
+  ['profile','calculate','scores'].forEach(v => {
+    document.getElementById('view-' + v).classList.toggle('hidden', v !== name);
+  });
+  document.querySelectorAll('.pagenav button').forEach(b => {
+    b.classList.toggle('active', b.dataset.view === name);
+  });
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+document.querySelectorAll('.pagenav button').forEach(b => {
+  b.addEventListener('click', () => showView(b.dataset.view));
+});
+
+// ---------- render ----------
+async function refreshAll(){
+  snapshots = await loadSnapshots();
+  renderHeader();
+  renderProfile();
+  renderScores();
+}
+
+function renderHeader(){
+  document.getElementById('headCompany').textContent = currentProfile.company_name;
+  const bits = [REV_LABEL[currentProfile.revenue_range], currentProfile.industry, currentProfile.city].filter(Boolean);
+  document.getElementById('headSub').textContent = bits.join(' · ');
+}
+
+function renderProfile(){
+  document.getElementById('pfCount').textContent = snapshots.length;
+  document.getElementById('pfPulse').textContent = snapshots.length ? snapshots[0].pulse_score : 0;
+  document.getElementById('pfSince').textContent = snapshots.length
+    ? fmtDay(snapshots[snapshots.length - 1].created_at) : '—';
+
+  document.getElementById('pfEmail').textContent = currentUser.email;
+  document.getElementById('pfCreated').textContent = currentUser.created_at ? fmtDay(currentUser.created_at) : '—';
+  document.getElementById('pfUid').textContent = currentUser.id;
+
+  document.getElementById('pfCompany').value = currentProfile.company_name || '';
+  document.getElementById('pfRevenue').value = currentProfile.revenue_range || '';
+  document.getElementById('pfIndustry').value = currentProfile.industry || '';
+  document.getElementById('pfCity').value = currentProfile.city || '';
+}
+
+document.getElementById('profileForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('pfSave');
+  const note = document.getElementById('pfNote');
+  note.className = 'note'; note.textContent = 'Saving…';
+  btn.disabled = true;
+  try {
+    const row = {
+      id: currentUser.id,
+      company_name: document.getElementById('pfCompany').value.trim(),
+      revenue_range: document.getElementById('pfRevenue').value,
+      industry: document.getElementById('pfIndustry').value.trim() || null,
+      city: document.getElementById('pfCity').value.trim() || null
+    };
+    const { error } = await withTimeout(sbClient.from('profiles').upsert(row), 20000, 'Saving profile');
+    if(error) throw error;
+    currentProfile = row;
+    renderHeader();
+    note.className = 'note ok'; note.textContent = 'Saved.';
+    setTimeout(() => { note.textContent = ''; note.className = 'note'; }, 2500);
+  } catch(err){
+    console.error('[margyn] profile save:', err);
+    note.className = 'note bad'; note.textContent = err.message || 'Could not save.';
+  } finally { btn.disabled = false; }
+});
+
+const VITAL_ACCENTS = { 'Cash Position':'#C97F1E','Receivables Aging':'#C23B67','Payables Due (30d)':'#5C6B7A',
+  'GST/ITC Leakage':'#C97F1E','Net Margin':'#12805A','Working Capital Runway':'#12805A' };
+
+// Shown before any snapshot exists — the shape of the scorecard, at zero.
+const ZERO_VITALS = [
+  { label:'Cash Position', value:'₹0', score:0 },
+  { label:'Receivables Aging', value:'₹0 over 90d', score:0 },
+  { label:'Payables Due (30d)', value:'₹0', score:0 },
+  { label:'GST/ITC Leakage', value:'₹0', score:0 },
+  { label:'Net Margin', value:'0.0%', score:0 },
+  { label:'Working Capital Runway', value:'0.0 months', score:0 }
+];
+
+function renderScores(){
+  const hasData = snapshots.length > 0;
+  const latest = hasData ? snapshots[0] : null;
+  const prev = snapshots[1];
+
+  const card = document.getElementById('pulseCard');
+  card.classList.toggle('is-zero', !hasData);
+  const pulseVal = hasData ? latest.pulse_score : 0;
+  document.getElementById('pulseNum').textContent = pulseVal;
+
+  const arc = document.getElementById('pulseArc');
+  if(arc){
+    const pct = Math.max(0, Math.min(100, pulseVal));
+    arc.setAttribute('stroke-dashoffset', (RING_CIRC * (1 - pct / 100)).toFixed(2));
+  }
+
+  const deltaEl = document.getElementById('pulseDelta');
+  if(!hasData){
+    deltaEl.textContent = 'no snapshots yet \u2014 upload data to calculate'; deltaEl.className = 'pulse-delta';
+  } else if(prev){
+    const d = latest.pulse_score - prev.pulse_score;
+    deltaEl.textContent = d === 0 ? 'no change since last' : (d > 0 ? '▲ +' + d : '▼ ' + d) + ' since last';
+    deltaEl.className = 'pulse-delta ' + (d > 0 ? 'score-good' : d < 0 ? 'score-bad' : '');
+  } else {
+    deltaEl.textContent = 'first snapshot'; deltaEl.className = 'pulse-delta';
+  }
+
+  document.getElementById('pulseAsOf').textContent = hasData ? 'as of ' + fmtDate(latest.created_at) : '';
+  renderVitals(hasData ? (latest.vitals || ZERO_VITALS) : ZERO_VITALS, hasData);
+  renderSpark(snapshots.slice().reverse().map(s => s.pulse_score));
+  renderHistory(snapshots);
+
+  const idle = document.getElementById('briefing-idle');
+  const text = document.getElementById('briefing-text');
+  const hint = document.getElementById('briefHint');
+  if(!hasData){
+    idle.style.display = 'none';
+    text.textContent = '';
+    hint.textContent = 'Add a snapshot on the Upload & calculate tab to generate your first briefing.';
+  } else {
+    hint.textContent = 'Generated from your latest snapshot.';
+    idle.style.display = latest.briefing ? 'none' : 'block';
+    text.textContent = latest.briefing || '';
+  }
+}
+
+const RING_CIRC = 289.03;   // 2 * PI * r, where r = 46
+
+// 'Rs 0 over 90d' -> main 'Rs 0', suffix 'over 90d' so the qualifier can sit
+// on the score line instead of crowding the headline figure.
+function splitValue(raw){
+  const i = String(raw).indexOf(' over ');
+  return i === -1 ? { main:String(raw), suffix:'' }
+                  : { main:String(raw).slice(0,i), suffix:String(raw).slice(i+1) };
+}
+
+function renderVitals(vitals, hasData){
+  const grid = document.getElementById('vitalsGrid');
+  grid.innerHTML = '';
+  vitals.forEach(v => {
+    const accent = VITAL_ACCENTS[v.label] || '#5C6B7A';
+    const pct = Math.max(0, Math.min(100, v.score || 0));
+    const offset = RING_CIRC * (1 - pct / 100);
+    const { main, suffix } = splitValue(v.value);
+
+    const el = document.createElement('div');
+    el.className = 'vital' + (hasData ? '' : ' is-zero');
+    el.style.setProperty('--v-accent', accent);
+    el.innerHTML =
+      '<div class="v-value"></div>' +
+      '<div class="v-ring">' +
+        '<svg viewBox="0 0 100 100" aria-hidden="true">' +
+          '<circle cx="50" cy="50" r="46" fill="none" stroke="rgba(11,18,32,0.10)" stroke-width="1.2"></circle>' +
+          '<circle cx="50" cy="50" r="46" fill="none" stroke="' + accent + '" stroke-width="2.4" ' +
+            'stroke-linecap="round" stroke-dasharray="' + RING_CIRC + '" stroke-dashoffset="' + offset.toFixed(2) + '"></circle>' +
+        '</svg>' +
+        '<div class="rv"></div>' +
+      '</div>' +
+      '<div class="v-top"><span class="v-dot"></span><span class="v-label"></span></div>' +
+      '<div class="v-score"></div>';
+
+    el.querySelector('.v-value').textContent = main;
+    el.querySelector('.rv').textContent = Math.round(v.score);
+    el.querySelector('.v-label').textContent = v.label;
+    el.querySelector('.v-score').textContent =
+      (suffix ? suffix + ' \u2022 ' : '') + Math.round(v.score) + '/100';
+    grid.appendChild(el);
+  });
+}
+
+function renderSpark(series){
+  const host = document.getElementById('spark');
+  if(series.length < 2){ host.innerHTML = ''; return; }
+  const W = 420, H = 54, P = 4;
+  const min = Math.min(...series), max = Math.max(...series);
+  const span = (max - min) || 1;
+  const pts = series.map((v,i) => {
+    const x = P + (i / (series.length - 1)) * (W - 2*P);
+    const y = H - P - ((v - min) / span) * (H - 2*P);
+    return x.toFixed(1) + ',' + y.toFixed(1);
+  }).join(' ');
+  host.innerHTML =
+    '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="' + H + '" preserveAspectRatio="none" aria-label="Pulse score trend">' +
+    '<polyline points="' + pts + '" fill="none" stroke="#12805A" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+}
+
+function renderHistory(rows){
+  const host = document.getElementById('historyList');
+  host.innerHTML = '';
+  if(!rows.length){
+    host.innerHTML = '<div class="hist-empty">No snapshots recorded yet.</div>';
+    return;
+  }
+  rows.forEach((r, i) => {
+    const prev = rows[i+1];
+    const d = prev ? r.pulse_score - prev.pulse_score : null;
+    const row = document.createElement('div');
+    row.className = 'hist-row';
+    row.innerHTML = '<span class="hist-date"></span><span class="hist-right">' +
+      '<span class="hist-src"></span><span class="hist-pulse"></span></span>';
+    row.querySelector('.hist-date').textContent = fmtDate(r.created_at);
+    row.querySelector('.hist-src').textContent = r.source;
+    const p = row.querySelector('.hist-pulse');
+    p.textContent = r.pulse_score + (d === null ? '' : d > 0 ? '  ▲+' + d : d < 0 ? '  ▼' + d : '  —');
+    p.className = 'hist-pulse ' + scoreClass(r.pulse_score);
+    host.appendChild(row);
+  });
+}
+
+// ---------- auth ----------
+const authTabs = document.querySelectorAll('.auth-tab');
+const authForms = document.querySelectorAll('.auth-form');
+const authTitle = document.getElementById('authTitle');
+authTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    const t = tab.dataset.form;
+    authTabs.forEach(x => x.classList.remove('active'));
+    authForms.forEach(f => f.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(t + 'Form').classList.add('active');
+    authTitle.textContent = t === 'signup' ? 'Create your account.' : 'Welcome back.';
+    clearAuthErrors();
+  });
+});
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('loginSubmit');
+  clearAuthErrors();
+  if(!sbClient){ showAuthError('Not ready yet — reload the page.'); return; }
+  btn.disabled = true; btn.textContent = 'Logging in…';
+  try {
+    const { error } = await withTimeout(sbClient.auth.signInWithPassword({
+      email: document.getElementById('loginEmail').value,
+      password: document.getElementById('loginPassword').value
+    }), 20000, 'Login');
+    if(error) throw error;
+    document.getElementById('loginForm').reset();
+  } catch(err){
+    console.error('[margyn] login:', err); showAuthError(err.message || 'Login failed');
+  } finally { btn.disabled = false; btn.textContent = 'Log in'; }
+});
+
+document.getElementById('signupForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('signupSubmit');
+  const errorEl = document.getElementById('signupError');
+  const email = document.getElementById('signupEmail').value;
+  clearAuthErrors();
+  if(!sbClient){ showAuthError('Not ready yet — reload the page.'); return; }
+  btn.disabled = true; btn.textContent = 'Creating account…';
+  try {
+    const { data, error } = await withTimeout(sbClient.auth.signUp({
+      email, password: document.getElementById('signupPassword').value
+    }), 20000, 'Signup');
+    if(error) throw error;
+    if(!(data && data.session)){
+      errorEl.style.color = 'var(--emerald)';
+      errorEl.textContent = 'Account created. Check ' + email + ' for the confirmation link.';
+      errorEl.classList.add('show');
+    }
+    document.getElementById('signupForm').reset();
+  } catch(err){
+    console.error('[margyn] signup:', err); showAuthError(err.message || 'Signup failed');
+  } finally { btn.disabled = false; btn.textContent = 'Create account'; }
+});
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('logoutBtn');
+  btn.disabled = true;
+  try {
+    if(sbClient) await sbClient.auth.signOut();
+  } catch(err){
+    // Session already gone, or the network dropped. Either way the local
+    // session is being discarded, so fall through and show the gate.
+    console.error('[margyn] signOut:', err);
+  } finally {
+    btn.disabled = false;
+    await routeFor(null);   // explicit — do not rely on onAuthStateChange firing
+  }
+});
+
+// ---------- entry tabs ----------
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  document.getElementById('panel-' + t.dataset.tab).classList.add('active');
+}));
+
+// ---------- 3D tilt ----------
+(function(){
+  const card = document.getElementById('pulseCard');
+  if(!card) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if(!window.matchMedia('(hover:hover)').matches) return;
+  const wrap = document.querySelector('.pulse-wrap');
+  wrap.addEventListener('mousemove', (e) => {
+    const r = wrap.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    card.style.transform = 'rotateX(' + (-py*6).toFixed(2) + 'deg) rotateY(' + (px*8).toFixed(2) + 'deg)';
+  });
+  wrap.addEventListener('mouseleave', () => { card.style.transform = 'rotateX(0deg) rotateY(0deg)'; });
+})();
+
+// ---------- upload ----------
+let workbookData = null;
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+dropzone.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', handleFile);
+dropzone.addEventListener('dragover', e => e.preventDefault());
+dropzone.addEventListener('drop', e => {
+  e.preventDefault();
+  if(e.dataTransfer.files[0]){ fileInput.files = e.dataTransfer.files; handleFile(); }
+});
+function handleFile(){
+  const file = fileInput.files[0];
+  if(!file) return;
+  const note = document.getElementById('noteUpload');
+  if(typeof XLSX === 'undefined'){
+    note.className = 'note bad';
+    note.textContent = 'Spreadsheet library failed to load — use manual entry, or reload.';
+    return;
+  }
+  document.getElementById('fileName').textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    workbookData = XLSX.read(new Uint8Array(e.target.result), { type:'array', cellDates:true });
+    document.getElementById('computeFromFile').disabled = false;
+  };
+  reader.readAsArrayBuffer(file);
+}
+function sheetToRows(wb, name){
+  const sheet = wb.Sheets[name];
+  return sheet ? XLSX.utils.sheet_to_json(sheet, { defval:0 }) : [];
+}
+
+document.getElementById('computeFromFile').addEventListener('click', () => {
+  if(!workbookData) return;
+  const bank = sheetToRows(workbookData, 'Bank Accounts');
+  const recv = sheetToRows(workbookData, 'Receivables');
+  const pay  = sheetToRows(workbookData, 'Payables');
+  const pl   = sheetToRows(workbookData, 'P&L Summary');
+  const gst  = sheetToRows(workbookData, 'GST ITC');
+
+  const cash = bank.reduce((s,r) => s + (Number(r['Balance'])||0), 0);
+  const today = new Date();
+  let recvTotal = 0, recv90 = 0;
+  recv.forEach(r => {
+    const out = (Number(r['Amount'])||0) - (Number(r['Amount Received'])||0);
+    recvTotal += out;
+    const due = r['Due Date'] ? new Date(r['Due Date']) : null;
+    if(due && (today - due)/86400000 > 90) recv90 += out;
+  });
+  let paySoon = 0;
+  pay.forEach(r => {
+    const due = r['Due Date'] ? new Date(r['Due Date']) : null;
+    const days = due ? (due - today)/86400000 : 999;
+    if(days <= 30) paySoon += Number(r['Amount'])||0;
+  });
+  const plMap = {};
+  pl.forEach(r => { plMap[r['Line Item']] = Number(r['Amount'])||0; });
+  const revenue = plMap['Revenue'] || 0;
+  const netProfit = plMap['Net Profit'] || 0;
+  const burn = plMap['Monthly Operating Expenses'] || (revenue - netProfit) || 1;
+  let gstLeak = 0;
+  gst.forEach(r => { gstLeak += (Number(r['ITC Available'])||0) - (Number(r['ITC Claimed'])||0); });
+
+  runCompute({ cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak }, 'upload', 'noteUpload');
+});
+
+document.getElementById('computeFromManual').addEventListener('click', () => {
+  const v = id => Number(document.getElementById(id).value) || 0;
+  runCompute({
+    cash:v('m-cash'), recvTotal:v('m-recv'), recv90:v('m-recv90'), paySoon:v('m-pay'),
+    revenue:v('m-rev'), netProfit:v('m-profit'), burn:v('m-burn') || 1, gstLeak:v('m-gst')
+  }, 'manual', 'noteManual');
+});
+
+// ---------- scoring ----------
+function clamp(n){ return Math.max(0, Math.min(100, n)); }
+
+function computeVitals(d){
+  const cashScore = clamp((d.cash / (d.burn * 3)) * 100);
+  const recvScore = d.recvTotal > 0 ? clamp(100 - (d.recv90 / d.recvTotal) * 100) : 100;
+  const payScore  = d.cash > 0 ? clamp(100 - (d.paySoon / d.cash) * 100) : (d.paySoon > 0 ? 0 : 100);
+  const gstScore  = clamp(100 - (d.gstLeak / 1000) * 10);
+  const netMargin = d.revenue > 0 ? (d.netProfit / d.revenue) * 100 : 0;
+  const marginScore = clamp(netMargin * 5);
+  const runwayMonths = d.burn > 0 ? (d.cash + d.recvTotal - d.paySoon) / d.burn : 0;
+  const runwayScore = clamp((runwayMonths / 6) * 100);
+
+  const pulse = Math.round(cashScore*0.20 + recvScore*0.15 + payScore*0.15 +
+                           gstScore*0.15 + marginScore*0.20 + runwayScore*0.15);
+  const vitals = [
+    { label:'Cash Position', value:'₹' + d.cash.toLocaleString('en-IN'), score:cashScore },
+    { label:'Receivables Aging', value:'₹' + d.recv90.toLocaleString('en-IN') + ' over 90d', score:recvScore },
+    { label:'Payables Due (30d)', value:'₹' + d.paySoon.toLocaleString('en-IN'), score:payScore },
+    { label:'GST/ITC Leakage', value:'₹' + d.gstLeak.toLocaleString('en-IN'), score:gstScore },
+    { label:'Net Margin', value:netMargin.toFixed(1) + '%', score:marginScore },
+    { label:'Working Capital Runway', value:runwayMonths.toFixed(1) + ' months', score:runwayScore }
+  ];
+  return { pulse, vitals };
+}
+
+async function runCompute(d, source, noteId){
+  const note = document.getElementById(noteId);
+  const { pulse, vitals } = computeVitals(d);
+  note.className = 'note'; note.textContent = 'Saving snapshot…';
+  try {
+    const row = {
+      user_id: currentUser.id, source,
+      cash:d.cash, recv_total:d.recvTotal, recv_90:d.recv90, pay_soon:d.paySoon,
+      revenue:d.revenue, net_profit:d.netProfit, burn:d.burn, gst_leak:d.gstLeak,
+      pulse_score:pulse, vitals
+    };
+    const { error } = await withTimeout(sbClient.from('snapshots').insert(row), 20000, 'Saving snapshot');
+    if(error) throw error;
+    note.textContent = '';
+    await refreshAll();
+    showView('scores');
+  } catch(err){
+    console.error('[margyn] save snapshot:', err);
+    note.className = 'note bad';
+    note.textContent = 'Could not save: ' + (err.message || 'unknown error');
+  }
+}
+
+// ---------- briefing ----------
+document.getElementById('generateBriefing').addEventListener('click', async () => {
+  const btn = document.getElementById('generateBriefing');
+  const out = document.getElementById('briefing-text');
+  const latest = snapshots[0];
+  if(!latest) return;
+  btn.disabled = true;
+  out.innerHTML = '<div class="loading">Generating briefing…</div>';
+  try {
+    const vitalsObj = {};
+    (latest.vitals || []).forEach(v => vitalsObj[v.label] = v.value);
+    const res = await fetch('/api/briefing', {
+      method:'POST', headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({ vitals:vitalsObj, pulseScore:latest.pulse_score, companyName:currentProfile.company_name })
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || 'Unknown error');
+    out.textContent = data.briefing;
+    document.getElementById('briefing-idle').style.display = 'none';
+    await sbClient.from('snapshots').update({ briefing:data.briefing }).eq('id', latest.id);
+    latest.briefing = data.briefing;
+  } catch(err){
+    out.innerHTML = '<div class="error-box">Could not generate briefing: ' + err.message + '</div>';
+  } finally { btn.disabled = false; }
+});
+
+// ---------- template ----------
+document.getElementById('downloadTemplate').addEventListener('click', () => {
+  if(typeof XLSX === 'undefined'){ alert('Spreadsheet library failed to load. Reload the page.'); return; }
+  const wb = XLSX.utils.book_new();
+  const sheets = {
+    'Bank Accounts': [{ 'Account Name':'HDFC Current A/c', 'Balance':0 }],
+    'Receivables': [{ 'Customer':'', 'Invoice Date':'', 'Due Date':'', 'Amount':0, 'Amount Received':0 }],
+    'Payables': [{ 'Vendor':'', 'Invoice Date':'', 'Due Date':'', 'Amount':0 }],
+    'P&L Summary': [{ 'Line Item':'Revenue','Amount':0 },{ 'Line Item':'Net Profit','Amount':0 },{ 'Line Item':'Monthly Operating Expenses','Amount':0 }],
+    'GST ITC': [{ 'Month':'', 'GST Payable':0, 'ITC Available':0, 'ITC Claimed':0 }]
+  };
+  Object.keys(sheets).forEach(n => XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheets[n]), n));
+  XLSX.writeFile(wb, 'Margyn_Data_Template.xlsx');
+});
+
+// Render zero-state immediately so the Scores page never looks broken pre-login.
+renderVitals(ZERO_VITALS, false);
+bootAuth();
+</script>
+</body>
+</html>  .nav-logo{ font-family:'Fraunces', serif; font-size:18px; font-weight:600; letter-spacing:-0.01em; }
+  .nav-user{ display:flex; align-items:center; gap:12px; font-size:13px; color:var(--steel); }
+  .nav-logout{ background:transparent; border:1px solid var(--line-strong); color:var(--steel); padding:8px 14px; border-radius:999px; cursor:pointer; font-size:12.5px; font-weight:600; transition:all .2s ease; }
+  .nav-logout:hover{ border-color:var(--ink); color:var(--ink); }
+
+  .gate{ position:fixed; inset:0; background:var(--bg); z-index:200; display:flex; align-items:center; justify-content:center; padding:24px; overflow-y:auto; }
   .gate-modal{ max-width:460px; width:100%; background:var(--white); border:1px solid var(--line); border-radius:6px; padding:40px 34px; box-shadow:var(--shadow-lg); }
   .gate-modal .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--emerald); margin-bottom:14px; font-weight:600; }
   .gate-modal h2{ font-family:'Fraunces',serif; font-weight:500; font-size:28px; letter-spacing:-0.01em; margin-bottom:12px; }
