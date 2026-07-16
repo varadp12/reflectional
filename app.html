@@ -25,14 +25,14 @@
   body{ background:var(--bg); color:var(--ink); font-family:'Manrope',sans-serif; min-height:100vh; line-height:1.55; -webkit-font-smoothing:antialiased; }
   .mono{font-family:'IBM Plex Mono',monospace;}
   a{ color:inherit; text-decoration:none; }
-  .wrap{max-width:920px; margin:0 auto; padding:120px 24px 96px;}
+  .wrap{max-width:920px; margin:0 auto; padding:118px 24px 96px;}
   .hidden{ display:none !important; }
 
   .crescent{ position:relative; border-radius:50%; overflow:hidden; flex-shrink:0; background:var(--emerald); }
   .crescent::after{ content:''; position:absolute; top:0; left:-42%; width:100%; height:100%; border-radius:50%; background:var(--bg); }
 
   nav{ position:fixed; top:18px; left:50%; transform:translateX(-50%); z-index:100; background:rgba(255,255,255,0.68); backdrop-filter:blur(20px) saturate(1.5); border:1px solid rgba(255,255,255,0.8); border-radius:999px; box-shadow:var(--shadow-md); max-width:calc(100% - 32px); }
-  .nav-inner{ padding:10px 10px 10px 22px; display:flex; align-items:center; gap:28px; }
+  .nav-inner{ padding:10px 10px 10px 22px; display:flex; align-items:center; gap:24px; }
   .nav-brand{ display:flex; align-items:center; gap:10px; }
   .nav-logo{ font-family:'Fraunces', serif; font-size:18px; font-weight:600; letter-spacing:-0.01em; }
   .nav-user{ display:flex; align-items:center; gap:12px; font-size:13px; color:var(--steel); }
@@ -59,18 +59,29 @@
   .auth-error{ font-size:12px; color:var(--rose); margin-top:12px; display:none; }
   .auth-error.show{ display:block; }
 
-  .dash-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:32px; flex-wrap:wrap; }
-  .dash-eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--emerald); margin-bottom:10px; font-weight:600; }
-  .dash-title{ font-family:'Fraunces',serif; font-weight:500; font-size:36px; letter-spacing:-0.01em; line-height:1.15; }
-  .dash-sub{ margin-top:8px; font-size:14px; color:var(--steel); }
+  header.app-head{ margin-bottom:26px; }
+  .app-eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--emerald); margin-bottom:10px; font-weight:600; }
+  .app-title{ font-family:'Fraunces',serif; font-weight:500; font-size:36px; letter-spacing:-0.01em; line-height:1.15; }
+  .app-sub{ margin-top:8px; font-size:14px; color:var(--steel); }
+
+  /* three-way page nav */
+  .pagenav{ display:flex; gap:4px; margin-bottom:30px; border:1px solid var(--line); border-radius:999px; padding:4px; background:var(--white); box-shadow:var(--shadow-sm); }
+  .pagenav button{ flex:1; padding:12px 10px; text-align:center; cursor:pointer; background:transparent; color:var(--steel); font-size:13.5px; font-weight:700; font-family:'Manrope',sans-serif; transition:all .2s ease; border:none; border-radius:999px; }
+  .pagenav button.active{ background:var(--ink); color:var(--white); }
 
   .card{ position:relative; background:var(--white); border:1px solid var(--line); border-radius:6px; padding:28px; margin-bottom:24px; box-shadow:var(--shadow-sm); }
-  .card h2{font-family:'Fraunces',serif; font-weight:500; font-size:20px; margin-bottom:16px;}
+  .card h2{font-family:'Fraunces',serif; font-weight:500; font-size:20px; margin-bottom:6px;}
   .hint{font-size:13px; color:var(--steel); margin-bottom:20px; line-height:1.6;}
 
-  .empty{ text-align:center; padding:56px 28px; }
-  .empty h2{ font-family:'Fraunces',serif; font-weight:500; font-size:24px; margin-bottom:10px; }
-  .empty p{ font-size:14px; color:var(--steel); margin-bottom:24px; }
+  .facts{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
+  .fact{ background:var(--white); border:1px solid var(--line); border-radius:6px; padding:18px; box-shadow:var(--shadow-sm); }
+  .fact .f-label{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600; margin-bottom:8px; }
+  .fact .f-value{ font-family:'IBM Plex Mono',monospace; font-size:19px; font-weight:600; }
+
+  .kv{ display:flex; justify-content:space-between; gap:16px; padding:12px 0; border-bottom:1px solid var(--line); font-size:14px; }
+  .kv:last-child{ border-bottom:none; }
+  .kv .k{ font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600; }
+  .kv .v{ font-weight:600; text-align:right; }
 
   .pulse-wrap{ perspective:1400px; margin-bottom:24px; }
   .pulse-score{ position:relative; text-align:center; padding:38px 28px 32px; border:1px solid var(--line); border-radius:6px; background:var(--white); box-shadow:0 40px 80px -30px rgba(18,128,90,0.16), var(--shadow-lg); transform-style:preserve-3d; will-change:transform; }
@@ -82,19 +93,22 @@
   .pulse-score .p-label{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--steel); display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:10px; }
   .pulse-score .p-label::before{ content:''; width:5px; height:5px; border-radius:50%; background:var(--emerald-bright); }
   .pulse-score .num{font-family:'Fraunces',serif; font-weight:500; font-size:64px; line-height:1;}
-  .pulse-delta{ font-family:'IBM Plex Mono',monospace; font-size:12.5px; margin-top:10px; font-weight:600; }
+  .pulse-score.is-zero .num{ color:var(--steel); opacity:.45; }
+  .pulse-delta{ font-family:'IBM Plex Mono',monospace; font-size:12.5px; margin-top:10px; font-weight:600; color:var(--steel); }
   .pulse-asof{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--steel); margin-top:8px; }
   .spark{ margin-top:20px; }
 
   .vitals-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px;}
   .vital{ background:var(--white); border:1px solid var(--line); border-radius:6px; padding:18px; position:relative; overflow:hidden; box-shadow:var(--shadow-sm); }
   .vital::before{ content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--v-accent, var(--steel)); }
+  .vital.is-zero{ opacity:.55; }
   .vital .v-top{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
   .vital .v-dot{ width:8px; height:8px; border-radius:50%; background:var(--v-accent, var(--steel)); flex-shrink:0; }
   .vital .v-label{font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600;}
   .vital .v-value{font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:600;}
   .vital .v-score{font-size:12px; margin-top:6px; font-weight:600;}
   .score-good{color:var(--emerald);} .score-warn{color:var(--gold);} .score-bad{color:var(--rose);}
+  .score-none{color:var(--steel);}
 
   .hist-row{ display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid var(--line); font-size:13.5px; }
   .hist-row:last-child{ border-bottom:none; }
@@ -102,9 +116,10 @@
   .hist-right{ display:flex; align-items:center; gap:14px; }
   .hist-pulse{ font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:15px; }
   .hist-src{ font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); border:1px solid var(--line); border-radius:999px; padding:2px 8px; }
+  .hist-empty{ font-size:13.5px; color:var(--steel); padding:8px 0; }
 
-  .tabs{display:flex; gap:4px; margin-bottom:28px; border:1px solid var(--line); border-radius:999px; padding:4px; background:var(--white); box-shadow:var(--shadow-sm);}
-  .tab{ flex:1; padding:12px; text-align:center; cursor:pointer; background:transparent; color:var(--steel); font-size:14px; font-weight:700; font-family:'Manrope',sans-serif; transition:all .2s ease; border:none; border-radius:999px; }
+  .tabs{display:flex; gap:4px; margin-bottom:24px; border:1px solid var(--line); border-radius:999px; padding:4px; background:var(--white); box-shadow:var(--shadow-sm);}
+  .tab{ flex:1; padding:11px; text-align:center; cursor:pointer; background:transparent; color:var(--steel); font-size:13.5px; font-weight:700; font-family:'Manrope',sans-serif; transition:all .2s ease; border:none; border-radius:999px; }
   .tab.active{background:var(--ink); color:var(--white);}
   .panel{display:none;} .panel.active{display:block;}
 
@@ -118,10 +133,10 @@
 
   .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
   label{display:block; font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--steel); margin-bottom:7px; text-transform:uppercase; letter-spacing:.06em; font-weight:600;}
-  input[type=number], input[type=text]{ width:100%; padding:11px 12px; background:var(--white); border:1px solid var(--line-strong); border-radius:4px; color:var(--ink); font-family:'IBM Plex Mono',monospace; font-size:14px; margin-bottom:16px; transition:border-color .2s ease; }
-  input:focus{outline:none; border-color:var(--emerald);}
+  input[type=number], input[type=text], select{ width:100%; padding:11px 12px; background:var(--white); border:1px solid var(--line-strong); border-radius:4px; color:var(--ink); font-family:'IBM Plex Mono',monospace; font-size:14px; margin-bottom:16px; transition:border-color .2s ease; }
+  input:focus, select:focus{outline:none; border-color:var(--emerald);}
 
-  .btn-row{ display:flex; gap:12px; flex-wrap:wrap; }
+  .btn-row{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
   button.primary{ background:var(--ink); color:var(--white); border:none; padding:14px 28px; border-radius:999px; font-weight:700; font-size:14.5px; font-family:'Manrope',sans-serif; cursor:pointer; transition:all .25s cubic-bezier(.16,1,.3,1); }
   button.primary:hover{background:var(--emerald); transform:translateY(-1px); box-shadow:var(--shadow-md);}
   button.primary:disabled{opacity:0.4; cursor:not-allowed; transform:none; box-shadow:none;}
@@ -131,15 +146,19 @@
   #briefing-text{ white-space:pre-wrap; font-size:15px; line-height:1.75; }
   .loading{color:var(--steel); font-size:14px; font-style:italic;}
   .error-box{ border:1px solid var(--rose); background:var(--blush); color:var(--rose); padding:14px; border-radius:6px; font-size:13px; margin-top:14px; }
-  .save-note{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--steel); margin-top:14px; }
+  .note{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--steel); }
+  .note.ok{ color:var(--emerald); }
+  .note.bad{ color:var(--rose); }
 
   footer{ border-top:1px solid var(--line); padding:32px 24px; text-align:center; font-size:12.5px; color:var(--steel); }
 
   @media (max-width:640px){
     .vitals-grid{grid-template-columns:1fr 1fr;}
+    .facts{grid-template-columns:1fr;}
     .grid-2{grid-template-columns:1fr;}
-    .dash-title{font-size:27px;}
+    .app-title{font-size:27px;}
     .wrap{padding:100px 20px 72px;}
+    .pagenav button{ font-size:12px; padding:11px 6px; }
   }
 </style>
 </head>
@@ -179,7 +198,7 @@
   <div class="gate-modal">
     <div class="eyebrow">One-time setup</div>
     <h2>Tell us about your business.</h2>
-    <p class="sub">This shapes your scorecard and your briefing. You can change it later.</p>
+    <p class="sub">This shapes your scorecard and your briefing. You can change it any time on your profile.</p>
     <form id="onboardForm">
       <div class="auth-field"><label for="obCompany">Company name</label>
         <input type="text" id="obCompany" required placeholder="Kavya Textiles Pvt Ltd"></div>
@@ -197,7 +216,7 @@
         <input type="text" id="obIndustry" placeholder="Textiles, auto components, pharma…"></div>
       <div class="auth-field"><label for="obCity">City</label>
         <input type="text" id="obCity" placeholder="Mumbai"></div>
-      <button type="submit" class="auth-submit" id="obSubmit">Continue to dashboard</button>
+      <button type="submit" class="auth-submit" id="obSubmit">Continue</button>
       <div class="auth-error" id="obError"></div>
     </form>
   </div>
@@ -220,66 +239,65 @@
 
 <div class="wrap">
 
-  <!-- ---------- DASHBOARD ---------- -->
-  <div id="view-dashboard">
-    <div class="dash-head">
-      <div>
-        <div class="dash-eyebrow">Margyn 1.0</div>
-        <div class="dash-title" id="dashCompany">—</div>
-        <div class="dash-sub" id="dashSub"></div>
-      </div>
-      <div class="btn-row">
-        <button class="primary" id="goEntry">Update figures</button>
-      </div>
+  <header class="app-head">
+    <div class="app-eyebrow">Margyn 1.0</div>
+    <div class="app-title" id="headCompany">—</div>
+    <div class="app-sub" id="headSub"></div>
+  </header>
+
+  <div class="pagenav">
+    <button data-view="profile">Profile</button>
+    <button data-view="calculate">Upload &amp; calculate</button>
+    <button data-view="scores" class="active">Scores</button>
+  </div>
+
+  <!-- ---------- 1. PROFILE ---------- -->
+  <div id="view-profile" class="hidden">
+    <div class="facts">
+      <div class="fact"><div class="f-label">Snapshots recorded</div><div class="f-value" id="pfCount">0</div></div>
+      <div class="fact"><div class="f-label">Latest pulse</div><div class="f-value" id="pfPulse">0</div></div>
+      <div class="fact"><div class="f-label">Tracking since</div><div class="f-value" id="pfSince">—</div></div>
     </div>
 
-    <div class="card empty hidden" id="dashEmpty">
-      <h2>No figures yet.</h2>
-      <p>Add your first set of numbers and your Pulse Score appears here.</p>
-      <button class="primary" id="emptyCta">Add your first snapshot</button>
+    <div class="card">
+      <h2>Account</h2>
+      <div class="hint">Read-only. These come from your login.</div>
+      <div class="kv"><span class="k">Email</span><span class="v" id="pfEmail">—</span></div>
+      <div class="kv"><span class="k">Account created</span><span class="v" id="pfCreated">—</span></div>
+      <div class="kv"><span class="k">User ID</span><span class="v mono" id="pfUid" style="font-size:11px;">—</span></div>
     </div>
 
-    <div id="dashContent" class="hidden">
-      <div class="pulse-wrap">
-        <div class="pulse-score" id="pulseCard">
-          <span class="tick tl"></span><span class="tick tr"></span><span class="tick bl"></span><span class="tick br"></span>
-          <div class="p-label">Pulse score — live</div>
-          <div class="num" id="pulseNum">—</div>
-          <div class="pulse-delta" id="pulseDelta"></div>
-          <div class="pulse-asof" id="pulseAsOf"></div>
-          <div class="spark" id="spark"></div>
+    <div class="card">
+      <h2>Business details</h2>
+      <div class="hint">Used in your scorecard and your AI briefing. Edit and save any time.</div>
+      <form id="profileForm">
+        <div class="grid-2">
+          <div><label>Company name</label><input type="text" id="pfCompany" required></div>
+          <div><label>Annual revenue</label>
+            <select id="pfRevenue" required>
+              <option value="">Select a range…</option>
+              <option value="under_5cr">Under ₹5 crore</option>
+              <option value="5_25cr">₹5 – 25 crore</option>
+              <option value="25_50cr">₹25 – 50 crore</option>
+              <option value="50_100cr">₹50 – 100 crore</option>
+              <option value="100_200cr">₹100 – 200 crore</option>
+              <option value="over_200cr">Over ₹200 crore</option>
+            </select></div>
+          <div><label>Industry</label><input type="text" id="pfIndustry"></div>
+          <div><label>City</label><input type="text" id="pfCity"></div>
         </div>
-      </div>
-
-      <div class="vitals-grid" id="vitalsGrid"></div>
-
-      <div class="card">
-        <h2>Executive briefing</h2>
-        <div id="briefing-idle"><button class="primary" id="generateBriefing">Generate AI briefing</button></div>
-        <div id="briefing-text"></div>
-      </div>
-
-      <div class="card" id="historyCard">
-        <h2>History</h2>
-        <div class="hint">Every snapshot you record. Depth here is what makes the score meaningful over time.</div>
-        <div id="historyList"></div>
-      </div>
+        <div class="btn-row">
+          <button type="submit" class="primary" id="pfSave">Save changes</button>
+          <span class="note" id="pfNote"></span>
+        </div>
+      </form>
     </div>
   </div>
 
-  <!-- ---------- ENTRY ---------- -->
-  <div id="view-entry" class="hidden">
-    <div class="dash-head">
-      <div>
-        <div class="dash-eyebrow">New snapshot</div>
-        <div class="dash-title">Update your figures</div>
-        <div class="dash-sub">Upload a workbook or type the numbers in. Saved to your account.</div>
-      </div>
-      <div class="btn-row"><button class="ghost" id="backToDash">Back</button></div>
-    </div>
-
+  <!-- ---------- 2. UPLOAD & CALCULATE ---------- -->
+  <div id="view-calculate" class="hidden">
     <div class="tabs">
-      <button class="tab active" data-tab="upload">Upload data</button>
+      <button class="tab active" data-tab="upload">Upload workbook</button>
       <button class="tab" data-tab="manual">Quick manual entry</button>
     </div>
 
@@ -295,7 +313,10 @@
         </div>
         <div class="template-link" id="downloadTemplate">Download the blank template →</div>
       </div>
-      <button class="primary" id="computeFromFile" disabled>Compute &amp; save</button>
+      <div class="btn-row">
+        <button class="primary" id="computeFromFile" disabled>Compute &amp; save</button>
+        <span class="note" id="noteUpload"></span>
+      </div>
     </div>
 
     <div class="panel" id="panel-manual">
@@ -313,10 +334,40 @@
           <div><label>GST ITC available but unclaimed (₹)</label><input type="number" id="m-gst" placeholder="65000"></div>
         </div>
       </div>
-      <button class="primary" id="computeFromManual">Compute &amp; save</button>
+      <div class="btn-row">
+        <button class="primary" id="computeFromManual">Compute &amp; save</button>
+        <span class="note" id="noteManual"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- 3. SCORES ---------- -->
+  <div id="view-scores">
+    <div class="pulse-wrap">
+      <div class="pulse-score" id="pulseCard">
+        <span class="tick tl"></span><span class="tick tr"></span><span class="tick bl"></span><span class="tick br"></span>
+        <div class="p-label">Pulse score — live</div>
+        <div class="num" id="pulseNum">0</div>
+        <div class="pulse-delta" id="pulseDelta"></div>
+        <div class="pulse-asof" id="pulseAsOf"></div>
+        <div class="spark" id="spark"></div>
+      </div>
     </div>
 
-    <div class="save-note" id="saveNote"></div>
+    <div class="vitals-grid" id="vitalsGrid"></div>
+
+    <div class="card">
+      <h2>Executive briefing</h2>
+      <div class="hint" id="briefHint">Generated from your latest snapshot.</div>
+      <div id="briefing-idle"><button class="primary" id="generateBriefing">Generate AI briefing</button></div>
+      <div id="briefing-text"></div>
+    </div>
+
+    <div class="card">
+      <h2>Previous scores</h2>
+      <div class="hint">Every snapshot you've recorded. Depth here is what makes the score meaningful over time.</div>
+      <div id="historyList"></div>
+    </div>
   </div>
 
 </div>
@@ -326,21 +377,21 @@
 <script>
 // ============================================================
 // Config — static HTML, no bundler: values must be literal.
-// The anon key is public by design; RLS enforces access.
+// Anon key is public by design; RLS enforces access.
 // ============================================================
 const SUPABASE_URL = 'https://lmegnxrixlrvyodqfthn.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_TcTCDSECsRxbDVXAnI893w_3BJC0Kgh';
 
-// NOTE: named sbClient, NOT supabase. The UMD library declares a global
-// `var supabase`, and a global `let supabase` here would collide with it
-// and throw SyntaxError before the library could execute.
+// Named sbClient, NOT supabase: the UMD library declares a global
+// `var supabase`, and a global `let` of the same name throws SyntaxError
+// before the library can execute.
 let sbClient = null;
 let currentUser = null;
 let currentProfile = null;
 let snapshots = [];
 let bootError = null;
 
-// ---------- error helpers ----------
+// ---------- helpers ----------
 function showAuthError(msg){
   const f = document.querySelector('.auth-form.active');
   const el = f ? f.querySelector('.auth-error') : document.getElementById('loginError');
@@ -351,12 +402,18 @@ function clearAuthErrors(){
   document.querySelectorAll('.auth-error').forEach(e => e.classList.remove('show'));
   if(bootError) showAuthError(bootError);
 }
-function withTimeout(promise, ms, label){
-  return Promise.race([ promise,
-    new Promise((_, rej) => setTimeout(() => rej(new Error(
-      label + ' timed out after ' + (ms/1000) + 's. The Supabase project may be paused — check your dashboard.'
-    )), ms)) ]);
+function withTimeout(p, ms, label){
+  return Promise.race([ p, new Promise((_, rej) => setTimeout(() => rej(new Error(
+    label + ' timed out after ' + (ms/1000) + 's. The Supabase project may be paused — check your dashboard.'
+  )), ms)) ]);
 }
+function fmtDate(iso){
+  return new Date(iso).toLocaleString('en-IN', { day:'numeric', month:'short', year:'numeric', hour:'numeric', minute:'2-digit' });
+}
+function fmtDay(iso){
+  return new Date(iso).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+}
+function scoreClass(s){ return s >= 70 ? 'score-good' : s >= 40 ? 'score-warn' : 'score-bad'; }
 
 // ---------- library loading ----------
 function loadScript(src){
@@ -396,7 +453,7 @@ async function initSupabase(){
   sbClient.auth.onAuthStateChange((_evt, s) => routeFor(s));
 }
 
-// ---------- routing: auth -> onboarding -> dashboard ----------
+// ---------- routing ----------
 async function routeFor(session){
   if(!session){
     currentUser = null; currentProfile = null; snapshots = [];
@@ -414,7 +471,7 @@ async function routeFor(session){
     return;
   }
   document.getElementById('onboardGate').classList.add('hidden');
-  await refreshDashboard();
+  await refreshAll();
 }
 
 async function loadProfile(){
@@ -422,10 +479,9 @@ async function loadProfile(){
   if(error){ console.error('[margyn] loadProfile:', error); return null; }
   return data;
 }
-
 async function loadSnapshots(){
   const { data, error } = await sbClient.from('snapshots')
-    .select('*').eq('user_id', currentUser.id).order('created_at', { ascending:false }).limit(24);
+    .select('*').eq('user_id', currentUser.id).order('created_at', { ascending:false }).limit(50);
   if(error){ console.error('[margyn] loadSnapshots:', error); return []; }
   return data || [];
 }
@@ -449,61 +505,144 @@ document.getElementById('onboardForm').addEventListener('submit', async (e) => {
     if(error) throw error;
     currentProfile = row;
     document.getElementById('onboardGate').classList.add('hidden');
-    await refreshDashboard();
+    await refreshAll();
   } catch(e2){
     console.error('[margyn] onboarding:', e2);
     err.textContent = e2.message || 'Could not save. Try again.'; err.classList.add('show');
-  } finally { btn.disabled = false; btn.textContent = 'Continue to dashboard'; }
+  } finally { btn.disabled = false; btn.textContent = 'Continue'; }
 });
 
-// ---------- dashboard ----------
+// ---------- page nav ----------
 const REV_LABEL = { under_5cr:'Under ₹5 cr', '5_25cr':'₹5–25 cr', '25_50cr':'₹25–50 cr',
   '50_100cr':'₹50–100 cr', '100_200cr':'₹100–200 cr', over_200cr:'Over ₹200 cr' };
 
-async function refreshDashboard(){
+function showView(name){
+  ['profile','calculate','scores'].forEach(v => {
+    document.getElementById('view-' + v).classList.toggle('hidden', v !== name);
+  });
+  document.querySelectorAll('.pagenav button').forEach(b => {
+    b.classList.toggle('active', b.dataset.view === name);
+  });
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+document.querySelectorAll('.pagenav button').forEach(b => {
+  b.addEventListener('click', () => showView(b.dataset.view));
+});
+
+// ---------- render ----------
+async function refreshAll(){
   snapshots = await loadSnapshots();
-  document.getElementById('dashCompany').textContent = currentProfile.company_name;
+  renderHeader();
+  renderProfile();
+  renderScores();
+}
+
+function renderHeader(){
+  document.getElementById('headCompany').textContent = currentProfile.company_name;
   const bits = [REV_LABEL[currentProfile.revenue_range], currentProfile.industry, currentProfile.city].filter(Boolean);
-  document.getElementById('dashSub').textContent = bits.join(' · ');
-  showView('dashboard');
-
-  const empty = document.getElementById('dashEmpty');
-  const content = document.getElementById('dashContent');
-  if(!snapshots.length){ empty.classList.remove('hidden'); content.classList.add('hidden'); return; }
-  empty.classList.add('hidden'); content.classList.remove('hidden');
-
-  const latest = snapshots[0];
-  const prev = snapshots[1];
-  document.getElementById('pulseNum').textContent = latest.pulse_score;
-
-  const deltaEl = document.getElementById('pulseDelta');
-  if(prev){
-    const d = latest.pulse_score - prev.pulse_score;
-    deltaEl.textContent = d === 0 ? 'no change since last' : (d > 0 ? '▲ +' + d : '▼ ' + d) + ' since last';
-    deltaEl.className = 'pulse-delta ' + (d > 0 ? 'score-good' : d < 0 ? 'score-bad' : '');
-  } else { deltaEl.textContent = 'first snapshot'; deltaEl.className = 'pulse-delta'; }
-
-  document.getElementById('pulseAsOf').textContent = 'as of ' + fmtDate(latest.created_at);
-  renderVitals(latest.vitals || []);
-  renderSpark(snapshots.slice().reverse().map(s => s.pulse_score));
-  renderHistory(snapshots);
-  document.getElementById('briefing-idle').style.display = latest.briefing ? 'none' : 'block';
-  document.getElementById('briefing-text').textContent = latest.briefing || '';
+  document.getElementById('headSub').textContent = bits.join(' · ');
 }
 
-function fmtDate(iso){
-  return new Date(iso).toLocaleString('en-IN', { day:'numeric', month:'short', year:'numeric', hour:'numeric', minute:'2-digit' });
+function renderProfile(){
+  document.getElementById('pfCount').textContent = snapshots.length;
+  document.getElementById('pfPulse').textContent = snapshots.length ? snapshots[0].pulse_score : 0;
+  document.getElementById('pfSince').textContent = snapshots.length
+    ? fmtDay(snapshots[snapshots.length - 1].created_at) : '—';
+
+  document.getElementById('pfEmail').textContent = currentUser.email;
+  document.getElementById('pfCreated').textContent = currentUser.created_at ? fmtDay(currentUser.created_at) : '—';
+  document.getElementById('pfUid').textContent = currentUser.id;
+
+  document.getElementById('pfCompany').value = currentProfile.company_name || '';
+  document.getElementById('pfRevenue').value = currentProfile.revenue_range || '';
+  document.getElementById('pfIndustry').value = currentProfile.industry || '';
+  document.getElementById('pfCity').value = currentProfile.city || '';
 }
-function scoreClass(s){ return s >= 70 ? 'score-good' : s >= 40 ? 'score-warn' : 'score-bad'; }
+
+document.getElementById('profileForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('pfSave');
+  const note = document.getElementById('pfNote');
+  note.className = 'note'; note.textContent = 'Saving…';
+  btn.disabled = true;
+  try {
+    const row = {
+      id: currentUser.id,
+      company_name: document.getElementById('pfCompany').value.trim(),
+      revenue_range: document.getElementById('pfRevenue').value,
+      industry: document.getElementById('pfIndustry').value.trim() || null,
+      city: document.getElementById('pfCity').value.trim() || null
+    };
+    const { error } = await withTimeout(sbClient.from('profiles').upsert(row), 20000, 'Saving profile');
+    if(error) throw error;
+    currentProfile = row;
+    renderHeader();
+    note.className = 'note ok'; note.textContent = 'Saved.';
+    setTimeout(() => { note.textContent = ''; note.className = 'note'; }, 2500);
+  } catch(err){
+    console.error('[margyn] profile save:', err);
+    note.className = 'note bad'; note.textContent = err.message || 'Could not save.';
+  } finally { btn.disabled = false; }
+});
+
 const VITAL_ACCENTS = { 'Cash Position':'#C97F1E','Receivables Aging':'#C23B67','Payables Due (30d)':'#5C6B7A',
   'GST/ITC Leakage':'#C97F1E','Net Margin':'#12805A','Working Capital Runway':'#12805A' };
 
-function renderVitals(vitals){
+// Shown before any snapshot exists — the shape of the scorecard, at zero.
+const ZERO_VITALS = [
+  { label:'Cash Position', value:'₹0', score:0 },
+  { label:'Receivables Aging', value:'₹0 over 90d', score:0 },
+  { label:'Payables Due (30d)', value:'₹0', score:0 },
+  { label:'GST/ITC Leakage', value:'₹0', score:0 },
+  { label:'Net Margin', value:'0.0%', score:0 },
+  { label:'Working Capital Runway', value:'0.0 months', score:0 }
+];
+
+function renderScores(){
+  const hasData = snapshots.length > 0;
+  const latest = hasData ? snapshots[0] : null;
+  const prev = snapshots[1];
+
+  const card = document.getElementById('pulseCard');
+  card.classList.toggle('is-zero', !hasData);
+  document.getElementById('pulseNum').textContent = hasData ? latest.pulse_score : 0;
+
+  const deltaEl = document.getElementById('pulseDelta');
+  if(!hasData){
+    deltaEl.textContent = 'no snapshots yet'; deltaEl.className = 'pulse-delta';
+  } else if(prev){
+    const d = latest.pulse_score - prev.pulse_score;
+    deltaEl.textContent = d === 0 ? 'no change since last' : (d > 0 ? '▲ +' + d : '▼ ' + d) + ' since last';
+    deltaEl.className = 'pulse-delta ' + (d > 0 ? 'score-good' : d < 0 ? 'score-bad' : '');
+  } else {
+    deltaEl.textContent = 'first snapshot'; deltaEl.className = 'pulse-delta';
+  }
+
+  document.getElementById('pulseAsOf').textContent = hasData ? 'as of ' + fmtDate(latest.created_at) : '';
+  renderVitals(hasData ? (latest.vitals || ZERO_VITALS) : ZERO_VITALS, hasData);
+  renderSpark(snapshots.slice().reverse().map(s => s.pulse_score));
+  renderHistory(snapshots);
+
+  const idle = document.getElementById('briefing-idle');
+  const text = document.getElementById('briefing-text');
+  const hint = document.getElementById('briefHint');
+  if(!hasData){
+    idle.style.display = 'none';
+    text.textContent = '';
+    hint.textContent = 'Add a snapshot on the Upload & calculate tab to generate your first briefing.';
+  } else {
+    hint.textContent = 'Generated from your latest snapshot.';
+    idle.style.display = latest.briefing ? 'none' : 'block';
+    text.textContent = latest.briefing || '';
+  }
+}
+
+function renderVitals(vitals, hasData){
   const grid = document.getElementById('vitalsGrid');
   grid.innerHTML = '';
   vitals.forEach(v => {
     const el = document.createElement('div');
-    el.className = 'vital';
+    el.className = 'vital' + (hasData ? '' : ' is-zero');
     el.style.setProperty('--v-accent', VITAL_ACCENTS[v.label] || '#5C6B7A');
     el.innerHTML = '<div class="v-top"><span class="v-dot"></span><span class="v-label"></span></div>' +
                    '<div class="v-value"></div><div class="v-score"></div>';
@@ -511,7 +650,7 @@ function renderVitals(vitals){
     el.querySelector('.v-value').textContent = v.value;
     const sc = el.querySelector('.v-score');
     sc.textContent = Math.round(v.score) + '/100';
-    sc.className = 'v-score ' + scoreClass(v.score);
+    sc.className = 'v-score ' + (hasData ? scoreClass(v.score) : 'score-none');
     grid.appendChild(el);
   });
 }
@@ -529,13 +668,16 @@ function renderSpark(series){
   }).join(' ');
   host.innerHTML =
     '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="' + H + '" preserveAspectRatio="none" aria-label="Pulse score trend">' +
-    '<polyline points="' + pts + '" fill="none" stroke="#12805A" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' +
-    '</svg>';
+    '<polyline points="' + pts + '" fill="none" stroke="#12805A" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>';
 }
 
 function renderHistory(rows){
   const host = document.getElementById('historyList');
   host.innerHTML = '';
+  if(!rows.length){
+    host.innerHTML = '<div class="hist-empty">No snapshots recorded yet.</div>';
+    return;
+  }
   rows.forEach((r, i) => {
     const prev = rows[i+1];
     const d = prev ? r.pulse_score - prev.pulse_score : null;
@@ -551,15 +693,6 @@ function renderHistory(rows){
     host.appendChild(row);
   });
 }
-
-function showView(which){
-  document.getElementById('view-dashboard').classList.toggle('hidden', which !== 'dashboard');
-  document.getElementById('view-entry').classList.toggle('hidden', which !== 'entry');
-  window.scrollTo({ top:0, behavior:'smooth' });
-}
-document.getElementById('goEntry').addEventListener('click', () => showView('entry'));
-document.getElementById('emptyCta').addEventListener('click', () => showView('entry'));
-document.getElementById('backToDash').addEventListener('click', () => showView('dashboard'));
 
 // ---------- auth ----------
 const authTabs = document.querySelectorAll('.auth-tab');
@@ -645,7 +778,7 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () =>
   wrap.addEventListener('mouseleave', () => { card.style.transform = 'rotateX(0deg) rotateY(0deg)'; });
 })();
 
-// ---------- file upload ----------
+// ---------- upload ----------
 let workbookData = null;
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('fileInput');
@@ -659,8 +792,10 @@ dropzone.addEventListener('drop', e => {
 function handleFile(){
   const file = fileInput.files[0];
   if(!file) return;
+  const note = document.getElementById('noteUpload');
   if(typeof XLSX === 'undefined'){
-    document.getElementById('saveNote').textContent = 'Spreadsheet library failed to load — use manual entry, or reload.';
+    note.className = 'note bad';
+    note.textContent = 'Spreadsheet library failed to load — use manual entry, or reload.';
     return;
   }
   document.getElementById('fileName').textContent = file.name;
@@ -707,7 +842,7 @@ document.getElementById('computeFromFile').addEventListener('click', () => {
   let gstLeak = 0;
   gst.forEach(r => { gstLeak += (Number(r['ITC Available'])||0) - (Number(r['ITC Claimed'])||0); });
 
-  runCompute({ cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak }, 'upload');
+  runCompute({ cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak }, 'upload', 'noteUpload');
 });
 
 document.getElementById('computeFromManual').addEventListener('click', () => {
@@ -715,7 +850,7 @@ document.getElementById('computeFromManual').addEventListener('click', () => {
   runCompute({
     cash:v('m-cash'), recvTotal:v('m-recv'), recv90:v('m-recv90'), paySoon:v('m-pay'),
     revenue:v('m-rev'), netProfit:v('m-profit'), burn:v('m-burn') || 1, gstLeak:v('m-gst')
-  }, 'manual');
+  }, 'manual', 'noteManual');
 });
 
 // ---------- scoring ----------
@@ -744,10 +879,10 @@ function computeVitals(d){
   return { pulse, vitals };
 }
 
-async function runCompute(d, source){
-  const note = document.getElementById('saveNote');
+async function runCompute(d, source, noteId){
+  const note = document.getElementById(noteId);
   const { pulse, vitals } = computeVitals(d);
-  note.textContent = 'Saving snapshot…';
+  note.className = 'note'; note.textContent = 'Saving snapshot…';
   try {
     const row = {
       user_id: currentUser.id, source,
@@ -758,14 +893,16 @@ async function runCompute(d, source){
     const { error } = await withTimeout(sbClient.from('snapshots').insert(row), 20000, 'Saving snapshot');
     if(error) throw error;
     note.textContent = '';
-    await refreshDashboard();
+    await refreshAll();
+    showView('scores');
   } catch(err){
     console.error('[margyn] save snapshot:', err);
+    note.className = 'note bad';
     note.textContent = 'Could not save: ' + (err.message || 'unknown error');
   }
 }
 
-// ---------- AI briefing ----------
+// ---------- briefing ----------
 document.getElementById('generateBriefing').addEventListener('click', async () => {
   const btn = document.getElementById('generateBriefing');
   const out = document.getElementById('briefing-text');
@@ -806,6 +943,8 @@ document.getElementById('downloadTemplate').addEventListener('click', () => {
   XLSX.writeFile(wb, 'Margyn_Data_Template.xlsx');
 });
 
+// Render zero-state immediately so the Scores page never looks broken pre-login.
+renderVitals(ZERO_VITALS, false);
 bootAuth();
 </script>
 </body>
