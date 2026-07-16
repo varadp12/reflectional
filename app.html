@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340..600&family=Manrope:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- supabase-js is loaded programmatically at the bottom of this file, with a CDN fallback -->
 <style>
   :root{
     --ink:#0B1220;
@@ -373,24 +373,77 @@ async function initSupabase(){
   });
 }
 
-// Wait for the Supabase CDN script (loaded with `async`) to arrive.
-let supabaseWaited = 0;
-const supabaseLoadInterval = setInterval(() => {
-  if(window.supabase){
-    clearInterval(supabaseLoadInterval);
-    initSupabase();
-    return;
+// ---------- Error display: always target the form the user is actually looking at ----------
+// A fatal boot error (library never loaded) must persist across tab switches — otherwise
+// switching tabs wipes the only explanation and leaves a dead button with no message.
+let bootError = null;
+
+function showAuthError(msg){
+  const activeForm = document.querySelector('.auth-form.active');
+  const el = activeForm ? activeForm.querySelector('.auth-error')
+                        : document.getElementById('loginError');
+  if(!el) return;
+  el.style.color = '';
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+function clearAuthErrors(){
+  document.querySelectorAll('.auth-error').forEach(e => e.classList.remove('show'));
+  if(bootError) showAuthError(bootError);  // fatal errors are not dismissible
+}
+
+// Reject a hanging promise instead of leaving the button dead forever.
+function withTimeout(promise, ms, label){
+  return Promise.race([
+    promise,
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error(
+        label + ' timed out after ' + (ms/1000) + 's. The Supabase project may be paused ' +
+        '(free projects pause after ~7 days idle) — check your Supabase dashboard.'
+      )), ms)
+    )
+  ]);
+}
+
+// ---------- Load supabase-js with an explicit fallback CDN ----------
+function loadScript(src){
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = () => resolve(src);
+    s.onerror = () => reject(new Error('blocked or unreachable: ' + src));
+    document.head.appendChild(s);
+  });
+}
+
+async function bootAuth(){
+  const sources = [
+    'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',
+    'https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js'
+  ];
+  for(const src of sources){
+    try {
+      await loadScript(src);
+      if(window.supabase){
+        console.log('[margyn] supabase-js loaded from', src);
+        initSupabase();
+        return;
+      }
+      console.warn('[margyn] script loaded but window.supabase undefined:', src);
+    } catch(err){
+      console.warn('[margyn]', err.message);
+    }
   }
-  supabaseWaited += 100;
-  if(supabaseWaited >= 10000){
-    clearInterval(supabaseLoadInterval);
-    const err = document.getElementById('loginError');
-    err.textContent = 'Could not reach the authentication service. Check your connection and reload.';
-    err.classList.add('show');
-    document.getElementById('loginSubmit').disabled = true;
-    document.getElementById('signupSubmit').disabled = true;
-  }
-}, 100);
+  // Every source failed — say so where the user can actually see it, and allow a retry.
+  console.error('[margyn] all supabase-js sources failed. Ad blocker or network filter?');
+  bootError = 'Could not load the authentication library — an ad blocker or network filter is likely blocking the CDN. Try a private window or disable content blockers, then reload.';
+  showAuthError(bootError);
+  document.getElementById('loginSubmit').disabled = true;
+  document.getElementById('signupSubmit').disabled = true;
+}
+
+bootAuth();
 
 // ---------- Auth UI ----------
 function showAuthGate(){ document.getElementById('authGate').classList.remove('hidden'); }
@@ -409,7 +462,7 @@ authTabs.forEach(tab => {
     tab.classList.add('active');
     document.getElementById(formType + 'Form').classList.add('active');
     authTitle.textContent = formType === 'signup' ? 'Create your account.' : 'Welcome back.';
-    document.querySelectorAll('.auth-error').forEach(e => e.classList.remove('show'));
+    clearAuthErrors();
   });
 });
 
@@ -418,21 +471,30 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const email = document.getElementById('loginEmail').value;
   const password = document.getElementById('loginPassword').value;
-  const errorEl = document.getElementById('loginError');
   const btn = document.getElementById('loginSubmit');
-  
-  errorEl.classList.remove('show');
+
+  clearAuthErrors();
+
+  if(!supabase){
+    showAuthError('Authentication service not ready yet. Reload the page and try again.');
+    return;
+  }
+
   btn.disabled = true;
-  
+  btn.textContent = 'Logging in…';
+
   try {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await withTimeout(
+      supabase.auth.signInWithPassword({ email, password }), 20000, 'Login'
+    );
     if(error) throw error;
     document.getElementById('loginForm').reset();
   } catch(err){
-    errorEl.textContent = err.message || 'Login failed';
-    errorEl.classList.add('show');
+    console.error('[margyn] login failed:', err);
+    showAuthError(err.message || 'Login failed');
   } finally {
     btn.disabled = false;
+    btn.textContent = 'Log in';
   }
 });
 
@@ -442,21 +504,40 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
   const password = document.getElementById('signupPassword').value;
   const errorEl = document.getElementById('signupError');
   const btn = document.getElementById('signupSubmit');
-  
-  errorEl.classList.remove('show');
+
+  clearAuthErrors();
+
+  if(!supabase){
+    showAuthError('Authentication service not ready yet. Reload the page and try again.');
+    return;
+  }
+
   btn.disabled = true;
-  
+  btn.textContent = 'Creating account…';
+
   try {
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await withTimeout(
+      supabase.auth.signUp({ email, password }), 20000, 'Signup'
+    );
     if(error) throw error;
-    errorEl.textContent = '';
-    alert('Account created! Check your email to confirm.');
-    document.getElementById('signupForm').reset();
+
+    // Session present => email confirmation is OFF, user is already logged in.
+    // No session => confirmation email sent.
+    if(data && data.session){
+      document.getElementById('signupForm').reset();
+    } else {
+      errorEl.style.color = 'var(--emerald)';
+      errorEl.textContent = 'Account created. Check ' + email + ' for the confirmation link.';
+      errorEl.classList.add('show');
+      document.getElementById('signupForm').reset();
+    }
   } catch(err){
-    errorEl.textContent = err.message || 'Signup failed';
-    errorEl.classList.add('show');
+    console.error('[margyn] signup failed:', err);
+    errorEl.style.color = '';
+    showAuthError(err.message || 'Signup failed');
   } finally {
     btn.disabled = false;
+    btn.textContent = 'Create account';
   }
 });
 
