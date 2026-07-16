@@ -418,7 +418,10 @@ function loadScript(src){
 }
 
 async function bootAuth(){
+  // Same-origin copy first: immune to ad blockers, corporate proxies and filtered DNS.
+  // The CDNs remain only as a backup if the vendored file is ever missing.
   const sources = [
+    '/supabase.js',
     'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',
     'https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js'
   ];
@@ -437,7 +440,7 @@ async function bootAuth(){
   }
   // Every source failed — say so where the user can actually see it, and allow a retry.
   console.error('[margyn] all supabase-js sources failed. Ad blocker or network filter?');
-  bootError = 'Could not load the authentication library — an ad blocker or network filter is likely blocking the CDN. Try a private window or disable content blockers, then reload.';
+  bootError = 'Could not load the authentication library. Confirm supabase.js is deployed at the site root, then reload.';
   showAuthError(bootError);
   document.getElementById('loginSubmit').disabled = true;
   document.getElementById('signupSubmit').disabled = true;
