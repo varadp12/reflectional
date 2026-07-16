@@ -33,6 +33,40 @@
     --shadow-md: 0 12px 32px rgba(11,18,32,0.10);
     --shadow-lg: 0 30px 70px -20px rgba(11,18,32,0.26);
   }
+  /* Auto dark mode — follows the user's system/browser preference. Keeps the same
+     ink-navy palette; the page just swaps which end of it is "background" vs "ink".
+     Every rule in this file reads colors from these variables, so redefining them
+     here re-themes the whole page without touching individual component rules. */
+  @media (prefers-color-scheme: dark){
+    :root{
+      --ink:#ECEEF1;
+      --steel:#93A2B5;
+      --bg:#0B1220;
+      --bg-dim:#060A12;
+      --white:#16233A;
+      --emerald:#21C08A;
+      --emerald-bright:#3FE0A5;
+      --mint: rgba(31,163,116,0.20);
+      --gold:#D99B3F;
+      --orange:#E37A38;
+      --peach: rgba(217,102,42,0.28);
+      --rose:#D9678F;
+      --sky:#5B9BD5;
+      --line: rgba(255,255,255,0.10);
+      --line-strong: rgba(255,255,255,0.20);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.35);
+      --shadow-md: 0 12px 32px rgba(0,0,0,0.45);
+      --shadow-lg: 0 30px 70px -20px rgba(0,0,0,0.6);
+    }
+    /* nav's glass background is hardcoded white, not a variable — override directly */
+    nav{ background:rgba(11,18,32,0.68); border-color:rgba(255,255,255,0.10); }
+    /* each bubble sets its own light pastel --accent-bg inline; blend it toward
+       the dark background instead of hand-picking six new dark pastels */
+    .bubble{ background: color-mix(in srgb, var(--accent-bg) 25%, var(--bg-dim) 75%); }
+  }
+  @media (prefers-color-scheme: dark) and (max-width:760px){
+    nav{ background:rgba(11,18,32,0.92); }
+  }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth; scroll-snap-type:y proximity;}
   body{ background:var(--bg); color:var(--ink); font-family:'Manrope', sans-serif; font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; position:relative; }
@@ -81,6 +115,10 @@
   @media (max-width:760px){
     .nav-inner{ padding:8px 8px 8px 18px; }
     .nav-toggle{ display:flex; }
+    /* transform + backdrop-filter on <nav> create a containing block for fixed-position
+       descendants, which breaks .nav-links' viewport-relative fixed positioning below.
+       Neutralize both on nav at this breakpoint and re-center it without transform. */
+    nav{ left:16px; right:16px; transform:none; margin:0 auto; width:fit-content; backdrop-filter:none; background:rgba(255,255,255,0.96); }
     .nav-links{ position:fixed; top:0; right:0; height:100vh; width:min(78vw,320px); background:var(--white); flex-direction:column; align-items:stretch; gap:0; padding:88px 28px 28px; box-shadow:var(--shadow-lg); transform:translateX(100%); transition:transform .3s cubic-bezier(.16,1,.3,1); z-index:99; }
     body.nav-open .nav-links{ transform:translateX(0); }
     .nav-links a{ padding:16px 4px; border-bottom:1px solid var(--line); font-size:16px; }
