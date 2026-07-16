@@ -3,38 +3,503 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="theme-color" content="#0E1B2C" />
-<title>Reflection — See your business clearly</title>
+<meta name="theme-color" content="#F0F1F3" />
+<title>Margyn — Your margin, live.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,450;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340..600&family=Manrope:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
   :root{
-    --ink:#0E1B2C;
-    --paper:#ECEEF1;
-    --steel:#3E5875;
-    --gold:#B08D57;
-    --emerald:#1F6F54;
-    --rose:#A3435C;
-    --steel-dim: rgba(62,88,117,0.35);
+    --ink:#0B1220;
+    --ink-soft:#16233A;
+    --steel:#5C6B7A;
+    --bg:#F0F1F3;
+    --bg-dim:#E6E8EB;
+    --white:#FFFFFF;
+    --emerald:#12805A;
+    --emerald-bright:#1FA374;
+    --mint:#CFEFDD;
+    --gold:#C97F1E;
+    --amber:#FBE7C7;
+    --orange:#D9662A;
+    --peach:#FFE0C7;
+    --rose:#C23B67;
+    --blush:#FBD9E4;
+    --sky:#2E6FA8;
+    --sky-light:#D8E8F7;
+    --line: rgba(11,18,32,0.11);
+    --line-strong: rgba(11,18,32,0.20);
+    --shadow-sm: 0 2px 8px rgba(11,18,32,0.06);
+    --shadow-md: 0 12px 32px rgba(11,18,32,0.10);
+    --shadow-lg: 0 30px 70px -20px rgba(11,18,32,0.26);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{
-    background:var(--ink);
-    color:var(--paper);
-    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Manrope',sans-serif;
     min-height:100vh;
-    line-height:1.5;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
   }
   .mono{font-family:'IBM Plex Mono',monospace;}
-  .wrap{max-width:960px; margin:0 auto; padding:48px 24px 96px;}
+  .serif{font-family:'Fraunces',serif;}
+  a{ color:inherit; }
+  .wrap{max-width:920px; margin:0 auto; padding:120px 24px 96px;}
 
-  /* --- Header / mirror wordmark --- */
-  header{text-align:center; margin-bottom:56px;}
-  .wordmark{
+  .crescent{ position:relative; border-radius:50%; overflow:hidden; flex-shrink:0; background:var(--emerald); }
+  .crescent::after{ content:''; position:absolute; top:0; left:-42%; width:100%; height:100%; border-radius:50%; background:var(--bg); }
+
+  nav{ position:fixed; top:18px; left:50%; transform:translateX(-50%); z-index:100; background:rgba(255,255,255,0.68); backdrop-filter:blur(20px) saturate(1.5); border:1px solid rgba(255,255,255,0.8); border-radius:999px; box-shadow:var(--shadow-md); width:auto; max-width:calc(100% - 32px); }
+  .nav-inner{ margin:0; padding:10px 10px 10px 22px; display:flex; align-items:center; justify-content:space-between; gap:28px; }
+  .nav-brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .nav-brand .crescent{ width:20px; height:20px; }
+  .nav-logo{ font-family:'Fraunces', serif; font-size:18px; font-weight:600; letter-spacing:-0.01em; color:var(--ink); }
+  .nav-back{ display:flex; align-items:center; gap:6px; font-size:13.5px; color:var(--steel); font-weight:600; text-decoration:none; padding:10px 18px; border-radius:999px; transition:all .2s ease; }
+  .nav-back:hover{ background:var(--bg); color:var(--ink); }
+
+  header{text-align:center; margin-bottom:48px;}
+  .app-eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--emerald); margin-bottom:14px; font-weight:600; }
+  .app-title{
     font-family:'Fraunces',serif;
-    font-weight:450;
-    font-size:44px;
+    font-weight:500;
+    font-size:38px;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+  }
+  .app-sub{
+    margin-top:14px;
+    font-size:14.5px;
+    color:var(--steel);
+  }
+
+  .tabs{display:flex; gap:4px; margin-bottom:28px; border:1px solid var(--line); border-radius:999px; padding:4px; background:var(--white); box-shadow:var(--shadow-sm);}
+  .tab{
+    flex:1; padding:12px; text-align:center; cursor:pointer;
+    background:transparent; color:var(--steel); font-size:14px; font-weight:700;
+    font-family:'Manrope',sans-serif;
+    transition:all .2s ease; border:none; border-radius:999px;
+  }
+  .tab.active{background:var(--ink); color:var(--white);}
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  .card{
+    position:relative;
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:28px;
+    margin-bottom:24px;
+    box-shadow:var(--shadow-sm);
+  }
+  .card h2{font-family:'Fraunces',serif; font-weight:500; font-size:20px; margin-bottom:16px; color:var(--ink);}
+  .hint{font-size:13px; color:var(--steel); margin-bottom:20px; line-height:1.6;}
+
+  .dropzone{
+    border:1.5px dashed var(--line-strong); border-radius:6px; padding:36px;
+    text-align:center; cursor:pointer; transition:border-color .2s, background .2s;
+  }
+  .dropzone:hover{border-color:var(--gold); background:rgba(201,127,30,0.03);}
+  .dropzone input{display:none;}
+  .dz-label{font-size:14px; color:var(--ink); font-weight:600;}
+  .dz-sub{font-size:12px; color:var(--steel); margin-top:6px;}
+  .file-name{margin-top:14px; font-size:13px; color:var(--emerald); font-weight:600;}
+  .template-link{display:inline-block; margin-top:18px; font-size:13px; color:var(--gold); cursor:pointer; font-weight:600; border-bottom:1px solid rgba(201,127,30,0.3);}
+  .template-link:hover{border-bottom-color:var(--gold);}
+
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  label{display:block; font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--steel); margin-bottom:7px; text-transform:uppercase; letter-spacing:.06em; font-weight:600;}
+  input[type=number], input[type=text]{
+    width:100%; padding:11px 12px; background:var(--white);
+    border:1px solid var(--line-strong); border-radius:4px; color:var(--ink);
+    font-family:'IBM Plex Mono',monospace; font-size:14px; margin-bottom:16px;
+    transition:border-color .2s ease;
+  }
+  input:focus{outline:none; border-color:var(--emerald);}
+
+  button.primary{
+    background:var(--ink); color:var(--white); border:none;
+    padding:14px 28px; border-radius:999px; font-weight:700; font-size:14.5px;
+    font-family:'Manrope',sans-serif;
+    cursor:pointer; transition:all .25s cubic-bezier(.16,1,.3,1);
+  }
+  button.primary:hover{background:var(--emerald); transform:translateY(-1px); box-shadow:var(--shadow-md);}
+  button.primary:disabled{opacity:0.4; cursor:not-allowed; transform:none; box-shadow:none;}
+  button.ghost{
+    background:transparent; color:var(--ink); border:1.5px solid var(--line-strong);
+    padding:13px 28px; border-radius:999px; font-size:14.5px; cursor:pointer; font-weight:700;
+    font-family:'Manrope',sans-serif; transition:all .2s ease;
+  }
+  button.ghost:hover{ border-color:var(--ink); background:var(--white); }
+
+  #results{display:none;}
+  .pulse-wrap{ perspective:1400px; margin-bottom:24px; }
+  .pulse-score{
+    position:relative; text-align:center; padding:38px 28px 32px; 
+    border:1px solid var(--line); border-radius:6px;
+    background:var(--white);
+    box-shadow:0 40px 80px -30px rgba(18,128,90,0.16), var(--shadow-lg);
+    transform-style:preserve-3d; will-change:transform;
+  }
+  .pulse-score .tick{ position:absolute; width:14px; height:14px; }
+  .pulse-score .tick.tl{ top:-1px; left:-1px; border-top:2px solid var(--gold); border-left:2px solid var(--gold); }
+  .pulse-score .tick.tr{ top:-1px; right:-1px; border-top:2px solid var(--gold); border-right:2px solid var(--gold); }
+  .pulse-score .tick.bl{ bottom:-1px; left:-1px; border-bottom:2px solid var(--gold); border-left:2px solid var(--gold); }
+  .pulse-score .tick.br{ bottom:-1px; right:-1px; border-bottom:2px solid var(--gold); border-right:2px solid var(--gold); }
+  .pulse-score .p-label{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--steel); display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:10px; }
+  .pulse-score .p-label::before{ content:''; width:5px; height:5px; border-radius:50%; background:var(--emerald-bright); }
+  .pulse-score .num{font-family:'Fraunces',serif; font-weight:500; font-size:64px; color:var(--ink); line-height:1;}
+  .pulse-score .label{font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--steel); margin-top:10px; font-family:'IBM Plex Mono', monospace;}
+
+  .vitals-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px;}
+  .vital{
+    background:var(--white); border:1px solid var(--line);
+    border-radius:6px; padding:18px; position:relative; overflow:hidden;
+    box-shadow:var(--shadow-sm);
+  }
+  .vital::before{ content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--v-accent, var(--steel)); }
+  .vital .v-top{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .vital .v-dot{ width:8px; height:8px; border-radius:50%; background:var(--v-accent, var(--steel)); flex-shrink:0; }
+  .vital .v-label{font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600;}
+  .vital .v-value{font-family:'IBM Plex Mono',monospace; font-size:20px; color:var(--ink); font-weight:600;}
+  .vital .v-score{font-size:12px; margin-top:6px; font-weight:600;}
+  .score-good{color:var(--emerald);}
+  .score-warn{color:var(--gold);}
+  .score-bad{color:var(--rose);}
+
+  #briefing-text{
+    white-space:pre-wrap; font-size:15px; line-height:1.75; color:var(--ink);
+  }
+  .loading{color:var(--steel); font-size:14px; font-style:italic;}
+  .error-box{
+    border:1px solid var(--rose); background:var(--blush); color:var(--rose); padding:14px; border-radius:6px; font-size:13px; margin-top:14px;
+  }
+
+  footer{ border-top:1px solid var(--line); padding:32px 24px; text-align:center; font-size:12.5px; color:var(--steel); }
+
+  @media (max-width:640px){
+    .vitals-grid{grid-template-columns:1fr 1fr;}
+    .grid-2{grid-template-columns:1fr;}
+    .app-title{font-size:28px;}
+    .wrap{padding:100px 20px 72px;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-brand" href="/">
+      <div class="crescent" style="width:20px;height:20px;"></div>
+      <div class="nav-logo">margyn</div>
+    </a>
+    <a class="nav-back" href="/">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      margyn.in
+    </a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header>
+    <div class="app-eyebrow">Margyn 1.0</div>
+    <div class="app-title">Your scorecard</div>
+    <div class="app-sub">Upload your numbers or enter them by hand — see your Pulse Score in under two minutes.</div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="upload">Upload data</button>
+    <button class="tab" data-tab="manual">Quick manual entry</button>
+  </div>
+
+  <div class="panel active" id="panel-upload">
+    <div class="card">
+      <h2>Upload your workbook</h2>
+      <div class="hint">One Excel file with five sheets: <span class="mono">Bank Accounts</span>, <span class="mono">Receivables</span>, <span class="mono">Payables</span>, <span class="mono">P&amp;L Summary</span>, <span class="mono">GST ITC</span>.</div>
+      <div class="dropzone" id="dropzone">
+        <div class="dz-label">Click to choose a file, or drag it here</div>
+        <div class="dz-sub">.xlsx or .csv</div>
+        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" />
+        <div class="file-name" id="fileName"></div>
+      </div>
+      <div class="template-link" id="downloadTemplate">Download the blank template →</div>
+    </div>
+    <button class="primary" id="computeFromFile" disabled>Compute vitals</button>
+  </div>
+
+  <div class="panel" id="panel-manual">
+    <div class="card">
+      <h2>Quick manual entry</h2>
+      <div class="hint">Enter aggregate figures directly — useful for a fast first look before you wire up a full data export.</div>
+      <div class="grid-2">
+        <div><label>Cash in bank (₹)</label><input type="number" id="m-cash" placeholder="e.g. 4200000"></div>
+        <div><label>Monthly operating expenses (₹)</label><input type="number" id="m-burn" placeholder="e.g. 1500000"></div>
+        <div><label>Total receivables outstanding (₹)</label><input type="number" id="m-recv" placeholder="e.g. 3800000"></div>
+        <div><label>Receivables overdue &gt;90 days (₹)</label><input type="number" id="m-recv90" placeholder="e.g. 900000"></div>
+        <div><label>Payables due in next 30 days (₹)</label><input type="number" id="m-pay" placeholder="e.g. 1100000"></div>
+        <div><label>Monthly revenue (₹)</label><input type="number" id="m-rev" placeholder="e.g. 6000000"></div>
+        <div><label>Net profit (this period, ₹)</label><input type="number" id="m-profit" placeholder="e.g. 480000"></div>
+        <div><label>GST ITC available but unclaimed (₹)</label><input type="number" id="m-gst" placeholder="e.g. 65000"></div>
+      </div>
+      <label>Company name (optional, used in the briefing)</label>
+      <input type="text" id="m-company" placeholder="e.g. Kavya Textiles Pvt Ltd">
+    </div>
+    <button class="primary" id="computeFromManual">Compute vitals</button>
+  </div>
+
+  <div id="results">
+    <div class="pulse-wrap">
+      <div class="pulse-score" id="pulseCard">
+        <span class="tick tl"></span><span class="tick tr"></span><span class="tick bl"></span><span class="tick br"></span>
+        <div class="p-label">Pulse score — live</div>
+        <div class="num" id="pulseNum">—</div>
+      </div>
+    </div>
+    <div class="vitals-grid" id="vitalsGrid"></div>
+
+    <div class="card">
+      <h2>Executive briefing</h2>
+      <div id="briefing-idle">
+        <button class="primary" id="generateBriefing">Generate AI briefing</button>
+      </div>
+      <div id="briefing-text"></div>
+    </div>
+
+    <button class="ghost" id="resetBtn">Start over</button>
+  </div>
+
+</div>
+
+<footer>Margyn 1.0 · margyn.in · Built for Indian SMEs</footer>
+
+<script>
+// ---------- Tab switching ----------
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  document.getElementById('panel-' + t.dataset.tab).classList.add('active');
+}));
+
+// ---------- 3D tilt on the Pulse Score card ----------
+(function(){
+  const card = document.getElementById('pulseCard');
+  if(!card) return;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduceMotion || !window.matchMedia('(hover:hover)').matches) return;
+  const wrap = document.querySelector('.pulse-wrap');
+  wrap.addEventListener('mousemove', (e) => {
+    const rect = wrap.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    card.style.transform = `rotateX(${(-py*6).toFixed(2)}deg) rotateY(${(px*8).toFixed(2)}deg)`;
+  });
+  wrap.addEventListener('mouseleave', () => { card.style.transform = 'rotateX(0deg) rotateY(0deg)'; });
+})();
+
+// ---------- File upload ----------
+let workbookData = null;
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+dropzone.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', handleFile);
+dropzone.addEventListener('dragover', e => e.preventDefault());
+dropzone.addEventListener('drop', e => {
+  e.preventDefault();
+  if (e.dataTransfer.files[0]) { fileInput.files = e.dataTransfer.files; handleFile(); }
+});
+
+function handleFile(){
+  const file = fileInput.files[0];
+  if (!file) return;
+  document.getElementById('fileName').textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const data = new Uint8Array(e.target.result);
+    workbookData = XLSX.read(data, { type: 'array', cellDates: true });
+    document.getElementById('computeFromFile').disabled = false;
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function sheetToRows(wb, name){
+  const sheet = wb.Sheets[name];
+  if (!sheet) return [];
+  return XLSX.utils.sheet_to_json(sheet, { defval: 0 });
+}
+
+document.getElementById('computeFromFile').addEventListener('click', () => {
+  if (!workbookData) return;
+  const bank = sheetToRows(workbookData, 'Bank Accounts');
+  const recv = sheetToRows(workbookData, 'Receivables');
+  const pay  = sheetToRows(workbookData, 'Payables');
+  const pl   = sheetToRows(workbookData, 'P&L Summary');
+  const gst  = sheetToRows(workbookData, 'GST ITC');
+
+  const cash = bank.reduce((s, r) => s + (Number(r['Balance']) || 0), 0);
+
+  const today = new Date();
+  let recvTotal = 0, recv90 = 0;
+  recv.forEach(r => {
+    const outstanding = (Number(r['Amount']) || 0) - (Number(r['Amount Received']) || 0);
+    recvTotal += outstanding;
+    const due = r['Due Date'] ? new Date(r['Due Date']) : null;
+    if (due && (today - due) / 86400000 > 90) recv90 += outstanding;
+  });
+
+  let paySoon = 0;
+  pay.forEach(r => {
+    const due = r['Due Date'] ? new Date(r['Due Date']) : null;
+    const days = due ? (due - today) / 86400000 : 999;
+    if (days <= 30) paySoon += Number(r['Amount']) || 0;
+  });
+
+  const plMap = {};
+  pl.forEach(r => { plMap[r['Line Item']] = Number(r['Amount']) || 0; });
+  const revenue = plMap['Revenue'] || 0;
+  const netProfit = plMap['Net Profit'] || 0;
+  const burn = plMap['Monthly Operating Expenses'] || (revenue - netProfit) || 1;
+
+  let gstLeak = 0;
+  gst.forEach(r => { gstLeak += (Number(r['ITC Available']) || 0) - (Number(r['ITC Claimed']) || 0); });
+
+  runCompute({ cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak, company: '' });
+});
+
+// ---------- Manual entry ----------
+document.getElementById('computeFromManual').addEventListener('click', () => {
+  const v = id => Number(document.getElementById(id).value) || 0;
+  runCompute({
+    cash: v('m-cash'),
+    recvTotal: v('m-recv'),
+    recv90: v('m-recv90'),
+    paySoon: v('m-pay'),
+    revenue: v('m-rev'),
+    netProfit: v('m-profit'),
+    burn: v('m-burn') || 1,
+    gstLeak: v('m-gst'),
+    company: document.getElementById('m-company').value
+  });
+});
+
+// ---------- Scoring ----------
+let lastVitals = null, lastPulse = null, lastCompany = '';
+
+function clamp(n){ return Math.max(0, Math.min(100, n)); }
+
+const VITAL_ACCENTS = {
+  'Cash Position': '#C97F1E',
+  'Receivables Aging': '#C23B67',
+  'Payables Due (30d)': '#5C6B7A',
+  'GST/ITC Leakage': '#C97F1E',
+  'Net Margin': '#12805A',
+  'Working Capital Runway': '#12805A'
+};
+
+function runCompute(d){
+  const cashScore = clamp((d.cash / (d.burn * 3)) * 100);
+  const recvScore = d.recvTotal > 0 ? clamp(100 - (d.recv90 / d.recvTotal) * 100) : 100;
+  const payScore  = d.cash > 0 ? clamp(100 - (d.paySoon / d.cash) * 100) : (d.paySoon > 0 ? 0 : 100);
+  const gstScore  = clamp(100 - (d.gstLeak / 1000) * 10);
+  const netMargin = d.revenue > 0 ? (d.netProfit / d.revenue) * 100 : 0;
+  const marginScore = clamp(netMargin * 5);
+  const runwayMonths = d.burn > 0 ? (d.cash + d.recvTotal - d.paySoon) / d.burn : 0;
+  const runwayScore = clamp((runwayMonths / 6) * 100);
+
+  const pulse = Math.round(
+    cashScore * 0.20 + recvScore * 0.15 + payScore * 0.15 +
+    gstScore * 0.15 + marginScore * 0.20 + runwayScore * 0.15
+  );
+
+  const vitals = [
+    { label: 'Cash Position', value: '₹' + d.cash.toLocaleString('en-IN'), score: cashScore },
+    { label: 'Receivables Aging', value: '₹' + d.recv90.toLocaleString('en-IN') + ' over 90d', score: recvScore },
+    { label: 'Payables Due (30d)', value: '₹' + d.paySoon.toLocaleString('en-IN'), score: payScore },
+    { label: 'GST/ITC Leakage', value: '₹' + d.gstLeak.toLocaleString('en-IN'), score: gstScore },
+    { label: 'Net Margin', value: netMargin.toFixed(1) + '%', score: marginScore },
+    { label: 'Working Capital Runway', value: runwayMonths.toFixed(1) + ' months', score: runwayScore }
+  ];
+
+  lastVitals = vitals; lastPulse = pulse; lastCompany = d.company;
+  renderResults(vitals, pulse);
+}
+
+function scoreClass(s){ return s >= 70 ? 'score-good' : s >= 40 ? 'score-warn' : 'score-bad'; }
+
+function renderResults(vitals, pulse){
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('pulseNum').textContent = pulse;
+  const grid = document.getElementById('vitalsGrid');
+  grid.innerHTML = '';
+  vitals.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'vital';
+    const accent = VITAL_ACCENTS[v.label] || '#5C6B7A';
+    el.style.setProperty('--v-accent', accent);
+    el.innerHTML = `<div class="v-top"><span class="v-dot"></span><span class="v-label">${v.label}</span></div>
+      <div class="v-value">${v.value}</div>
+      <div class="v-score ${scoreClass(v.score)}">${Math.round(v.score)}/100</div>`;
+    grid.appendChild(el);
+  });
+  document.getElementById('briefing-idle').style.display = 'block';
+  document.getElementById('briefing-text').textContent = '';
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ---------- AI briefing ----------
+document.getElementById('generateBriefing').addEventListener('click', async () => {
+  const btn = document.getElementById('generateBriefing');
+  const out = document.getElementById('briefing-text');
+  btn.disabled = true;
+  out.innerHTML = '<div class="loading">Generating briefing…</div>';
+  try {
+    const vitalsObj = {};
+    lastVitals.forEach(v => vitalsObj[v.label] = v.value);
+    const res = await fetch('/api/briefing', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ vitals: vitalsObj, pulseScore: lastPulse, companyName: lastCompany })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Unknown error');
+    out.textContent = data.briefing;
+    document.getElementById('briefing-idle').style.display = 'none';
+  } catch (err) {
+    out.innerHTML = `<div class="error-box">Could not generate briefing: ${err.message}</div>`;
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  document.getElementById('results').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ---------- Template download ----------
+document.getElementById('downloadTemplate').addEventListener('click', () => {
+  const wb = XLSX.utils.book_new();
+  const sheets = {
+    'Bank Accounts': [{ 'Account Name': 'HDFC Current A/c', 'Balance': 0 }],
+    'Receivables': [{ 'Customer': '', 'Invoice Date': '', 'Due Date': '', 'Amount': 0, 'Amount Received': 0 }],
+    'Payables': [{ 'Vendor': '', 'Invoice Date': '', 'Due Date': '', 'Amount': 0 }],
+    'P&L Summary': [
+      { 'Line Item': 'Revenue', 'Amount': 0 },
+      { 'Line Item': 'Net Profit', 'Amount': 0 },
+      { 'Line Item': 'Monthly Operating Expenses', 'Amount': 0 }
+    ],
+    'GST ITC': [{ 'Month': '', 'GST Payable': 0, 'ITC Available': 0, 'ITC Claimed': 0 }]
+  };
+  Object.keys(sheets).forEach(name => {
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheets[name]), name);
+  });
+  XLSX.writeFile(wb, 'Margyn_Data_Template.xlsx');
+});
+</script>
+</body>
+</html>    font-size:44px;
     letter-spacing:0.5px;
     color:var(--paper);
   }
