@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340..600&family=Manrope:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
     --ink:#0B1220;
@@ -44,7 +45,7 @@
   }
   .mono{font-family:'IBM Plex Mono',monospace;}
   .serif{font-family:'Fraunces',serif;}
-  a{ color:inherit; }
+  a{ color:inherit; text-decoration:none; }
   .wrap{max-width:920px; margin:0 auto; padding:120px 24px 96px;}
 
   .crescent{ position:relative; border-radius:50%; overflow:hidden; flex-shrink:0; background:var(--emerald); }
@@ -57,6 +58,31 @@
   .nav-logo{ font-family:'Fraunces', serif; font-size:18px; font-weight:600; letter-spacing:-0.01em; color:var(--ink); }
   .nav-back{ display:flex; align-items:center; gap:6px; font-size:13.5px; color:var(--steel); font-weight:600; text-decoration:none; padding:10px 18px; border-radius:999px; transition:all .2s ease; }
   .nav-back:hover{ background:var(--bg); color:var(--ink); }
+  .nav-user{ display:flex; align-items:center; gap:12px; font-size:13px; color:var(--steel); }
+  .nav-logout{ background:transparent; border:1px solid var(--line-strong); color:var(--steel); padding:8px 14px; border-radius:999px; cursor:pointer; font-size:12.5px; font-weight:600; transition:all .2s ease; }
+  .nav-logout:hover{ border-color:var(--ink); color:var(--ink); }
+
+  /* Auth gate */
+  .auth-gate{ position:fixed; inset:0; background:var(--bg); z-index:200; display:flex; align-items:center; justify-content:center; }
+  .auth-gate.hidden{ display:none; }
+  .auth-modal{ max-width:440px; width:100%; background:var(--white); border:1px solid var(--line); border-radius:6px; padding:40px 34px; box-shadow:var(--shadow-lg); }
+  .auth-modal .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--emerald); margin-bottom:14px; font-weight:600; }
+  .auth-modal h2{ font-family:'Fraunces',serif; font-weight:500; font-size:28px; letter-spacing:-0.01em; margin-bottom:12px; color:var(--ink); }
+  .auth-modal .sub{ font-size:14px; color:var(--steel); margin-bottom:28px; line-height:1.6; }
+  .auth-tab-bar{ display:flex; gap:4px; margin-bottom:24px; border:1px solid var(--line); border-radius:999px; padding:4px; background:transparent; }
+  .auth-tab{ flex:1; padding:10px; text-align:center; cursor:pointer; background:transparent; color:var(--steel); font-size:13px; font-weight:700; font-family:'Manrope',sans-serif; transition:all .2s ease; border:none; border-radius:999px; }
+  .auth-tab.active{ background:var(--ink); color:var(--white); }
+  .auth-form{ display:none; }
+  .auth-form.active{ display:block; }
+  .auth-field{ margin-bottom:16px; }
+  .auth-field label{ display:block; font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); margin-bottom:6px; font-weight:600; }
+  .auth-field input{ width:100%; padding:11px 12px; border:1px solid var(--line-strong); border-radius:4px; font-family:'Manrope',sans-serif; font-size:14px; color:var(--ink); transition:border-color .2s ease; }
+  .auth-field input:focus{ outline:none; border-color:var(--emerald); }
+  .auth-submit{ width:100%; background:var(--ink); color:var(--white); border:none; padding:12px; border-radius:999px; font-size:14px; font-weight:700; cursor:pointer; transition:all .25s ease; font-family:'Manrope',sans-serif; }
+  .auth-submit:hover{ background:var(--emerald); }
+  .auth-submit:disabled{ opacity:0.5; cursor:not-allowed; }
+  .auth-error{ font-size:12px; color:var(--rose); margin-top:12px; display:none; }
+  .auth-error.show{ display:block; }
 
   header{text-align:center; margin-bottom:48px;}
   .app-eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--emerald); margin-bottom:14px; font-weight:600; }
@@ -183,21 +209,66 @@
     .grid-2{grid-template-columns:1fr;}
     .app-title{font-size:28px;}
     .wrap{padding:100px 20px 72px;}
+    .nav-user{ flex-direction:column; align-items:flex-start; }
   }
 </style>
 </head>
 <body>
 
+<!-- Auth Gate (shown before login) -->
+<div class="auth-gate" id="authGate">
+  <div class="auth-modal">
+    <div class="eyebrow">Margyn 1.0</div>
+    <h2 id="authTitle">Welcome back.</h2>
+    <p class="sub">Log in to your dashboard or create an account to get started.</p>
+
+    <div class="auth-tab-bar">
+      <button class="auth-tab active" data-form="login">Log in</button>
+      <button class="auth-tab" data-form="signup">Sign up</button>
+    </div>
+
+    <!-- Login form -->
+    <form class="auth-form active" id="loginForm">
+      <div class="auth-field">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" required autocomplete="email" placeholder="you@company.com">
+      </div>
+      <div class="auth-field">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <button type="submit" class="auth-submit" id="loginSubmit">Log in</button>
+      <div class="auth-error" id="loginError"></div>
+    </form>
+
+    <!-- Signup form -->
+    <form class="auth-form" id="signupForm">
+      <div class="auth-field">
+        <label for="signupEmail">Email</label>
+        <input type="email" id="signupEmail" required autocomplete="email" placeholder="you@company.com">
+      </div>
+      <div class="auth-field">
+        <label for="signupPassword">Password (min 6 characters)</label>
+        <input type="password" id="signupPassword" required autocomplete="new-password" placeholder="••••••••" minlength="6">
+      </div>
+      <button type="submit" class="auth-submit" id="signupSubmit">Create account</button>
+      <div class="auth-error" id="signupError"></div>
+    </form>
+  </div>
+</div>
+
+<!-- Main app (shown after login) -->
 <nav>
   <div class="nav-inner">
     <a class="nav-brand" href="/">
       <div class="crescent" style="width:20px;height:20px;"></div>
       <div class="nav-logo">margyn</div>
     </a>
-    <a class="nav-back" href="/">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
-      margyn.in
-    </a>
+    <div style="flex:1;"></div>
+    <div class="nav-user">
+      <span id="userEmail" style="color:var(--steel); font-size:13px;"></span>
+      <button class="nav-logout" id="logoutBtn">Log out</button>
+    </div>
   </div>
 </nav>
 
@@ -275,6 +346,101 @@
 <footer>Margyn 1.0 · margyn.in · Built for Indian SMEs</footer>
 
 <script>
+// ---------- Supabase initialization ----------
+const SUPABASE_URL = window.location.hostname === 'localhost' 
+  ? 'https://lmegnxrixlrvyodqfthn.supabase.co'
+  : (process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://lmegnxrixlrvyodqfthn.supabase.co');
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+
+let supabase = null;
+let currentUser = null;
+
+async function initSupabase(){
+  if(!window.supabase){ console.error('Supabase JS not loaded'); return; }
+  const { createClient } = window.supabase;
+  supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  
+  const { data: { session } } = await supabase.auth.getSession();
+  if(session){ 
+    currentUser = session.user;
+    showApp();
+  } else {
+    showAuthGate();
+  }
+
+  supabase.auth.onAuthStateChange((event, session) => {
+    if(session){ currentUser = session.user; showApp(); }
+    else { currentUser = null; showAuthGate(); }
+  });
+}
+
+// Wait for Supabase to load
+const supabaseLoadInterval = setInterval(() => {
+  if(window.supabase){ clearInterval(supabaseLoadInterval); initSupabase(); }
+}, 100);
+
+// ---------- Auth UI ----------
+function showAuthGate(){ document.getElementById('authGate').classList.remove('hidden'); }
+function showApp(){ document.getElementById('authGate').classList.add('hidden'); document.getElementById('userEmail').textContent = currentUser.email; }
+
+document.querySelectorAll('.auth-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.form + 'Form').classList.add('active');
+  });
+});
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+  const errorEl = document.getElementById('loginError');
+  const btn = document.getElementById('loginSubmit');
+  
+  errorEl.classList.remove('show');
+  btn.disabled = true;
+  
+  try {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if(error) throw error;
+  } catch(err){
+    errorEl.textContent = err.message || 'Login failed';
+    errorEl.classList.add('show');
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+document.getElementById('signupForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('signupEmail').value;
+  const password = document.getElementById('signupPassword').value;
+  const errorEl = document.getElementById('signupError');
+  const btn = document.getElementById('signupSubmit');
+  
+  errorEl.classList.remove('show');
+  btn.disabled = true;
+  
+  try {
+    const { error } = await supabase.auth.signUp({ email, password });
+    if(error) throw error;
+    errorEl.textContent = '';
+    alert('Account created! Check your email to confirm.');
+    document.getElementById('signupForm').reset();
+  } catch(err){
+    errorEl.textContent = err.message || 'Signup failed';
+    errorEl.classList.add('show');
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await supabase.auth.signOut();
+});
+
 // ---------- Tab switching ----------
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
   document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
