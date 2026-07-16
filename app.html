@@ -351,15 +351,15 @@
 // The anon key is public by design — Supabase RLS policies are what enforce access.
 const SUPABASE_URL = 'https://lmegnxrixlrvyodqfthn.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_TcTCDSECsRxbDVXAnI893w_3BJC0Kgh';
-let supabase = null;
+let sbClient = null;
 let currentUser = null;
 
 async function initSupabase(){
   if(!window.supabase){ console.error('Supabase JS not loaded'); return; }
   const { createClient } = window.supabase;
-  supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await sbClient.auth.getSession();
   if(session){ 
     currentUser = session.user;
     showApp();
@@ -367,7 +367,7 @@ async function initSupabase(){
     showAuthGate();
   }
 
-  supabase.auth.onAuthStateChange((event, session) => {
+  sbClient.auth.onAuthStateChange((event, session) => {
     if(session){ currentUser = session.user; showApp(); }
     else { currentUser = null; showAuthGate(); }
   });
@@ -478,7 +478,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
   clearAuthErrors();
 
-  if(!supabase){
+  if(!sbClient){
     showAuthError('Authentication service not ready yet. Reload the page and try again.');
     return;
   }
@@ -488,7 +488,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
   try {
     const { error } = await withTimeout(
-      supabase.auth.signInWithPassword({ email, password }), 20000, 'Login'
+      sbClient.auth.signInWithPassword({ email, password }), 20000, 'Login'
     );
     if(error) throw error;
     document.getElementById('loginForm').reset();
@@ -510,7 +510,7 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
 
   clearAuthErrors();
 
-  if(!supabase){
+  if(!sbClient){
     showAuthError('Authentication service not ready yet. Reload the page and try again.');
     return;
   }
@@ -520,7 +520,7 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
 
   try {
     const { data, error } = await withTimeout(
-      supabase.auth.signUp({ email, password }), 20000, 'Signup'
+      sbClient.auth.signUp({ email, password }), 20000, 'Signup'
     );
     if(error) throw error;
 
@@ -545,7 +545,7 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
 });
 
 document.getElementById('logoutBtn').addEventListener('click', async () => {
-  await supabase.auth.signOut();
+  await sbClient.auth.signOut();
 });
 
 // ---------- Tab switching (Upload / Manual entry) ----------
