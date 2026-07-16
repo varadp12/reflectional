@@ -8,8 +8,9 @@
 // Returns: { ok: true }
 //
 // Required env vars (Vercel → Settings → Environment Variables):
-//   SUPABASE_URL               e.g. https://lmegnxrixlrvyodqfthn.supabase.co
-//   SUPABASE_SERVICE_ROLE_KEY  Supabase → Settings → API → service_role
+//   SUPABASE_URL           e.g. https://lmegnxrixlrvyodqfthn.supabase.co
+//   SUPABASE_SERVICE_KEY   (or SUPABASE_SERVICE_ROLE_KEY — either is accepted)
+//                          Supabase → Settings → API Keys → the sb_secret_... key
 //
 // NOTE: the service_role key bypasses Row Level Security. It must only ever
 // live in server-side env vars. Never put it in any .html file.
@@ -21,12 +22,15 @@ module.exports = async function handler(req, res) {
   }
 
   const url = process.env.SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  // Accept either name — some projects use SUPABASE_SERVICE_KEY, others
+  // SUPABASE_SERVICE_ROLE_KEY. Whichever exists in Vercel is used.
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+                  || process.env.SUPABASE_SERVICE_KEY;
 
   if (!url || !serviceKey) {
-    console.error('[waitlist] missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
+    console.error('[waitlist] missing SUPABASE_URL or service key env var');
     res.status(500).json({
-      error: 'Server is not configured. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in Vercel → Settings → Environment Variables, then redeploy.'
+      error: 'Server is not configured. Set SUPABASE_URL and SUPABASE_SERVICE_KEY (or SUPABASE_SERVICE_ROLE_KEY) in Vercel → Settings → Environment Variables, then redeploy.'
     });
     return;
   }
