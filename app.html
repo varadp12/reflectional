@@ -83,30 +83,29 @@
   .kv .k{ font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600; }
   .kv .v{ font-weight:600; text-align:right; }
 
-  .pulse-wrap{ perspective:1400px; margin-bottom:24px; }
-  .pulse-score{ position:relative; text-align:center; padding:38px 28px 32px; border:1px solid var(--line); border-radius:6px; background:var(--white); box-shadow:0 40px 80px -30px rgba(18,128,90,0.16), var(--shadow-lg); transform-style:preserve-3d; will-change:transform; }
-  .pulse-score .tick{ position:absolute; width:14px; height:14px; }
-  .pulse-score .tick.tl{ top:-1px; left:-1px; border-top:2px solid var(--gold); border-left:2px solid var(--gold); }
-  .pulse-score .tick.tr{ top:-1px; right:-1px; border-top:2px solid var(--gold); border-right:2px solid var(--gold); }
-  .pulse-score .tick.bl{ bottom:-1px; left:-1px; border-bottom:2px solid var(--gold); border-left:2px solid var(--gold); }
-  .pulse-score .tick.br{ bottom:-1px; right:-1px; border-bottom:2px solid var(--gold); border-right:2px solid var(--gold); }
-  .pulse-score .p-label{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--steel); display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:10px; }
+  .pulse-wrap{ perspective:1400px; margin-bottom:34px; }
+  .pulse-score{ position:relative; text-align:center; padding:34px 28px 34px; border:none; border-radius:14px; background:var(--ink); box-shadow:0 40px 80px -30px rgba(11,18,32,0.45); transform-style:preserve-3d; will-change:transform; }
+  .pulse-score .p-label{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--emerald-bright); display:flex; align-items:center; justify-content:center; gap:7px; }
   .pulse-score .p-label::before{ content:''; width:5px; height:5px; border-radius:50%; background:var(--emerald-bright); }
-  .pulse-score .num{font-family:'Fraunces',serif; font-weight:500; font-size:64px; line-height:1;}
-  .pulse-score.is-zero .num{ color:var(--steel); opacity:.45; }
-  .pulse-delta{ font-family:'IBM Plex Mono',monospace; font-size:12.5px; margin-top:10px; font-weight:600; color:var(--steel); }
-  .pulse-asof{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--steel); margin-top:8px; }
-  .spark{ margin-top:20px; }
+  .pulse-ring{ width:280px; height:280px; max-width:72vw; max-height:72vw; margin:22px auto 14px; position:relative; border-radius:50%; background:radial-gradient(circle at 50% 40%, rgba(255,255,255,0.055), rgba(255,255,255,0) 68%); }
+  .pulse-ring svg{ width:100%; height:100%; display:block; transform:rotate(-90deg); }
+  .pulse-ring .num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:62px; line-height:1; color:#FFFFFF; }
+  .pulse-score.is-zero .pulse-ring .num{ color:#FFFFFF; }
+  .pulse-delta{ font-family:'Manrope',sans-serif; font-size:13px; font-weight:500; color:rgba(255,255,255,0.52); }
+  .pulse-asof{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,0.34); margin-top:8px; }
+  .spark{ margin-top:18px; }
 
-  .vitals-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px;}
-  .vital{ background:var(--white); border:1px solid var(--line); border-radius:6px; padding:18px; position:relative; overflow:hidden; box-shadow:var(--shadow-sm); }
-  .vital::before{ content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--v-accent, var(--steel)); }
-  .vital.is-zero{ opacity:.55; }
-  .vital .v-top{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
-  .vital .v-dot{ width:8px; height:8px; border-radius:50%; background:var(--v-accent, var(--steel)); flex-shrink:0; }
+  .vitals-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:34px 16px; margin-bottom:34px;}
+  .vital{ background:transparent; border:none; border-radius:0; padding:0; position:relative; box-shadow:none; text-align:center; }
+  .vital .v-value{font-family:'IBM Plex Mono',monospace; font-size:21px; font-weight:600; color:var(--ink); margin-bottom:14px;}
+  .v-ring{ width:132px; height:132px; margin:0 auto 16px; position:relative; }
+  .v-ring svg{ width:100%; height:100%; display:block; transform:rotate(-90deg); }
+  .v-ring .rv{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:22px; color:var(--ink); }
+  .vital.is-zero .v-ring .rv{ color:var(--ink); }
+  .vital .v-top{ display:flex; align-items:center; justify-content:center; gap:7px; margin-bottom:7px; }
+  .vital .v-dot{ width:6px; height:6px; border-radius:50%; background:var(--v-accent, var(--steel)); flex-shrink:0; }
   .vital .v-label{font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600;}
-  .vital .v-value{font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:600;}
-  .vital .v-score{font-size:12px; margin-top:6px; font-weight:600;}
+  .vital .v-score{font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:500; color:var(--steel);}
   .score-good{color:var(--emerald);} .score-warn{color:var(--gold);} .score-bad{color:var(--rose);}
   .score-none{color:var(--steel);}
 
@@ -344,10 +343,16 @@
   <!-- ---------- 3. SCORES ---------- -->
   <div id="view-scores">
     <div class="pulse-wrap">
-      <div class="pulse-score" id="pulseCard">
-        <span class="tick tl"></span><span class="tick tr"></span><span class="tick bl"></span><span class="tick br"></span>
+      <div class="pulse-score is-zero" id="pulseCard">
         <div class="p-label">Pulse score — live</div>
-        <div class="num" id="pulseNum">0</div>
+        <div class="pulse-ring">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="1.2"></circle>
+            <circle id="pulseArc" cx="50" cy="50" r="46" fill="none" stroke="#1FA374" stroke-width="2.4"
+                    stroke-linecap="round" stroke-dasharray="289.03" stroke-dashoffset="289.03"></circle>
+          </svg>
+          <div class="num" id="pulseNum">0</div>
+        </div>
         <div class="pulse-delta" id="pulseDelta"></div>
         <div class="pulse-asof" id="pulseAsOf"></div>
         <div class="spark" id="spark"></div>
@@ -605,11 +610,18 @@ function renderScores(){
 
   const card = document.getElementById('pulseCard');
   card.classList.toggle('is-zero', !hasData);
-  document.getElementById('pulseNum').textContent = hasData ? latest.pulse_score : 0;
+  const pulseVal = hasData ? latest.pulse_score : 0;
+  document.getElementById('pulseNum').textContent = pulseVal;
+
+  const arc = document.getElementById('pulseArc');
+  if(arc){
+    const pct = Math.max(0, Math.min(100, pulseVal));
+    arc.setAttribute('stroke-dashoffset', (RING_CIRC * (1 - pct / 100)).toFixed(2));
+  }
 
   const deltaEl = document.getElementById('pulseDelta');
   if(!hasData){
-    deltaEl.textContent = 'no snapshots yet'; deltaEl.className = 'pulse-delta';
+    deltaEl.textContent = 'no snapshots yet \u2014 upload data to calculate'; deltaEl.className = 'pulse-delta';
   } else if(prev){
     const d = latest.pulse_score - prev.pulse_score;
     deltaEl.textContent = d === 0 ? 'no change since last' : (d > 0 ? '▲ +' + d : '▼ ' + d) + ' since last';
@@ -637,20 +649,46 @@ function renderScores(){
   }
 }
 
+const RING_CIRC = 289.03;   // 2 * PI * r, where r = 46
+
+// 'Rs 0 over 90d' -> main 'Rs 0', suffix 'over 90d' so the qualifier can sit
+// on the score line instead of crowding the headline figure.
+function splitValue(raw){
+  const i = String(raw).indexOf(' over ');
+  return i === -1 ? { main:String(raw), suffix:'' }
+                  : { main:String(raw).slice(0,i), suffix:String(raw).slice(i+1) };
+}
+
 function renderVitals(vitals, hasData){
   const grid = document.getElementById('vitalsGrid');
   grid.innerHTML = '';
   vitals.forEach(v => {
+    const accent = VITAL_ACCENTS[v.label] || '#5C6B7A';
+    const pct = Math.max(0, Math.min(100, v.score || 0));
+    const offset = RING_CIRC * (1 - pct / 100);
+    const { main, suffix } = splitValue(v.value);
+
     const el = document.createElement('div');
     el.className = 'vital' + (hasData ? '' : ' is-zero');
-    el.style.setProperty('--v-accent', VITAL_ACCENTS[v.label] || '#5C6B7A');
-    el.innerHTML = '<div class="v-top"><span class="v-dot"></span><span class="v-label"></span></div>' +
-                   '<div class="v-value"></div><div class="v-score"></div>';
+    el.style.setProperty('--v-accent', accent);
+    el.innerHTML =
+      '<div class="v-value"></div>' +
+      '<div class="v-ring">' +
+        '<svg viewBox="0 0 100 100" aria-hidden="true">' +
+          '<circle cx="50" cy="50" r="46" fill="none" stroke="rgba(11,18,32,0.10)" stroke-width="1.2"></circle>' +
+          '<circle cx="50" cy="50" r="46" fill="none" stroke="' + accent + '" stroke-width="2.4" ' +
+            'stroke-linecap="round" stroke-dasharray="' + RING_CIRC + '" stroke-dashoffset="' + offset.toFixed(2) + '"></circle>' +
+        '</svg>' +
+        '<div class="rv"></div>' +
+      '</div>' +
+      '<div class="v-top"><span class="v-dot"></span><span class="v-label"></span></div>' +
+      '<div class="v-score"></div>';
+
+    el.querySelector('.v-value').textContent = main;
+    el.querySelector('.rv').textContent = Math.round(v.score);
     el.querySelector('.v-label').textContent = v.label;
-    el.querySelector('.v-value').textContent = v.value;
-    const sc = el.querySelector('.v-score');
-    sc.textContent = Math.round(v.score) + '/100';
-    sc.className = 'v-score ' + (hasData ? scoreClass(v.score) : 'score-none');
+    el.querySelector('.v-score').textContent =
+      (suffix ? suffix + ' \u2022 ' : '') + Math.round(v.score) + '/100';
     grid.appendChild(el);
   });
 }
