@@ -109,6 +109,71 @@
   .vital .v-dot{ width:6px; height:6px; border-radius:50%; background:var(--v-accent, var(--steel)); flex-shrink:0; }
   .vital .v-label{font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600;}
   .vital .v-score{font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:500; color:var(--steel);}
+  .vital{ cursor:pointer; transition:opacity .2s ease; }
+  .vital:hover{ opacity:0.72; }
+  .vital.is-zero{ cursor:default; }
+  .vital.is-zero:hover{ opacity:1; }
+
+  /* ---------- vital detail drawer ---------- */
+  .detail-overlay{ position:fixed; inset:0; z-index:300; background:rgba(11,18,32,0.42); backdrop-filter:blur(2px);
+    display:flex; justify-content:flex-end; }
+  .detail-panel{ width:min(480px, 100%); height:100%; background:var(--bg); overflow-y:auto; box-shadow:var(--shadow-lg);
+    padding:26px 24px 60px; position:relative; animation:slideIn .22s ease; }
+  @keyframes slideIn{ from{ transform:translateX(24px); opacity:0; } to{ transform:translateX(0); opacity:1; } }
+  .detail-close{ position:absolute; top:20px; right:20px; width:32px; height:32px; border-radius:50%; border:1px solid var(--line-strong);
+    background:var(--white); color:var(--steel); font-size:14px; cursor:pointer; }
+  .detail-close:hover{ color:var(--ink); border-color:var(--ink); }
+  .detail-eyebrow{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--steel); font-weight:600; margin:6px 0 4px; }
+  .detail-title{ font-family:'Fraunces',serif; font-weight:500; font-size:26px; letter-spacing:-0.01em; margin-bottom:4px; padding-right:40px; }
+  .detail-sub{ font-size:13px; color:var(--steel); margin-bottom:22px; line-height:1.6; }
+  .detail-stats{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:22px; }
+  .detail-stat{ background:var(--white); border:1px solid var(--line); border-radius:6px; padding:14px; }
+  .detail-stat .ds-label{ font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600; margin-bottom:6px; }
+  .detail-stat .ds-value{ font-family:'IBM Plex Mono',monospace; font-size:17px; font-weight:600; }
+
+  .aging-bar{ display:flex; gap:6px; margin-bottom:22px; }
+  .aging-seg{ flex:1; background:var(--white); border:1px solid var(--line); border-radius:6px; padding:10px 8px; text-align:center; }
+  .aging-seg .ag-b{ font-family:'IBM Plex Mono',monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--steel); font-weight:600; margin-bottom:4px; }
+  .aging-seg .ag-v{ font-family:'IBM Plex Mono',monospace; font-size:12.5px; font-weight:600; }
+  .aging-seg.hot{ border-color:var(--rose); background:var(--blush); }
+
+  .ledger-form{ background:var(--white); border:1px solid var(--line); border-radius:6px; padding:16px; margin-bottom:20px; }
+  .ledger-form .lf-title{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600; margin-bottom:10px; }
+  .ledger-form .lf-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px; }
+  .ledger-form input{ width:100%; padding:9px 10px; border:1px solid var(--line-strong); border-radius:4px; font-family:'Manrope',sans-serif; font-size:13px; background:var(--white); color:var(--ink); }
+  .ledger-form input:focus{ outline:none; border-color:var(--emerald); }
+  .ledger-form button{ width:100%; background:var(--ink); color:var(--white); border:none; padding:10px; border-radius:999px; font-size:13px; font-weight:700; cursor:pointer; font-family:'Manrope',sans-serif; }
+  .ledger-form button:hover{ background:var(--emerald); }
+  .ledger-form button:disabled{ opacity:.5; cursor:not-allowed; }
+
+  .ledger-list-title{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600; margin-bottom:10px; }
+  .ledger-row{ background:var(--white); border:1px solid var(--line); border-radius:6px; padding:12px 14px; margin-bottom:8px; display:flex; align-items:center; gap:10px; }
+  .ledger-row .lr-main{ flex:1; min-width:0; }
+  .ledger-row .lr-party{ font-size:13.5px; font-weight:700; margin-bottom:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .ledger-row .lr-meta{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--steel); }
+  .ledger-row .lr-amount{ font-family:'IBM Plex Mono',monospace; font-size:14px; font-weight:600; white-space:nowrap; }
+  .lr-tag{ display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:.04em; font-weight:600; padding:2px 6px; border-radius:4px; margin-left:6px; }
+  .lr-tag.ok{ background:var(--mint); color:var(--emerald); }
+  .lr-tag.warn{ background:var(--amber); color:var(--gold); }
+  .lr-tag.bad{ background:var(--blush); color:var(--rose); }
+  .lr-actions{ display:flex; flex-direction:column; gap:6px; }
+  .lr-btn{ font-family:'Manrope',sans-serif; font-size:11px; font-weight:700; padding:6px 10px; border-radius:999px; cursor:pointer; border:1px solid var(--line-strong); background:var(--white); color:var(--ink); white-space:nowrap; }
+  .lr-btn:hover{ border-color:var(--emerald); color:var(--emerald); }
+  .lr-btn.danger{ color:var(--rose); }
+  .lr-btn.danger:hover{ border-color:var(--rose); }
+  .ledger-empty{ font-size:13px; color:var(--steel); padding:20px 0; text-align:center; }
+  .detail-note{ font-size:12px; margin-top:6px; min-height:16px; }
+  .detail-note.ok{ color:var(--emerald); }
+  .detail-note.bad{ color:var(--rose); }
+  .readonly-block{ background:var(--white); border:1px solid var(--line); border-radius:6px; padding:16px; font-size:13.5px; line-height:1.7; color:var(--ink-soft); }
+  .cash-tx-row{ display:flex; justify-content:space-between; gap:10px; padding:10px 0; border-bottom:1px solid var(--line); font-size:13px; }
+  .cash-tx-row:last-child{ border-bottom:none; }
+  .cash-tx-row .ctr-desc{ color:var(--ink-soft); }
+  .cash-tx-row .ctr-date{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--steel); display:block; margin-top:2px; }
+  .cash-tx-row .ctr-amt{ font-family:'IBM Plex Mono',monospace; font-weight:600; white-space:nowrap; }
+  .cash-tx-row .ctr-amt.in{ color:var(--emerald); }
+  .cash-tx-row .ctr-amt.out{ color:var(--rose); }
+  @media (max-width:640px){ .detail-panel{ width:100%; padding:22px 16px 50px; } .ledger-form .lf-grid{ grid-template-columns:1fr; } }
   .score-good{color:var(--emerald);} .score-warn{color:var(--gold);} .score-bad{color:var(--rose);}
   .score-none{color:var(--steel);}
 
@@ -327,13 +392,10 @@
     <div class="panel" id="panel-manual">
       <div class="card">
         <h2>Quick manual entry</h2>
-        <div class="hint">Enter aggregate figures directly — useful for a fast look before you wire up a full export.</div>
+        <div class="hint">Set your reconciled cash balance and P&amp;L figures here. Receivables and payables are now tracked as a live ledger — open a vital on the Scores tab to add or clear individual entries.</div>
         <div class="grid-2">
-          <div><label>Cash in bank (₹)</label><input type="number" id="m-cash" placeholder="4200000"></div>
+          <div><label>Cash in bank (₹) — sets your reconciled balance</label><input type="number" id="m-cash" placeholder="4200000"></div>
           <div><label>Monthly operating expenses (₹)</label><input type="number" id="m-burn" placeholder="1500000"></div>
-          <div><label>Total receivables outstanding (₹)</label><input type="number" id="m-recv" placeholder="3800000"></div>
-          <div><label>Receivables overdue &gt;90 days (₹)</label><input type="number" id="m-recv90" placeholder="900000"></div>
-          <div><label>Payables due in next 30 days (₹)</label><input type="number" id="m-pay" placeholder="1100000"></div>
           <div><label>Monthly revenue (₹)</label><input type="number" id="m-rev" placeholder="6000000"></div>
           <div><label>Net profit (this period, ₹)</label><input type="number" id="m-profit" placeholder="480000"></div>
           <div><label>GST ITC available but unclaimed (₹)</label><input type="number" id="m-gst" placeholder="65000"></div>
@@ -383,6 +445,13 @@
 
 </div>
 
+<div class="detail-overlay hidden" id="detailOverlay">
+  <div class="detail-panel">
+    <button class="detail-close" id="detailClose">✕</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
 <footer>Margyn 1.0 · Built for Indian SMEs</footer>
 
 <script>
@@ -400,6 +469,9 @@ let sbClient = null;
 let currentUser = null;
 let currentProfile = null;
 let snapshots = [];
+let receivables = [];
+let payables = [];
+let cashTx = [];
 let bootError = null;
 
 // ---------- helpers ----------
@@ -468,6 +540,7 @@ async function initSupabase(){
 async function routeFor(session){
   if(!session){
     currentUser = null; currentProfile = null; snapshots = [];
+    receivables = []; payables = []; cashTx = [];
     document.getElementById('authGate').classList.remove('hidden');
     document.getElementById('onboardGate').classList.add('hidden');
     // Wipe the signed-in view so nothing from the last session is left behind
@@ -507,6 +580,24 @@ async function loadSnapshots(){
   const { data, error } = await sbClient.from('snapshots')
     .select('*').eq('user_id', currentUser.id).order('created_at', { ascending:false }).limit(50);
   if(error){ console.error('[margyn] loadSnapshots:', error); return []; }
+  return data || [];
+}
+async function loadReceivables(){
+  const { data, error } = await sbClient.from('receivables')
+    .select('*').eq('user_id', currentUser.id).eq('status', 'open').order('due_date', { ascending:true, nullsFirst:false });
+  if(error){ console.error('[margyn] loadReceivables:', error); return []; }
+  return data || [];
+}
+async function loadPayables(){
+  const { data, error } = await sbClient.from('payables')
+    .select('*').eq('user_id', currentUser.id).eq('status', 'open').order('due_date', { ascending:true, nullsFirst:false });
+  if(error){ console.error('[margyn] loadPayables:', error); return []; }
+  return data || [];
+}
+async function loadCashTx(){
+  const { data, error } = await sbClient.from('cash_transactions')
+    .select('*').eq('user_id', currentUser.id).order('created_at', { ascending:false }).limit(25);
+  if(error){ console.error('[margyn] loadCashTx:', error); return []; }
   return data || [];
 }
 
@@ -556,6 +647,9 @@ document.querySelectorAll('.pagenav button').forEach(b => {
 // ---------- render ----------
 async function refreshAll(){
   snapshots = await loadSnapshots();
+  receivables = await loadReceivables();
+  payables = await loadPayables();
+  cashTx = await loadCashTx();
   renderHeader();
   renderProfile();
   renderScores();
@@ -690,6 +784,7 @@ function renderVitals(vitals, hasData){
     const el = document.createElement('div');
     el.className = 'vital' + (hasData ? '' : ' is-zero');
     el.style.setProperty('--v-accent', accent);
+    if(hasData) el.addEventListener('click', () => openVitalDetail(v.label));
     el.innerHTML =
       '<div class="v-value"></div>' +
       '<div class="v-ring">' +
@@ -749,6 +844,363 @@ function renderHistory(rows){
     p.className = 'hist-pulse ' + scoreClass(r.pulse_score);
     host.appendChild(row);
   });
+}
+
+// ---------- vital detail drawer ----------
+const inr = n => '₹' + Math.round(Number(n)||0).toLocaleString('en-IN');
+const fmtDay2 = iso => iso ? new Date(iso).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : '—';
+
+function daysFromToday(dateStr){
+  if(!dateStr) return null;
+  const ms = new Date(dateStr) - new Date(new Date().toDateString());
+  return Math.round(ms / 86400000);
+}
+// Positive 'daysOverdue' = past due. Used for receivables.
+function recvBucket(dueDate){
+  const days = daysFromToday(dueDate);
+  if(days === null) return { label:'No due date', tag:'' };
+  const overdue = -days;
+  if(overdue <= 0) return { label:'not yet due', tag:'ok' };
+  if(overdue <= 30) return { label:overdue + 'd overdue', tag:'warn' };
+  if(overdue <= 90) return { label:overdue + 'd overdue', tag:'warn' };
+  return { label:overdue + 'd overdue', tag:'bad' };
+}
+function payUrgency(dueDate){
+  const days = daysFromToday(dueDate);
+  if(days === null) return { label:'no due date', tag:'warn' };
+  if(days < 0) return { label:(-days) + 'd overdue', tag:'bad' };
+  if(days <= 7) return { label:'due in ' + days + 'd', tag:'bad' };
+  if(days <= 30) return { label:'due in ' + days + 'd', tag:'warn' };
+  return { label:'due in ' + days + 'd', tag:'ok' };
+}
+
+function openVitalDetail(label){
+  const overlay = document.getElementById('detailOverlay');
+  overlay.classList.remove('hidden');
+  renderDetailFor(label);
+}
+function closeVitalDetail(){
+  document.getElementById('detailOverlay').classList.add('hidden');
+}
+document.getElementById('detailClose').addEventListener('click', closeVitalDetail);
+document.getElementById('detailOverlay').addEventListener('click', (e) => {
+  if(e.target.id === 'detailOverlay') closeVitalDetail();
+});
+
+function renderDetailFor(label){
+  const host = document.getElementById('detailContent');
+  if(label === 'Cash Position') return renderCashDetail(host);
+  if(label === 'Receivables Aging') return renderReceivablesDetail(host);
+  if(label === 'Payables Due (30d)') return renderPayablesDetail(host);
+  return renderReadOnlyDetail(host, label);
+}
+
+// ---- Cash Position ----
+function renderCashDetail(host){
+  const bal = Number(currentProfile.cash_balance) || 0;
+  host.innerHTML =
+    '<div class="detail-eyebrow">Vital</div><div class="detail-title">Cash Position</div>' +
+    '<div class="detail-sub">Your running bank balance. This updates automatically when you mark a receivable as collected or a payable as paid — use the adjustment below only to reconcile against your actual bank statement.</div>' +
+    '<div class="detail-stats"><div class="detail-stat"><div class="ds-label">Current balance</div><div class="ds-value">' + inr(bal) + '</div></div>' +
+    '<div class="detail-stat"><div class="ds-label">Logged transactions</div><div class="ds-value">' + cashTx.length + '</div></div></div>' +
+    '<div class="ledger-form"><div class="lf-title">Adjust balance</div>' +
+    '<div class="lf-grid"><input type="number" id="cashAdjAmt" placeholder="Amount (± ₹)"><input type="text" id="cashAdjDesc" placeholder="Reason (optional)"></div>' +
+    '<button id="cashAdjBtn">Apply adjustment</button><div class="detail-note" id="cashAdjNote"></div></div>' +
+    '<div class="ledger-list-title">Recent activity</div><div id="cashTxList"></div>';
+
+  const list = host.querySelector('#cashTxList');
+  if(!cashTx.length){
+    list.innerHTML = '<div class="ledger-empty">No transactions logged yet.</div>';
+  } else {
+    list.innerHTML = cashTx.map(t => {
+      const inflow = Number(t.amount) >= 0;
+      return '<div class="cash-tx-row"><span class="ctr-desc">' + escapeHtml(t.description || t.type) +
+        '<span class="ctr-date">' + fmtDay2(t.created_at) + '</span></span>' +
+        '<span class="ctr-amt ' + (inflow ? 'in' : 'out') + '">' + (inflow ? '+' : '') + inr(t.amount) + '</span></div>';
+    }).join('');
+  }
+
+  host.querySelector('#cashAdjBtn').addEventListener('click', async () => {
+    const amt = Number(host.querySelector('#cashAdjAmt').value);
+    const desc = host.querySelector('#cashAdjDesc').value.trim() || 'Manual adjustment';
+    const note = host.querySelector('#cashAdjNote');
+    if(!amt){ note.className = 'detail-note bad'; note.textContent = 'Enter a non-zero amount.'; return; }
+    note.className = 'detail-note'; note.textContent = 'Saving…';
+    try {
+      await applyCashDelta(amt, 'adjustment', desc);
+      note.textContent = '';
+      renderDetailFor('Cash Position');
+    } catch(err){
+      console.error('[margyn] cash adjust:', err);
+      note.className = 'detail-note bad'; note.textContent = err.message || 'Could not save.';
+    }
+  });
+}
+
+// Central place all cash movements go through: updates the profile balance,
+// logs it to cash_transactions, and re-derives + saves a fresh snapshot so
+// every vital reflects the change immediately.
+async function applyCashDelta(amount, type, description){
+  const newBal = (Number(currentProfile.cash_balance) || 0) + Number(amount);
+  const { error: e1 } = await sbClient.from('profiles').update({ cash_balance:newBal }).eq('id', currentUser.id);
+  if(e1) throw e1;
+  currentProfile.cash_balance = newBal;
+  const { error: e2 } = await sbClient.from('cash_transactions').insert({
+    user_id:currentUser.id, type, amount, description
+  });
+  if(e2) throw e2;
+  cashTx = await loadCashTx();
+  await saveLedgerSnapshot();
+  renderScores();
+}
+
+// ---- Receivables ----
+function renderReceivablesDetail(host){
+  const total = receivables.reduce((s,r) => s + Number(r.amount), 0);
+  const over90 = receivables.reduce((s,r) => { const d = daysFromToday(r.due_date); return (d !== null && -d > 90) ? s + Number(r.amount) : s; }, 0);
+  const buckets = { notdue:0, d30:0, d60:0, d90p:0 };
+  receivables.forEach(r => {
+    const d = daysFromToday(r.due_date);
+    const overdue = d === null ? 0 : -d;
+    if(overdue <= 0) buckets.notdue += Number(r.amount);
+    else if(overdue <= 30) buckets.d30 += Number(r.amount);
+    else if(overdue <= 90) buckets.d60 += Number(r.amount);
+    else buckets.d90p += Number(r.amount);
+  });
+
+  host.innerHTML =
+    '<div class="detail-eyebrow">Vital</div><div class="detail-title">Receivables Aging</div>' +
+    '<div class="detail-sub">Money owed to you by customers. Mark an invoice as collected once the payment lands — that amount moves straight into your Cash Position.</div>' +
+    '<div class="detail-stats"><div class="detail-stat"><div class="ds-label">Total outstanding</div><div class="ds-value">' + inr(total) + '</div></div>' +
+    '<div class="detail-stat"><div class="ds-label">Over 90 days</div><div class="ds-value">' + inr(over90) + '</div></div></div>' +
+    '<div class="aging-bar">' +
+      '<div class="aging-seg"><div class="ag-b">Not due</div><div class="ag-v">' + inr(buckets.notdue) + '</div></div>' +
+      '<div class="aging-seg"><div class="ag-b">1–30d</div><div class="ag-v">' + inr(buckets.d30) + '</div></div>' +
+      '<div class="aging-seg"><div class="ag-b">31–90d</div><div class="ag-v">' + inr(buckets.d60) + '</div></div>' +
+      '<div class="aging-seg hot"><div class="ag-b">90d+</div><div class="ag-v">' + inr(buckets.d90p) + '</div></div>' +
+    '</div>' +
+    '<div class="ledger-form"><div class="lf-title">Add receivable</div>' +
+    '<div class="lf-grid"><input type="text" id="recvParty" placeholder="Customer name">' +
+    '<input type="number" id="recvAmt" placeholder="Amount (₹)"></div>' +
+    '<div class="lf-grid"><input type="date" id="recvDue"><span></span></div>' +
+    '<button id="recvAddBtn">Add to ledger</button><div class="detail-note" id="recvAddNote"></div></div>' +
+    '<div class="ledger-list-title">Open invoices (' + receivables.length + ')</div><div id="recvList"></div>';
+
+  renderReceivablesList(host);
+
+  host.querySelector('#recvAddBtn').addEventListener('click', async () => {
+    const party = host.querySelector('#recvParty').value.trim();
+    const amt = Number(host.querySelector('#recvAmt').value);
+    const due = host.querySelector('#recvDue').value || null;
+    const note = host.querySelector('#recvAddNote');
+    if(!party || !amt){ note.className = 'detail-note bad'; note.textContent = 'Enter a customer name and amount.'; return; }
+    note.className = 'detail-note'; note.textContent = 'Saving…';
+    try {
+      const { error } = await sbClient.from('receivables').insert({
+        user_id:currentUser.id, party_name:party, amount:amt, due_date:due, status:'open'
+      });
+      if(error) throw error;
+      receivables = await loadReceivables();
+      await saveLedgerSnapshot();
+      renderScores();
+      renderDetailFor('Receivables Aging');
+    } catch(err){
+      console.error('[margyn] add receivable:', err);
+      note.className = 'detail-note bad'; note.textContent = err.message || 'Could not save.';
+    }
+  });
+}
+
+function renderReceivablesList(host){
+  const list = host.querySelector('#recvList');
+  if(!receivables.length){
+    list.innerHTML = '<div class="ledger-empty">No open receivables. Add one above.</div>';
+    return;
+  }
+  list.innerHTML = '';
+  receivables.forEach(r => {
+    const b = recvBucket(r.due_date);
+    const row = document.createElement('div');
+    row.className = 'ledger-row';
+    row.innerHTML =
+      '<div class="lr-main"><div class="lr-party">' + escapeHtml(r.party_name) + '</div>' +
+      '<div class="lr-meta">due ' + fmtDay2(r.due_date) + (b.tag ? '<span class="lr-tag ' + b.tag + '">' + b.label + '</span>' : '') + '</div></div>' +
+      '<div class="lr-amount">' + inr(r.amount) + '</div>' +
+      '<div class="lr-actions"><button class="lr-btn" data-act="collect">Mark received</button><button class="lr-btn danger" data-act="del">Delete</button></div>';
+    row.querySelector('[data-act="collect"]').addEventListener('click', () => collectReceivable(r));
+    row.querySelector('[data-act="del"]').addEventListener('click', () => deleteReceivable(r));
+    list.appendChild(row);
+  });
+}
+
+async function collectReceivable(r){
+  try {
+    const { error: e1 } = await sbClient.from('receivables').delete().eq('id', r.id);
+    if(e1) throw e1;
+    receivables = await loadReceivables();
+    await applyCashDelta(Number(r.amount), 'receivable_collected', 'Collected from ' + r.party_name);
+    renderDetailFor('Receivables Aging');
+  } catch(err){
+    console.error('[margyn] collect receivable:', err);
+    alert('Could not mark as received: ' + (err.message || 'unknown error'));
+  }
+}
+async function deleteReceivable(r){
+  try {
+    const { error } = await sbClient.from('receivables').delete().eq('id', r.id);
+    if(error) throw error;
+    receivables = await loadReceivables();
+    await saveLedgerSnapshot();
+    renderScores();
+    renderDetailFor('Receivables Aging');
+  } catch(err){
+    console.error('[margyn] delete receivable:', err);
+    alert('Could not delete: ' + (err.message || 'unknown error'));
+  }
+}
+
+// ---- Payables ----
+function renderPayablesDetail(host){
+  const total = payables.reduce((s,p) => s + Number(p.amount), 0);
+  const soon = payables.reduce((s,p) => { const d = daysFromToday(p.due_date); return (d === null || d <= 30) ? s + Number(p.amount) : s; }, 0);
+
+  host.innerHTML =
+    '<div class="detail-eyebrow">Vital</div><div class="detail-title">Payables Due</div>' +
+    '<div class="detail-sub">Money you owe suppliers and vendors. Mark a bill as paid once you\u2019ve settled it — that amount comes straight out of your Cash Position.</div>' +
+    '<div class="detail-stats"><div class="detail-stat"><div class="ds-label">Total outstanding</div><div class="ds-value">' + inr(total) + '</div></div>' +
+    '<div class="detail-stat"><div class="ds-label">Due within 30 days</div><div class="ds-value">' + inr(soon) + '</div></div></div>' +
+    '<div class="ledger-form"><div class="lf-title">Add payable</div>' +
+    '<div class="lf-grid"><input type="text" id="payParty" placeholder="Vendor name">' +
+    '<input type="number" id="payAmt" placeholder="Amount (₹)"></div>' +
+    '<div class="lf-grid"><input type="date" id="payDue"><span></span></div>' +
+    '<button id="payAddBtn">Add to ledger</button><div class="detail-note" id="payAddNote"></div></div>' +
+    '<div class="ledger-list-title">Open bills (' + payables.length + ')</div><div id="payList"></div>';
+
+  renderPayablesList(host);
+
+  host.querySelector('#payAddBtn').addEventListener('click', async () => {
+    const party = host.querySelector('#payParty').value.trim();
+    const amt = Number(host.querySelector('#payAmt').value);
+    const due = host.querySelector('#payDue').value || null;
+    const note = host.querySelector('#payAddNote');
+    if(!party || !amt){ note.className = 'detail-note bad'; note.textContent = 'Enter a vendor name and amount.'; return; }
+    note.className = 'detail-note'; note.textContent = 'Saving…';
+    try {
+      const { error } = await sbClient.from('payables').insert({
+        user_id:currentUser.id, party_name:party, amount:amt, due_date:due, status:'open'
+      });
+      if(error) throw error;
+      payables = await loadPayables();
+      await saveLedgerSnapshot();
+      renderScores();
+      renderDetailFor('Payables Due (30d)');
+    } catch(err){
+      console.error('[margyn] add payable:', err);
+      note.className = 'detail-note bad'; note.textContent = err.message || 'Could not save.';
+    }
+  });
+}
+
+function renderPayablesList(host){
+  const list = host.querySelector('#payList');
+  if(!payables.length){
+    list.innerHTML = '<div class="ledger-empty">No open payables. Add one above.</div>';
+    return;
+  }
+  list.innerHTML = '';
+  payables.forEach(p => {
+    const u = payUrgency(p.due_date);
+    const row = document.createElement('div');
+    row.className = 'ledger-row';
+    row.innerHTML =
+      '<div class="lr-main"><div class="lr-party">' + escapeHtml(p.party_name) + '</div>' +
+      '<div class="lr-meta">due ' + fmtDay2(p.due_date) + '<span class="lr-tag ' + u.tag + '">' + u.label + '</span></div></div>' +
+      '<div class="lr-amount">' + inr(p.amount) + '</div>' +
+      '<div class="lr-actions"><button class="lr-btn" data-act="pay">Mark paid</button><button class="lr-btn danger" data-act="del">Delete</button></div>';
+    row.querySelector('[data-act="pay"]').addEventListener('click', () => payPayable(p));
+    row.querySelector('[data-act="del"]').addEventListener('click', () => deletePayable(p));
+    list.appendChild(row);
+  });
+}
+
+async function payPayable(p){
+  try {
+    const { error: e1 } = await sbClient.from('payables').delete().eq('id', p.id);
+    if(e1) throw e1;
+    payables = await loadPayables();
+    await applyCashDelta(-Number(p.amount), 'payable_paid', 'Paid to ' + p.party_name);
+    renderDetailFor('Payables Due (30d)');
+  } catch(err){
+    console.error('[margyn] pay payable:', err);
+    alert('Could not mark as paid: ' + (err.message || 'unknown error'));
+  }
+}
+async function deletePayable(p){
+  try {
+    const { error } = await sbClient.from('payables').delete().eq('id', p.id);
+    if(error) throw error;
+    payables = await loadPayables();
+    await saveLedgerSnapshot();
+    renderScores();
+    renderDetailFor('Payables Due (30d)');
+  } catch(err){
+    console.error('[margyn] delete payable:', err);
+    alert('Could not delete: ' + (err.message || 'unknown error'));
+  }
+}
+
+// ---- Read-only vitals (GST/ITC, Net Margin, Working Capital Runway) ----
+function renderReadOnlyDetail(host, label){
+  const latest = snapshots[0];
+  let stats = '', body = '';
+  if(label === 'GST/ITC Leakage'){
+    stats = '<div class="detail-stat"><div class="ds-label">Unclaimed ITC</div><div class="ds-value">' + inr(latest.gst_leak) + '</div></div>';
+    body = 'GST input tax credit sitting unclaimed reduces cash you\u2019re entitled to. This figure comes from your most recent manual entry or workbook upload — a line-item GST ledger is on the roadmap.';
+  } else if(label === 'Net Margin'){
+    const margin = latest.revenue > 0 ? (latest.net_profit / latest.revenue) * 100 : 0;
+    stats = '<div class="detail-stat"><div class="ds-label">Revenue</div><div class="ds-value">' + inr(latest.revenue) + '</div></div>' +
+      '<div class="detail-stat"><div class="ds-label">Net profit</div><div class="ds-value">' + inr(latest.net_profit) + '</div></div>';
+    body = 'Net margin is net profit divided by revenue (' + margin.toFixed(1) + '% currently). Update revenue and net profit from the Upload &amp; calculate tab.';
+  } else {
+    const runway = latest.burn > 0 ? (latest.cash + latest.recv_total - latest.pay_soon) / latest.burn : 0;
+    stats = '<div class="detail-stat"><div class="ds-label">Cash + receivables − payables</div><div class="ds-value">' + inr(latest.cash + latest.recv_total - latest.pay_soon) + '</div></div>' +
+      '<div class="detail-stat"><div class="ds-label">Monthly burn</div><div class="ds-value">' + inr(latest.burn) + '</div></div>';
+    body = 'Runway estimates how many months of operating expenses your current cash position (adjusted for the receivables and payables ledger) would cover — currently ' + runway.toFixed(1) + ' months. It updates automatically as your ledger changes.';
+  }
+  host.innerHTML =
+    '<div class="detail-eyebrow">Vital</div><div class="detail-title">' + label + '</div>' +
+    '<div class="detail-sub">' + body + '</div>' +
+    '<div class="detail-stats">' + stats + '</div>';
+}
+
+function escapeHtml(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+
+// Recomputes all six vitals from the current ledger state (cash balance +
+// open receivables + open payables) and the most recent P&L figures, then
+// saves it as a new snapshot so history and the trend line stay accurate.
+async function saveLedgerSnapshot(){
+  const recvTotal = receivables.reduce((s,r) => s + Number(r.amount), 0);
+  const recv90 = receivables.reduce((s,r) => { const d = daysFromToday(r.due_date); return (d !== null && -d > 90) ? s + Number(r.amount) : s; }, 0);
+  const paySoon = payables.reduce((s,p) => { const d = daysFromToday(p.due_date); return (d === null || d <= 30) ? s + Number(p.amount) : s; }, 0);
+  const cash = Number(currentProfile.cash_balance) || 0;
+  const latest = snapshots[0];
+  const revenue = latest ? Number(latest.revenue) || 0 : 0;
+  const netProfit = latest ? Number(latest.net_profit) || 0 : 0;
+  const burn = latest ? (Number(latest.burn) || 1) : 1;
+  const gstLeak = latest ? Number(latest.gst_leak) || 0 : 0;
+
+  const { pulse, vitals } = computeVitals({ cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak });
+  const row = {
+    user_id:currentUser.id, source:'ledger',
+    cash, recv_total:recvTotal, recv_90:recv90, pay_soon:paySoon,
+    revenue, net_profit:netProfit, burn, gst_leak:gstLeak,
+    pulse_score:pulse, vitals
+  };
+  const { data, error } = await sbClient.from('snapshots').insert(row).select().single();
+  if(error){ console.error('[margyn] saveLedgerSnapshot:', error); return; }
+  snapshots.unshift(data);
 }
 
 // ---------- auth ----------
@@ -881,46 +1333,87 @@ function sheetToRows(wb, name){
   return sheet ? XLSX.utils.sheet_to_json(sheet, { defval:0 }) : [];
 }
 
-document.getElementById('computeFromFile').addEventListener('click', () => {
+document.getElementById('computeFromFile').addEventListener('click', async () => {
   if(!workbookData) return;
-  const bank = sheetToRows(workbookData, 'Bank Accounts');
-  const recv = sheetToRows(workbookData, 'Receivables');
-  const pay  = sheetToRows(workbookData, 'Payables');
-  const pl   = sheetToRows(workbookData, 'P&L Summary');
-  const gst  = sheetToRows(workbookData, 'GST ITC');
+  const note = document.getElementById('noteUpload');
+  note.className = 'note'; note.textContent = 'Saving…';
+  try {
+    const bank = sheetToRows(workbookData, 'Bank Accounts');
+    const recv = sheetToRows(workbookData, 'Receivables');
+    const pay  = sheetToRows(workbookData, 'Payables');
+    const pl   = sheetToRows(workbookData, 'P&L Summary');
+    const gst  = sheetToRows(workbookData, 'GST ITC');
 
-  const cash = bank.reduce((s,r) => s + (Number(r['Balance'])||0), 0);
-  const today = new Date();
-  let recvTotal = 0, recv90 = 0;
-  recv.forEach(r => {
-    const out = (Number(r['Amount'])||0) - (Number(r['Amount Received'])||0);
-    recvTotal += out;
-    const due = r['Due Date'] ? new Date(r['Due Date']) : null;
-    if(due && (today - due)/86400000 > 90) recv90 += out;
-  });
-  let paySoon = 0;
-  pay.forEach(r => {
-    const due = r['Due Date'] ? new Date(r['Due Date']) : null;
-    const days = due ? (due - today)/86400000 : 999;
-    if(days <= 30) paySoon += Number(r['Amount'])||0;
-  });
-  const plMap = {};
-  pl.forEach(r => { plMap[r['Line Item']] = Number(r['Amount'])||0; });
-  const revenue = plMap['Revenue'] || 0;
-  const netProfit = plMap['Net Profit'] || 0;
-  const burn = plMap['Monthly Operating Expenses'] || (revenue - netProfit) || 1;
-  let gstLeak = 0;
-  gst.forEach(r => { gstLeak += (Number(r['ITC Available'])||0) - (Number(r['ITC Claimed'])||0); });
+    const cash = bank.reduce((s,r) => s + (Number(r['Balance'])||0), 0);
 
-  runCompute({ cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak }, 'upload', 'noteUpload');
+    // Bank sheet is treated as the reconciled truth for cash on hand.
+    const { error: eCash } = await sbClient.from('profiles').update({ cash_balance:cash }).eq('id', currentUser.id);
+    if(eCash) throw eCash;
+    currentProfile.cash_balance = cash;
+
+    // Receivables/Payables sheet rows become open ledger entries — re-uploading
+    // the same file will add duplicate entries, so clear an entry from the
+    // ledger (mark received/paid, or delete) once it's actually settled.
+    const recvInserts = recv
+      .filter(r => (Number(r['Amount'])||0) - (Number(r['Amount Received'])||0) > 0)
+      .map(r => ({
+        user_id:currentUser.id,
+        party_name:String(r['Customer'] || 'Unnamed customer'),
+        amount:(Number(r['Amount'])||0) - (Number(r['Amount Received'])||0),
+        due_date:r['Due Date'] ? new Date(r['Due Date']).toISOString().slice(0,10) : null,
+        status:'open'
+      }));
+    const payInserts = pay
+      .filter(r => (Number(r['Amount'])||0) > 0)
+      .map(r => ({
+        user_id:currentUser.id,
+        party_name:String(r['Vendor'] || 'Unnamed vendor'),
+        amount:Number(r['Amount'])||0,
+        due_date:r['Due Date'] ? new Date(r['Due Date']).toISOString().slice(0,10) : null,
+        status:'open'
+      }));
+    if(recvInserts.length){ const { error } = await sbClient.from('receivables').insert(recvInserts); if(error) throw error; }
+    if(payInserts.length){ const { error } = await sbClient.from('payables').insert(payInserts); if(error) throw error; }
+
+    const plMap = {};
+    pl.forEach(r => { plMap[r['Line Item']] = Number(r['Amount'])||0; });
+    const revenue = plMap['Revenue'] || 0;
+    const netProfit = plMap['Net Profit'] || 0;
+    const burn = plMap['Monthly Operating Expenses'] || (revenue - netProfit) || 1;
+    let gstLeak = 0;
+    gst.forEach(r => { gstLeak += (Number(r['ITC Available'])||0) - (Number(r['ITC Claimed'])||0); });
+
+    receivables = await loadReceivables();
+    payables = await loadPayables();
+    await saveLedgerSnapshotWithPL(revenue, netProfit, burn, gstLeak);
+    note.textContent = '';
+    await refreshAll();
+    showView('scores');
+  } catch(err){
+    console.error('[margyn] upload compute:', err);
+    note.className = 'note bad';
+    note.textContent = 'Could not save: ' + (err.message || 'unknown error');
+  }
 });
 
-document.getElementById('computeFromManual').addEventListener('click', () => {
+document.getElementById('computeFromManual').addEventListener('click', async () => {
   const v = id => Number(document.getElementById(id).value) || 0;
-  runCompute({
-    cash:v('m-cash'), recvTotal:v('m-recv'), recv90:v('m-recv90'), paySoon:v('m-pay'),
-    revenue:v('m-rev'), netProfit:v('m-profit'), burn:v('m-burn') || 1, gstLeak:v('m-gst')
-  }, 'manual', 'noteManual');
+  const note = document.getElementById('noteManual');
+  note.className = 'note'; note.textContent = 'Saving…';
+  try {
+    const cash = v('m-cash');
+    const { error: eCash } = await sbClient.from('profiles').update({ cash_balance:cash }).eq('id', currentUser.id);
+    if(eCash) throw eCash;
+    currentProfile.cash_balance = cash;
+    await saveLedgerSnapshotWithPL(v('m-rev'), v('m-profit'), v('m-burn') || 1, v('m-gst'));
+    note.textContent = '';
+    await refreshAll();
+    showView('scores');
+  } catch(err){
+    console.error('[margyn] manual compute:', err);
+    note.className = 'note bad';
+    note.textContent = 'Could not save: ' + (err.message || 'unknown error');
+  }
 });
 
 // ---------- scoring ----------
@@ -949,27 +1442,23 @@ function computeVitals(d){
   return { pulse, vitals };
 }
 
-async function runCompute(d, source, noteId){
-  const note = document.getElementById(noteId);
-  const { pulse, vitals } = computeVitals(d);
-  note.className = 'note'; note.textContent = 'Saving snapshot…';
-  try {
-    const row = {
-      user_id: currentUser.id, source,
-      cash:d.cash, recv_total:d.recvTotal, recv_90:d.recv90, pay_soon:d.paySoon,
-      revenue:d.revenue, net_profit:d.netProfit, burn:d.burn, gst_leak:d.gstLeak,
-      pulse_score:pulse, vitals
-    };
-    const { error } = await withTimeout(sbClient.from('snapshots').insert(row), 20000, 'Saving snapshot');
-    if(error) throw error;
-    note.textContent = '';
-    await refreshAll();
-    showView('scores');
-  } catch(err){
-    console.error('[margyn] save snapshot:', err);
-    note.className = 'note bad';
-    note.textContent = 'Could not save: ' + (err.message || 'unknown error');
-  }
+// Same as saveLedgerSnapshot(), but takes P&L/GST figures explicitly instead
+// of carrying them forward — used right after a manual entry or upload.
+async function saveLedgerSnapshotWithPL(revenue, netProfit, burn, gstLeak){
+  const recvTotal = receivables.reduce((s,r) => s + Number(r.amount), 0);
+  const recv90 = receivables.reduce((s,r) => { const d = daysFromToday(r.due_date); return (d !== null && -d > 90) ? s + Number(r.amount) : s; }, 0);
+  const paySoon = payables.reduce((s,p) => { const d = daysFromToday(p.due_date); return (d === null || d <= 30) ? s + Number(p.amount) : s; }, 0);
+  const cash = Number(currentProfile.cash_balance) || 0;
+
+  const { pulse, vitals } = computeVitals({ cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak });
+  const row = {
+    user_id:currentUser.id, source:'manual',
+    cash, recv_total:recvTotal, recv_90:recv90, pay_soon:paySoon,
+    revenue, net_profit:netProfit, burn, gst_leak:gstLeak,
+    pulse_score:pulse, vitals
+  };
+  const { error } = await withTimeout(sbClient.from('snapshots').insert(row), 20000, 'Saving snapshot');
+  if(error) throw error;
 }
 
 // ---------- briefing ----------
