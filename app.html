@@ -227,6 +227,64 @@
     .wrap{padding:100px 20px 72px;}
     .pagenav button{ font-size:12px; padding:11px 6px; }
   }
+
+  /* ---------- methodology link (small, under the pulse card) ---------- */
+  .methodology-link{ display:block; text-align:center; margin:-18px 0 34px; font-family:'IBM Plex Mono',monospace; font-size:11.5px;
+    color:var(--steel); cursor:pointer; font-weight:600; transition:color .2s ease; background:none; border:none; width:100%; }
+  .methodology-link:hover{ color:var(--emerald); }
+  .pagenav.hidden{ display:none; }
+
+  /* ---------- methodology page ---------- */
+  .meth-back{ background:transparent; border:1px solid var(--line-strong); color:var(--steel); padding:8px 16px; border-radius:999px;
+    cursor:pointer; font-size:12.5px; font-weight:700; font-family:'Manrope',sans-serif; transition:all .2s ease; margin-bottom:30px; }
+  .meth-back:hover{ border-color:var(--ink); color:var(--ink); }
+
+  .meth-waterline{ margin:56px 0 8px; }
+  .meth-wl-bar{ display:flex; align-items:stretch; height:1px; background:var(--line-strong); position:relative; }
+  .meth-wl-seg{ position:relative; height:1px; }
+  .meth-wl-seg::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--seg-color); transform:translateY(-1px); transition:height .18s ease, transform .18s ease; }
+  .meth-wl-seg:hover::before{ height:6px; transform:translateY(-2.5px); }
+  .meth-wl-reflect{ display:flex; align-items:stretch; height:1px; margin-top:4px; -webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,.35), transparent); mask-image:linear-gradient(to bottom, rgba(0,0,0,.35), transparent); }
+  .meth-wl-rseg{ height:14px; border-top:2px solid var(--seg-color); opacity:.5; }
+  .meth-wl-labels{ display:flex; margin-top:18px; }
+  .meth-wl-label{ padding-right:14px; }
+  .meth-wl-label .wl-name{ font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.02em; color:var(--ink-soft); font-weight:600; line-height:1.4; }
+  .meth-wl-label .wl-pct{ font-family:'IBM Plex Mono',monospace; font-size:14px; font-weight:700; margin-top:3px; }
+
+  .meth-section-label{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--steel); font-weight:600; margin:60px 0 4px; }
+
+  .meth-ledger{ border-top:1px solid var(--line-strong); }
+  .meth-row{ display:flex; justify-content:space-between; align-items:baseline; gap:20px; padding:20px 0 6px; border-bottom:1px solid var(--line); }
+  .meth-row .mr-left{ display:flex; align-items:baseline; gap:12px; }
+  .meth-row .mr-tick{ width:8px; height:8px; border-radius:1px; background:var(--seg-color); transform:rotate(45deg); flex-shrink:0; position:relative; top:-2px; }
+  .meth-row .mr-name{ font-family:'Fraunces',serif; font-weight:500; font-size:19px; }
+  .meth-row .mr-weight{ font-family:'IBM Plex Mono',monospace; font-size:15px; font-weight:700; white-space:nowrap; }
+  .meth-note{ padding:0 0 22px 20px; border-bottom:1px solid var(--line); }
+  .meth-note .mn-ratio{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--steel); margin-bottom:6px; }
+  .meth-note .mn-why{ font-size:13.5px; color:var(--ink-soft); line-height:1.65; max-width:560px; }
+
+  .meth-footnotes{ margin-top:8px; }
+  .meth-fn-row{ display:flex; gap:12px; padding:13px 0; border-bottom:1px solid var(--line); }
+  .meth-fn-row:first-child{ border-top:1px solid var(--line-strong); }
+  .meth-fn-num{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--steel); font-weight:600; flex-shrink:0; width:16px; }
+  .meth-fn-text{ font-size:13.5px; color:var(--ink-soft); line-height:1.65; }
+  .meth-fn-text b{ color:var(--ink); font-weight:700; }
+  .meth-fn-row.is-open .meth-fn-text i{ color:var(--sky); }
+
+  .meth-industry-line{ font-size:14px; color:var(--ink-soft); line-height:1.8; margin-top:2px; }
+  .meth-industry-line .mi-dot{ color:var(--line-strong); margin:0 9px; }
+  .meth-industry-line .mi-name{ font-family:'IBM Plex Mono',monospace; font-size:12.5px; font-weight:600; color:var(--ink-soft); }
+
+  .meth-footer{ margin-top:56px; padding-top:20px; border-top:1px solid var(--line-strong); display:flex; flex-wrap:wrap; justify-content:space-between; gap:10px; align-items:baseline; }
+  .meth-footer .mf-version{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--steel); }
+  .meth-footer .mf-note{ font-size:12.5px; color:var(--steel); max-width:400px; text-align:right; line-height:1.55; }
+
+  @media (max-width:640px){
+    .meth-wl-labels{ flex-wrap:wrap; row-gap:14px; }
+    .meth-wl-label{ min-width:30%; }
+    .meth-footer .mf-note{ text-align:left; }
+    .meth-row .mr-name{ font-size:17px; }
+  }
 </style>
 </head>
 <body>
@@ -283,7 +341,16 @@
           <option value="over_200cr">Over ₹200 crore</option>
         </select></div>
       <div class="auth-field"><label for="obIndustry">Industry</label>
-        <input type="text" id="obIndustry" placeholder="Textiles, auto components, pharma…"></div>
+        <select id="obIndustry">
+          <option value="">Select an industry…</option>
+          <option value="Manufacturing (General)">Manufacturing (General)</option>
+          <option value="Textiles & Apparel">Textiles &amp; Apparel</option>
+          <option value="Auto Components">Auto Components</option>
+          <option value="Pharma & Chemicals">Pharma &amp; Chemicals</option>
+          <option value="Trading & Distribution">Trading &amp; Distribution</option>
+          <option value="Professional & IT Services">Professional &amp; IT Services</option>
+          <option value="Other / Generalized">Other</option>
+        </select></div>
       <div class="auth-field"><label for="obCity">City</label>
         <input type="text" id="obCity" placeholder="Mumbai"></div>
       <button type="submit" class="auth-submit" id="obSubmit">Continue</button>
@@ -353,7 +420,17 @@
               <option value="100_200cr">₹100 – 200 crore</option>
               <option value="over_200cr">Over ₹200 crore</option>
             </select></div>
-          <div><label>Industry</label><input type="text" id="pfIndustry"></div>
+          <div><label>Industry</label>
+            <select id="pfIndustry">
+              <option value="">Select an industry…</option>
+              <option value="Manufacturing (General)">Manufacturing (General)</option>
+              <option value="Textiles & Apparel">Textiles &amp; Apparel</option>
+              <option value="Auto Components">Auto Components</option>
+              <option value="Pharma & Chemicals">Pharma &amp; Chemicals</option>
+              <option value="Trading & Distribution">Trading &amp; Distribution</option>
+              <option value="Professional & IT Services">Professional &amp; IT Services</option>
+              <option value="Other / Generalized">Other</option>
+            </select></div>
           <div><label>City</label><input type="text" id="pfCity"></div>
         </div>
         <div class="btn-row">
@@ -398,6 +475,7 @@
           <div><label>Monthly operating expenses (₹)</label><input type="number" id="m-burn" placeholder="1500000"></div>
           <div><label>Monthly revenue (₹)</label><input type="number" id="m-rev" placeholder="6000000"></div>
           <div><label>Net profit (this period, ₹)</label><input type="number" id="m-profit" placeholder="480000"></div>
+          <div><label>Monthly GST payable (₹)</label><input type="number" id="m-gstpay" placeholder="240000"></div>
           <div><label>GST ITC available but unclaimed (₹)</label><input type="number" id="m-gst" placeholder="65000"></div>
         </div>
       </div>
@@ -426,6 +504,7 @@
         <div class="spark" id="spark"></div>
       </div>
     </div>
+    <button class="methodology-link" id="methodologyLink">How this is calculated →</button>
 
     <div class="vitals-grid" id="vitalsGrid"></div>
 
@@ -440,6 +519,123 @@
       <h2>Previous scores</h2>
       <div class="hint">Every snapshot you've recorded. Depth here is what makes the score meaningful over time.</div>
       <div id="historyList"></div>
+    </div>
+  </div>
+
+  <!-- ---------- 4. METHODOLOGY ---------- -->
+  <div id="view-methodology" class="hidden">
+    <button class="meth-back" id="methodologyBack">← Back to Scores</button>
+
+    <header>
+      <div class="app-eyebrow">Methodology — v1.0</div>
+      <div class="app-title">How your Pulse Score is calculated</div>
+      <div class="app-sub">Six vitals, weighted by what actually sinks SMEs, benchmarked against published lending and industry data — not arbitrary thresholds.</div>
+    </header>
+
+    <div class="meth-waterline">
+      <div class="meth-wl-bar">
+        <div class="meth-wl-seg" style="--seg-color:#C97F1E; flex:25;"></div>
+        <div class="meth-wl-seg" style="--seg-color:#2E6FA8; flex:20;"></div>
+        <div class="meth-wl-seg" style="--seg-color:#C23B67; flex:15;"></div>
+        <div class="meth-wl-seg" style="--seg-color:#5C6B7A; flex:15;"></div>
+        <div class="meth-wl-seg" style="--seg-color:#12805A; flex:15;"></div>
+        <div class="meth-wl-seg" style="--seg-color:#D9662A; flex:10;"></div>
+      </div>
+      <div class="meth-wl-reflect">
+        <div class="meth-wl-rseg" style="--seg-color:#C97F1E; flex:25;"></div>
+        <div class="meth-wl-rseg" style="--seg-color:#2E6FA8; flex:20;"></div>
+        <div class="meth-wl-rseg" style="--seg-color:#C23B67; flex:15;"></div>
+        <div class="meth-wl-rseg" style="--seg-color:#5C6B7A; flex:15;"></div>
+        <div class="meth-wl-rseg" style="--seg-color:#12805A; flex:15;"></div>
+        <div class="meth-wl-rseg" style="--seg-color:#D9662A; flex:10;"></div>
+      </div>
+      <div class="meth-wl-labels">
+        <div class="meth-wl-label" style="flex:25;"><div class="wl-name">CASH POSITION</div><div class="wl-pct" style="color:#C97F1E;">25%</div></div>
+        <div class="meth-wl-label" style="flex:20;"><div class="wl-name">WC RUNWAY</div><div class="wl-pct" style="color:#2E6FA8;">20%</div></div>
+        <div class="meth-wl-label" style="flex:15;"><div class="wl-name">RECEIVABLES</div><div class="wl-pct" style="color:#C23B67;">15%</div></div>
+        <div class="meth-wl-label" style="flex:15;"><div class="wl-name">PAYABLES</div><div class="wl-pct" style="color:#5C6B7A;">15%</div></div>
+        <div class="meth-wl-label" style="flex:15;"><div class="wl-name">NET MARGIN</div><div class="wl-pct" style="color:#12805A;">15%</div></div>
+        <div class="meth-wl-label" style="flex:10;"><div class="wl-name">GST/ITC</div><div class="wl-pct" style="color:#D9662A;">10%</div></div>
+      </div>
+    </div>
+
+    <div class="meth-section-label">The six vitals</div>
+    <div class="meth-ledger">
+
+      <div class="meth-row">
+        <div class="mr-left"><span class="mr-tick" style="--seg-color:#C97F1E;"></span><span class="mr-name">Cash Position</span></div>
+        <span class="mr-weight" style="color:#C97F1E;">25%</span>
+      </div>
+      <div class="meth-note">
+        <div class="mn-ratio">cash ÷ monthly operating expense</div>
+        <div class="mn-why">Weighted heaviest because running out of cash — not unprofitability — is what actually kills most SMEs.</div>
+      </div>
+
+      <div class="meth-row">
+        <div class="mr-left"><span class="mr-tick" style="--seg-color:#2E6FA8;"></span><span class="mr-name">Working Capital Runway</span></div>
+        <span class="mr-weight" style="color:#2E6FA8;">20%</span>
+      </div>
+      <div class="meth-note">
+        <div class="mn-ratio">(cash + receivables − payables) ÷ burn</div>
+        <div class="mn-why">The forward-looking half of liquidity — money about to move in or out that a cash snapshot alone would miss.</div>
+      </div>
+
+      <div class="meth-row">
+        <div class="mr-left"><span class="mr-tick" style="--seg-color:#C23B67;"></span><span class="mr-name">Receivables Aging</span></div>
+        <span class="mr-weight" style="color:#C23B67;">15%</span>
+      </div>
+      <div class="meth-note">
+        <div class="mn-ratio">% of receivables overdue 90+ days</div>
+        <div class="mn-why">Isolates money you're owed but genuinely at risk of not collecting, not just outstanding invoices.</div>
+      </div>
+
+      <div class="meth-row">
+        <div class="mr-left"><span class="mr-tick" style="--seg-color:#5C6B7A;"></span><span class="mr-name">Payables Due</span></div>
+        <span class="mr-weight" style="color:#5C6B7A;">15%</span>
+      </div>
+      <div class="meth-note">
+        <div class="mn-ratio">payables due in 30 days ÷ cash</div>
+        <div class="mn-why">Tests whether your liquid cash actually covers what's about to come due.</div>
+      </div>
+
+      <div class="meth-row">
+        <div class="mr-left"><span class="mr-tick" style="--seg-color:#12805A;"></span><span class="mr-name">Net Margin</span></div>
+        <span class="mr-weight" style="color:#12805A;">15%</span>
+      </div>
+      <div class="meth-note">
+        <div class="mn-ratio">net profit ÷ revenue</div>
+        <div class="mn-why">Profitability matters, but it's a lagging indicator — a business survives low margin longer than it survives no cash.</div>
+      </div>
+
+      <div class="meth-row">
+        <div class="mr-left"><span class="mr-tick" style="--seg-color:#D9662A;"></span><span class="mr-name">GST/ITC Leakage</span></div>
+        <span class="mr-weight" style="color:#D9662A;">10%</span>
+      </div>
+      <div class="meth-note">
+        <div class="mn-ratio">unclaimed ITC ÷ monthly GST payable</div>
+        <div class="mn-why">A real cash leak worth surfacing — weighted lowest because it's a compliance issue, not a solvency risk.</div>
+      </div>
+
+    </div>
+
+    <div class="meth-section-label">Where the benchmarks come from</div>
+    <div class="meth-footnotes">
+      <div class="meth-fn-row"><span class="meth-fn-num">01</span><span class="meth-fn-text"><b>Liquidity thresholds</b> — drawn from the RBI's Tandon Committee framework, the reference standard Indian banks have used to assess working-capital lending since 1975, plus cash-reserve conventions widely used by CFOs and advisors.</span></div>
+      <div class="meth-fn-row"><span class="meth-fn-num">02</span><span class="meth-fn-text"><b>Profitability benchmarks</b> — published net-margin ranges by industry, cross-checked against India Inc-wide averages.</span></div>
+      <div class="meth-fn-row"><span class="meth-fn-num">03</span><span class="meth-fn-text"><b>Trade-credit norms</b> — the receivables and payables thresholds reflect standard practice for invoice aging and near-term liquidity coverage.</span></div>
+      <div class="meth-fn-row is-open"><span class="meth-fn-num">04</span><span class="meth-fn-text"><b>GST/ITC leakage</b> — <i>no published benchmark exists yet for this one.</i> We use a reasoned placeholder until real data gives us a better one. We'd rather tell you that than hide it.</span></div>
+    </div>
+
+    <div class="meth-section-label">Built for your industry</div>
+    <p class="meth-industry-line">
+      Net Margin is benchmarked against your industry where we have real data for it — set yours on the Profile tab.
+      <span class="mi-name">Manufacturing</span><span class="mi-dot">·</span><span class="mi-name">Textiles &amp; Apparel</span><span class="mi-dot">·</span><span class="mi-name">Auto Components</span><span class="mi-dot">·</span><span class="mi-name">Pharma &amp; Chemicals</span><span class="mi-dot">·</span><span class="mi-name">Trading &amp; Distribution</span><span class="mi-dot">·</span><span class="mi-name">Professional &amp; IT Services</span><span class="mi-dot">·</span><span class="mi-name">Other</span>
+      — outside these, or in a category we haven't benchmarked yet, your score uses a cross-industry default.
+    </p>
+
+    <div class="meth-footer">
+      <span class="mf-version">Scoring methodology v1.0</span>
+      <span class="mf-note">We refine these benchmarks as we work directly with SME finance teams — this page will track every change.</span>
     </div>
   </div>
 
@@ -632,9 +828,10 @@ const REV_LABEL = { under_5cr:'Under ₹5 cr', '5_25cr':'₹5–25 cr', '25_50cr
   '50_100cr':'₹50–100 cr', '100_200cr':'₹100–200 cr', over_200cr:'Over ₹200 cr' };
 
 function showView(name){
-  ['profile','calculate','scores'].forEach(v => {
+  ['profile','calculate','scores','methodology'].forEach(v => {
     document.getElementById('view-' + v).classList.toggle('hidden', v !== name);
   });
+  document.querySelector('.pagenav').classList.toggle('hidden', name === 'methodology');
   document.querySelectorAll('.pagenav button').forEach(b => {
     b.classList.toggle('active', b.dataset.view === name);
   });
@@ -643,6 +840,8 @@ function showView(name){
 document.querySelectorAll('.pagenav button').forEach(b => {
   b.addEventListener('click', () => showView(b.dataset.view));
 });
+document.getElementById('methodologyLink').addEventListener('click', () => showView('methodology'));
+document.getElementById('methodologyBack').addEventListener('click', () => showView('scores'));
 
 // ---------- render ----------
 async function refreshAll(){
@@ -1154,13 +1353,16 @@ function renderReadOnlyDetail(host, label){
   const latest = snapshots[0];
   let stats = '', body = '';
   if(label === 'GST/ITC Leakage'){
-    stats = '<div class="detail-stat"><div class="ds-label">Unclaimed ITC</div><div class="ds-value">' + inr(latest.gst_leak) + '</div></div>';
-    body = 'GST input tax credit sitting unclaimed reduces cash you\u2019re entitled to. This figure comes from your most recent manual entry or workbook upload — a line-item GST ledger is on the roadmap.';
+    const gstPayable = Number(latest.gst_payable) || 0;
+    const ratio = gstPayable > 0 ? (latest.gst_leak / gstPayable) * 100 : 0;
+    stats = '<div class="detail-stat"><div class="ds-label">Unclaimed ITC</div><div class="ds-value">' + inr(latest.gst_leak) + '</div></div>' +
+      '<div class="detail-stat"><div class="ds-label">% of monthly GST payable</div><div class="ds-value">' + ratio.toFixed(1) + '%</div></div>';
+    body = 'GST input tax credit sitting unclaimed reduces cash you\u2019re entitled to. Scored as a share of your monthly GST payable, not a flat rupee figure. Update both figures from the Upload &amp; calculate tab — a line-item GST ledger is on the roadmap.';
   } else if(label === 'Net Margin'){
     const margin = latest.revenue > 0 ? (latest.net_profit / latest.revenue) * 100 : 0;
     stats = '<div class="detail-stat"><div class="ds-label">Revenue</div><div class="ds-value">' + inr(latest.revenue) + '</div></div>' +
       '<div class="detail-stat"><div class="ds-label">Net profit</div><div class="ds-value">' + inr(latest.net_profit) + '</div></div>';
-    body = 'Net margin is net profit divided by revenue (' + margin.toFixed(1) + '% currently). Update revenue and net profit from the Upload &amp; calculate tab.';
+    body = 'Net margin is net profit divided by revenue (' + margin.toFixed(1) + '% currently), scored against a benchmark for your selected industry where one exists — set on your Profile tab. Update revenue and net profit from the Upload &amp; calculate tab.';
   } else {
     const runway = latest.burn > 0 ? (latest.cash + latest.recv_total - latest.pay_soon) / latest.burn : 0;
     stats = '<div class="detail-stat"><div class="ds-label">Cash + receivables − payables</div><div class="ds-value">' + inr(latest.cash + latest.recv_total - latest.pay_soon) + '</div></div>' +
@@ -1190,12 +1392,14 @@ async function saveLedgerSnapshot(){
   const netProfit = latest ? Number(latest.net_profit) || 0 : 0;
   const burn = latest ? (Number(latest.burn) || 1) : 1;
   const gstLeak = latest ? Number(latest.gst_leak) || 0 : 0;
+  const gstPayable = latest ? Number(latest.gst_payable) || 0 : 0;
+  const industry = currentProfile.industry || '';
 
-  const { pulse, vitals } = computeVitals({ cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak });
+  const { pulse, vitals } = computeVitals({ cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak, gstPayable, industry });
   const row = {
     user_id:currentUser.id, source:'ledger',
     cash, recv_total:recvTotal, recv_90:recv90, pay_soon:paySoon,
-    revenue, net_profit:netProfit, burn, gst_leak:gstLeak,
+    revenue, net_profit:netProfit, burn, gst_leak:gstLeak, gst_payable:gstPayable,
     pulse_score:pulse, vitals
   };
   const { data, error } = await sbClient.from('snapshots').insert(row).select().single();
@@ -1380,12 +1584,15 @@ document.getElementById('computeFromFile').addEventListener('click', async () =>
     const revenue = plMap['Revenue'] || 0;
     const netProfit = plMap['Net Profit'] || 0;
     const burn = plMap['Monthly Operating Expenses'] || (revenue - netProfit) || 1;
-    let gstLeak = 0;
-    gst.forEach(r => { gstLeak += (Number(r['ITC Available'])||0) - (Number(r['ITC Claimed'])||0); });
+    let gstLeak = 0, gstPayable = 0;
+    gst.forEach(r => {
+      gstLeak += (Number(r['ITC Available'])||0) - (Number(r['ITC Claimed'])||0);
+      gstPayable += Number(r['GST Payable'])||0;
+    });
 
     receivables = await loadReceivables();
     payables = await loadPayables();
-    await saveLedgerSnapshotWithPL(revenue, netProfit, burn, gstLeak);
+    await saveLedgerSnapshotWithPL(revenue, netProfit, burn, gstLeak, gstPayable);
     note.textContent = '';
     await refreshAll();
     showView('scores');
@@ -1405,7 +1612,7 @@ document.getElementById('computeFromManual').addEventListener('click', async () 
     const { error: eCash } = await sbClient.from('profiles').update({ cash_balance:cash }).eq('id', currentUser.id);
     if(eCash) throw eCash;
     currentProfile.cash_balance = cash;
-    await saveLedgerSnapshotWithPL(v('m-rev'), v('m-profit'), v('m-burn') || 1, v('m-gst'));
+    await saveLedgerSnapshotWithPL(v('m-rev'), v('m-profit'), v('m-burn') || 1, v('m-gst'), v('m-gstpay'));
     note.textContent = '';
     await refreshAll();
     showView('scores');
@@ -1416,45 +1623,80 @@ document.getElementById('computeFromManual').addEventListener('click', async () 
   }
 });
 
-// ---------- scoring ----------
+// ---------- scoring (v1.0 methodology — see Margyn_Pulse_Score_Methodology_v1.xlsx) ----------
 function clamp(n){ return Math.max(0, Math.min(100, n)); }
 
-function computeVitals(d){
-  const cashScore = clamp((d.cash / (d.burn * 3)) * 100);
-  const recvScore = d.recvTotal > 0 ? clamp(100 - (d.recv90 / d.recvTotal) * 100) : 100;
-  const payScore  = d.cash > 0 ? clamp(100 - (d.paySoon / d.cash) * 100) : (d.paySoon > 0 ? 0 : 100);
-  const gstScore  = clamp(100 - (d.gstLeak / 1000) * 10);
-  const netMargin = d.revenue > 0 ? (d.netProfit / d.revenue) * 100 : 0;
-  const marginScore = clamp(netMargin * 5);
-  const runwayMonths = d.burn > 0 ? (d.cash + d.recvTotal - d.paySoon) / d.burn : 0;
-  const runwayScore = clamp((runwayMonths / 6) * 100);
+// Universal Benchmarks sheet, ported 1:1.
+const BENCH = { cashMin:3, cashMax:6, recvBad:1.0, payBad:1.0, gstBad:0.5, runwayMin:3, runwayMax:6 };
+// Weights (DRAFT) sheet, ported 1:1.
+const WEIGHTS = { cash:0.25, runway:0.20, recv:0.15, pay:0.15, margin:0.15, gst:0.10 };
+// Industry Benchmarks sheet — Net Margin only has cited sector overrides in v1;
+// everything else (and any industry not listed here) falls back to the Universal anchor.
+const INDUSTRY_MARGIN_ANCHOR = {
+  'Manufacturing (General)': 0.10,
+  'Auto Components': 0.06,
+  'Trading & Distribution': 0.06,
+  'Professional & IT Services': 0.20
+};
+const UNIVERSAL_MARGIN_ANCHOR = 0.10;
 
-  const pulse = Math.round(cashScore*0.20 + recvScore*0.15 + payScore*0.15 +
-                           gstScore*0.15 + marginScore*0.20 + runwayScore*0.15);
+// Piecewise runway curve: 0→min maps 0-50, min→max maps 50-100, capped beyond max.
+// Used for both Cash Position and Working Capital Runway (same cited 3/6-month anchors).
+function runwayScore(months, minM, maxM){
+  const s = months <= minM ? (months / minM) * 50 : 50 + Math.min(1, (months - minM) / (maxM - minM)) * 50;
+  return clamp(s);
+}
+
+function computeVitals(d){
+  const cashMonths = d.burn > 0 ? d.cash / d.burn : 0;
+  const cashScore = runwayScore(cashMonths, BENCH.cashMin, BENCH.cashMax);
+
+  const recvPct = d.recvTotal > 0 ? d.recv90 / d.recvTotal : 0;
+  const recvScore = clamp(100 * (1 - recvPct / BENCH.recvBad));
+
+  const payRatio = d.cash > 0 ? d.paySoon / d.cash : (d.paySoon > 0 ? 1 : 0);
+  const payScore = clamp(100 * (1 - payRatio / BENCH.payBad));
+
+  const gstRatio = d.gstPayable > 0 ? d.gstLeak / d.gstPayable : 0;
+  const gstScore = clamp(100 * (1 - gstRatio / BENCH.gstBad));
+
+  const marginAnchor = INDUSTRY_MARGIN_ANCHOR[d.industry] || UNIVERSAL_MARGIN_ANCHOR;
+  const netMargin = d.revenue > 0 ? d.netProfit / d.revenue : 0;
+  const marginScore = clamp(100 * (netMargin / marginAnchor));
+
+  const runwayMonths = d.burn > 0 ? (d.cash + d.recvTotal - d.paySoon) / d.burn : 0;
+  const runwayScoreVal = runwayScore(runwayMonths, BENCH.runwayMin, BENCH.runwayMax);
+
+  const pulse = Math.round(
+    cashScore * WEIGHTS.cash + runwayScoreVal * WEIGHTS.runway + recvScore * WEIGHTS.recv +
+    payScore * WEIGHTS.pay + marginScore * WEIGHTS.margin + gstScore * WEIGHTS.gst
+  );
+
   const vitals = [
-    { label:'Cash Position', value:'₹' + d.cash.toLocaleString('en-IN'), score:cashScore },
-    { label:'Receivables Aging', value:'₹' + d.recv90.toLocaleString('en-IN') + ' over 90d', score:recvScore },
-    { label:'Payables Due (30d)', value:'₹' + d.paySoon.toLocaleString('en-IN'), score:payScore },
-    { label:'GST/ITC Leakage', value:'₹' + d.gstLeak.toLocaleString('en-IN'), score:gstScore },
-    { label:'Net Margin', value:netMargin.toFixed(1) + '%', score:marginScore },
-    { label:'Working Capital Runway', value:runwayMonths.toFixed(1) + ' months', score:runwayScore }
+    { label:'Cash Position', value:'₹' + Math.round(d.cash).toLocaleString('en-IN'), score:cashScore },
+    { label:'Receivables Aging', value:'₹' + Math.round(d.recv90).toLocaleString('en-IN') + ' over 90d', score:recvScore },
+    { label:'Payables Due (30d)', value:'₹' + Math.round(d.paySoon).toLocaleString('en-IN'), score:payScore },
+    { label:'GST/ITC Leakage', value:'₹' + Math.round(d.gstLeak).toLocaleString('en-IN'), score:gstScore },
+    { label:'Net Margin', value:(netMargin * 100).toFixed(1) + '%', score:marginScore },
+    { label:'Working Capital Runway', value:runwayMonths.toFixed(1) + ' months', score:runwayScoreVal }
   ];
   return { pulse, vitals };
 }
 
 // Same as saveLedgerSnapshot(), but takes P&L/GST figures explicitly instead
 // of carrying them forward — used right after a manual entry or upload.
-async function saveLedgerSnapshotWithPL(revenue, netProfit, burn, gstLeak){
+async function saveLedgerSnapshotWithPL(revenue, netProfit, burn, gstLeak, gstPayable){
   const recvTotal = receivables.reduce((s,r) => s + Number(r.amount), 0);
   const recv90 = receivables.reduce((s,r) => { const d = daysFromToday(r.due_date); return (d !== null && -d > 90) ? s + Number(r.amount) : s; }, 0);
   const paySoon = payables.reduce((s,p) => { const d = daysFromToday(p.due_date); return (d === null || d <= 30) ? s + Number(p.amount) : s; }, 0);
   const cash = Number(currentProfile.cash_balance) || 0;
+  const industry = currentProfile.industry || '';
 
-  const { pulse, vitals } = computeVitals({ cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak });
+  const { pulse, vitals } = computeVitals({ cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak, gstPayable, industry });
   const row = {
     user_id:currentUser.id, source:'manual',
     cash, recv_total:recvTotal, recv_90:recv90, pay_soon:paySoon,
-    revenue, net_profit:netProfit, burn, gst_leak:gstLeak,
+    revenue, net_profit:netProfit, burn, gst_leak:gstLeak, gst_payable:gstPayable,
     pulse_score:pulse, vitals
   };
   const { error } = await withTimeout(sbClient.from('snapshots').insert(row), 20000, 'Saving snapshot');
