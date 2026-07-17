@@ -458,7 +458,7 @@
           <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" />
           <div class="file-name" id="fileName"></div>
         </div>
-        <div class="template-link" id="downloadTemplate">Download the blank template →</div>
+        <a class="template-link" id="downloadTemplate" href="/Margyn_Data_Template.xlsx" download="Margyn_Data_Template.xlsx">Download the blank template →</a>
       </div>
       <div class="btn-row">
         <button class="primary" id="computeFromFile" disabled>Compute &amp; save</button>
@@ -1730,19 +1730,9 @@ document.getElementById('generateBriefing').addEventListener('click', async () =
 });
 
 // ---------- template ----------
-document.getElementById('downloadTemplate').addEventListener('click', () => {
-  if(typeof XLSX === 'undefined'){ alert('Spreadsheet library failed to load. Reload the page.'); return; }
-  const wb = XLSX.utils.book_new();
-  const sheets = {
-    'Bank Accounts': [{ 'Account Name':'HDFC Current A/c', 'Balance':0 }],
-    'Receivables': [{ 'Customer':'', 'Invoice Date':'', 'Due Date':'', 'Amount':0, 'Amount Received':0 }],
-    'Payables': [{ 'Vendor':'', 'Invoice Date':'', 'Due Date':'', 'Amount':0 }],
-    'P&L Summary': [{ 'Line Item':'Revenue','Amount':0 },{ 'Line Item':'Net Profit','Amount':0 },{ 'Line Item':'Monthly Operating Expenses','Amount':0 }],
-    'GST ITC': [{ 'Month':'', 'GST Payable':0, 'ITC Available':0, 'ITC Claimed':0 }]
-  };
-  Object.keys(sheets).forEach(n => XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheets[n]), n));
-  XLSX.writeFile(wb, 'Margyn_Data_Template.xlsx');
-});
+// Template download is now a static, pre-built branded file (Margyn_Data_Template.xlsx
+// at the site root) linked directly from the anchor tag above — no client-side
+// generation, since SheetJS's free tier can't produce styled/branded output.
 
 // Render zero-state immediately so the Scores page never looks broken pre-login.
 renderVitals(ZERO_VITALS, false);
