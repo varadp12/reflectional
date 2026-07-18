@@ -17,10 +17,12 @@
     --gold:#C97F1E; --amber:#FBE7C7; --orange:#D9662A; --peach:#FFE0C7;
     --rose:#C23B67; --blush:#FBD9E4; --sky:#2E6FA8; --sky-light:#D8E8F7;
     --line: rgba(11,18,32,0.11); --line-strong: rgba(11,18,32,0.20);
-    --shadow-sm: 0 2px 8px rgba(11,18,32,0.06);
-    --shadow-md: 0 12px 32px rgba(11,18,32,0.10);
+    --shadow-sm: 0 2px 10px rgba(18,128,90,0.05), 0 1px 2px rgba(11,18,32,0.05);
+    --shadow-md: 0 14px 34px rgba(18,128,90,0.08), 0 2px 8px rgba(11,18,32,0.06);
     --shadow-lg: 0 30px 70px -20px rgba(11,18,32,0.26);
   }
+  @keyframes cardIn{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:translateY(0); } }
+  @media (prefers-reduced-motion: reduce){ @keyframes cardIn{ from{ opacity:1; transform:none; } to{ opacity:1; transform:none; } } }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{ background:var(--bg); color:var(--ink); font-family:'Manrope',sans-serif; min-height:100vh; line-height:1.55; -webkit-font-smoothing:antialiased; }
   .mono{font-family:'IBM Plex Mono',monospace;}
@@ -43,7 +45,7 @@
   .gate-col{ max-width:460px; width:100%; }
   .gate-back{ display:block; text-align:center; margin-top:20px; font-size:13px; font-weight:600; color:var(--steel); transition:color .2s ease; }
   .gate-back:hover{ color:var(--ink); }
-  .gate-modal{ max-width:460px; width:100%; background:var(--white); border:1px solid var(--line); border-radius:6px; padding:40px 34px; box-shadow:var(--shadow-lg); }
+  .gate-modal{ max-width:460px; width:100%; background:linear-gradient(165deg, #ffffff 0%, #fafbfa 100%); border:1px solid var(--line); border-radius:20px; padding:40px 34px; box-shadow:var(--shadow-lg); }
   .gate-modal .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--emerald); margin-bottom:14px; font-weight:600; }
   .gate-modal h2{ font-family:'Fraunces',serif; font-weight:500; font-size:28px; letter-spacing:-0.01em; margin-bottom:12px; }
   .gate-modal .sub{ font-size:14px; color:var(--steel); margin-bottom:28px; line-height:1.6; }
@@ -54,7 +56,7 @@
   .auth-form.active{ display:block; }
   .auth-field{ margin-bottom:16px; }
   .auth-field label{ display:block; font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); margin-bottom:6px; font-weight:600; }
-  .auth-field input, .auth-field select{ width:100%; padding:11px 12px; border:1px solid var(--line-strong); border-radius:4px; font-family:'Manrope',sans-serif; font-size:14px; color:var(--ink); background:var(--white); transition:border-color .2s ease; }
+  .auth-field input, .auth-field select{ width:100%; padding:11px 14px; border:1px solid var(--line-strong); border-radius:12px; font-family:'Manrope',sans-serif; font-size:14px; color:var(--ink); background:var(--white); transition:border-color .2s ease; }
   .auth-field input:focus, .auth-field select:focus{ outline:none; border-color:var(--emerald); }
   .auth-submit{ width:100%; background:var(--ink); color:var(--white); border:none; padding:12px; border-radius:999px; font-size:14px; font-weight:700; cursor:pointer; transition:all .25s ease; font-family:'Manrope',sans-serif; }
   .auth-submit:hover{ background:var(--emerald); }
@@ -72,12 +74,12 @@
   .pagenav button{ flex:1; padding:12px 10px; text-align:center; cursor:pointer; background:transparent; color:var(--steel); font-size:13.5px; font-weight:700; font-family:'Manrope',sans-serif; transition:all .2s ease; border:none; border-radius:999px; }
   .pagenav button.active{ background:var(--ink); color:var(--white); }
 
-  .card{ position:relative; background:var(--white); border:1px solid var(--line); border-radius:6px; padding:28px; margin-bottom:24px; box-shadow:var(--shadow-sm); }
+  .card{ position:relative; background:linear-gradient(165deg, #ffffff 0%, #fafbfa 100%); border:1px solid var(--line); border-radius:16px; padding:28px; margin-bottom:24px; box-shadow:var(--shadow-sm); animation:cardIn .5s cubic-bezier(.16,1,.3,1) backwards; }
   .card h2{font-family:'Fraunces',serif; font-weight:500; font-size:20px; margin-bottom:6px;}
   .hint{font-size:13px; color:var(--steel); margin-bottom:20px; line-height:1.6;}
 
   .facts{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
-  .fact{ background:var(--white); border:1px solid var(--line); border-radius:6px; padding:18px; box-shadow:var(--shadow-sm); }
+  .fact{ background:linear-gradient(165deg, #ffffff 0%, #fafbfa 100%); border:1px solid var(--line); border-radius:14px; padding:18px; box-shadow:var(--shadow-sm); animation:cardIn .5s cubic-bezier(.16,1,.3,1) backwards; }
   .fact .f-label{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600; margin-bottom:8px; }
   .fact .f-value{ font-family:'IBM Plex Mono',monospace; font-size:19px; font-weight:600; }
 
@@ -86,29 +88,65 @@
   .kv .k{ font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600; }
   .kv .v{ font-weight:600; text-align:right; }
 
-  .pulse-wrap{ perspective:1400px; margin-bottom:22px; }
-  .pulse-score{ position:relative; text-align:center; padding:34px 28px 34px; border:none; border-radius:14px; background:var(--ink); box-shadow:0 40px 80px -30px rgba(11,18,32,0.45); transform-style:preserve-3d; will-change:transform; cursor:pointer; transition:transform .25s cubic-bezier(.16,1,.3,1), box-shadow .25s ease; }
-  .pulse-score:hover{ transform:translateY(-2px); box-shadow:0 46px 90px -28px rgba(11,18,32,0.55); }
-  .pulse-score:hover .pulse-tap-hint{ color:rgba(255,255,255,0.62); }
-  .pulse-score .p-label{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--band-color, var(--emerald-bright)); display:flex; align-items:center; justify-content:center; gap:7px; }
-  .pulse-score .p-label::before{ content:''; width:5px; height:5px; border-radius:50%; background:var(--band-color, var(--emerald-bright)); }
-  .pulse-band-badge{ display:inline-block; margin-top:12px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:4px 12px; border-radius:999px; background:var(--band-color, var(--emerald-bright)); color:#08130C; }
-  .pulse-ring{ width:280px; height:280px; max-width:72vw; max-height:72vw; margin:22px auto 14px; position:relative; border-radius:50%; background:radial-gradient(circle at 50% 40%, rgba(255,255,255,0.055), rgba(255,255,255,0) 68%); }
+  .pulse-wrap{ margin-bottom:22px; }
+  /* Compact rectangle: ring on the left, everything else stacked on the right.
+     Hovering (or focusing, for keyboard users) grows a panel below the main
+     row that surfaces the 3 most urgent action items without leaving the page. */
+  .pulse-score{
+    position:relative; border-radius:18px; padding:22px 26px; border:none;
+    background:linear-gradient(160deg, #101B2E 0%, #0B1220 62%, #0A1522 100%);
+    box-shadow:0 24px 54px -22px rgba(11,18,32,0.42), inset 0 1px 0 rgba(255,255,255,0.05);
+    cursor:pointer; overflow:hidden; animation:cardIn .5s cubic-bezier(.16,1,.3,1) backwards;
+    transition:box-shadow .3s ease;
+  }
+  .pulse-score:hover, .pulse-score:focus-visible{ box-shadow:0 32px 64px -20px rgba(11,18,32,0.5), inset 0 1px 0 rgba(255,255,255,0.06); }
+  .pulse-score:hover .pulse-tap-hint, .pulse-score:focus-visible .pulse-tap-hint{ color:rgba(255,255,255,0.62); }
+  .pulse-main{ display:flex; align-items:center; gap:22px; position:relative; z-index:1; }
+  .pulse-ring{ width:96px; height:96px; flex-shrink:0; position:relative; }
   .pulse-ring svg{ width:100%; height:100%; display:block; transform:rotate(-90deg); }
-  .pulse-ring .num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:62px; line-height:1; color:#FFFFFF; }
+  .pulse-ring .num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:29px; line-height:1; color:#FFFFFF; }
   .pulse-score.is-zero .pulse-ring .num{ color:#FFFFFF; }
-  .pulse-delta{ font-family:'Manrope',sans-serif; font-size:13px; font-weight:500; color:rgba(255,255,255,0.52); }
-  .pulse-asof{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,0.34); margin-top:8px; }
-  .spark{ margin-top:18px; }
-  .pulse-tap-hint{ margin-top:20px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,0.38); transition:color .2s ease; display:flex; align-items:center; justify-content:center; gap:5px; }
-  .pulse-tap-hint svg{ width:11px; height:11px; }
+  .pulse-text{ flex:1; min-width:0; text-align:left; }
+  .p-label{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--band-color, var(--emerald-bright)); display:flex; align-items:center; justify-content:flex-start; gap:7px; margin-bottom:8px; }
+  .pd-hero .p-label{ justify-content:center; }
+  .p-label::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--band-color, var(--emerald-bright)); box-shadow:0 0 0 4px color-mix(in srgb, var(--band-color, var(--emerald-bright)) 22%, transparent); }
+  .pulse-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .pulse-band-badge{ display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; padding:4px 11px; border-radius:999px; background:var(--band-color, var(--emerald-bright)); color:#08130C; }
+  .pulse-delta{ font-family:'Manrope',sans-serif; font-size:12.5px; font-weight:600; color:rgba(255,255,255,0.72); }
+  .pulse-asof{ font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.05em; text-transform:uppercase; color:rgba(255,255,255,0.34); margin-top:0; }
+  .spark{ display:none; }
+  .pulse-tap-hint{ margin-top:8px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,0.42); transition:color .2s ease; display:flex; align-items:center; gap:5px; }
+  .pulse-tap-hint svg{ width:11px; height:11px; transition:transform .3s cubic-bezier(.16,1,.3,1); }
+  .pulse-score:hover .pulse-tap-hint svg, .pulse-score:focus-visible .pulse-tap-hint svg{ transform:rotate(90deg); }
+
+  .pulse-expand{
+    position:relative; z-index:1; max-height:0; opacity:0; overflow:hidden;
+    transition:max-height .42s cubic-bezier(.16,1,.3,1), opacity .3s ease .04s, margin-top .42s cubic-bezier(.16,1,.3,1);
+    margin-top:0;
+  }
+  .pulse-score:hover .pulse-expand, .pulse-score:focus-visible .pulse-expand, .pulse-score.is-open .pulse-expand{
+    max-height:320px; opacity:1; margin-top:18px;
+  }
+  .pulse-expand-inner{ border-top:1px solid rgba(255,255,255,0.09); padding-top:16px; }
+  .pulse-expand-label{ font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,0.4); margin-bottom:10px; font-weight:600; }
+  .pulse-action-row{ display:flex; align-items:center; gap:12px; padding:9px 10px; border-radius:10px; cursor:pointer; transition:background .18s ease; }
+  .pulse-action-row:hover{ background:rgba(255,255,255,0.05); }
+  .pulse-action-row-dot{ width:7px; height:7px; border-radius:50%; flex-shrink:0; background:var(--a-color); box-shadow:0 0 0 3px color-mix(in srgb, var(--a-color) 25%, transparent); }
+  .pulse-action-row-title{ flex:1; min-width:0; font-size:13px; font-weight:600; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .pulse-action-row-tag{ font-family:'IBM Plex Mono',monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:.04em; font-weight:700; color:var(--a-color); white-space:nowrap; }
+  .pulse-action-row-arrow{ color:rgba(255,255,255,0.3); flex-shrink:0; }
+  .pulse-more{ margin-top:8px; padding:9px 10px; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600; color:var(--emerald-bright); text-align:center; border-radius:10px; }
+  .pulse-all-clear{ font-size:13px; color:rgba(255,255,255,0.6); padding:8px 10px 2px; line-height:1.55; }
 
   /* ---------- pulse detail page ---------- */
   .pd-back{ background:none; border:none; color:var(--steel); font-family:'Manrope',sans-serif; font-size:13.5px; font-weight:700; cursor:pointer; margin-bottom:22px; padding:0; }
   .pd-back:hover{ color:var(--ink); }
-  .pd-hero{ position:relative; text-align:center; padding:36px 28px; border-radius:14px; background:var(--ink); box-shadow:0 40px 80px -30px rgba(11,18,32,0.45); margin-bottom:28px; }
-  .pd-hero .pulse-ring{ width:220px; height:220px; }
+  .pd-hero{ position:relative; text-align:center; padding:36px 28px; border-radius:20px; background:linear-gradient(160deg, #101B2E 0%, #0B1220 62%, #0A1522 100%); box-shadow:0 24px 54px -22px rgba(11,18,32,0.42), inset 0 1px 0 rgba(255,255,255,0.05); margin-bottom:28px; }
+  .pd-hero .pulse-ring{ width:220px; height:220px; margin:22px auto 14px; }
   .pd-hero .pulse-ring .num{ font-size:50px; }
+  .pd-hero .pulse-band-badge{ margin-top:2px; }
+  .pd-hero .pulse-delta{ display:block; margin-top:12px; font-size:13px; }
+  .pd-hero .pulse-asof{ display:block; margin-top:6px; }
   .pd-summary{ font-size:14px; color:rgba(255,255,255,0.72); max-width:440px; margin:16px auto 0; line-height:1.6; }
 
   .pd-section-title{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--steel); font-weight:700; margin:34px 0 14px; }
@@ -120,37 +158,52 @@
   .pd-trend-legend span{ display:inline-flex; align-items:center; gap:6px; }
   .pd-trend-legend i{ width:8px; height:8px; border-radius:2px; display:inline-block; }
 
-  .pd-action-list{ display:flex; flex-direction:column; gap:10px; }
-  .pd-tier-header{ font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--tier-color, var(--steel)); margin:18px 0 2px; display:flex; align-items:center; gap:8px; }
-  .pd-tier-header:first-child{ margin-top:0; }
+  /* Ledger treatment: no card box per item — a hairline divider between rows
+     does the separating, and a small rotated tick (same device as the
+     methodology page) carries the tier color instead of a border-left stripe. */
+  .pd-action-list{ border-top:1px solid var(--line-strong); }
+  .pd-tier-header{ font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--tier-color, var(--steel)); margin:20px 0 2px; display:flex; align-items:center; gap:8px; }
+  .pd-tier-header:first-child{ margin-top:14px; }
   .pd-tier-header span{ background:var(--tier-color, var(--steel)); color:#fff; font-size:10px; border-radius:999px; padding:1px 7px; }
-  .pd-action{ display:flex; gap:14px; align-items:flex-start; background:var(--white); border:1px solid var(--line); border-left:4px solid var(--action-color, var(--steel)); border-radius:8px; padding:16px 18px; box-shadow:var(--shadow-sm); cursor:pointer; transition:transform .18s ease, box-shadow .18s ease; }
-  .pd-action:hover{ transform:translateY(-1px); box-shadow:var(--shadow-md); }
-  .pd-action-icon{ width:34px; height:34px; border-radius:8px; background:var(--action-bg, var(--bg-dim)); color:var(--action-color, var(--steel)); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:13px; }
+  .pd-action{ display:flex; gap:14px; align-items:flex-start; padding:16px 6px; border-bottom:1px solid var(--line); cursor:pointer; transition:background .18s ease, padding-left .18s ease; border-radius:8px; }
+  .pd-action:hover{ background:rgba(11,18,32,0.025); padding-left:12px; }
+  .pd-action-tick{ width:8px; height:8px; border-radius:2px; background:var(--action-color, var(--steel)); transform:rotate(45deg); flex-shrink:0; margin-top:7px; }
   .pd-action-body{ flex:1; min-width:0; }
   .pd-action-title{ font-size:14px; font-weight:700; margin-bottom:3px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-  .pd-action-tag{ font-family:'IBM Plex Mono',monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:.04em; font-weight:700; padding:2px 7px; border-radius:4px; background:var(--action-bg, var(--bg-dim)); color:var(--action-color, var(--steel)); }
+  .pd-action-tag{ font-family:'IBM Plex Mono',monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:.04em; font-weight:700; color:var(--action-color, var(--steel)); }
   .pd-action-detail{ font-size:13px; color:var(--steel); line-height:1.55; }
   .pd-action-cta{ font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; color:var(--action-color, var(--emerald)); white-space:nowrap; align-self:center; }
-  .pd-empty-good{ background:var(--mint); border:1px solid rgba(18,128,90,0.25); border-radius:8px; padding:22px 20px; text-align:center; color:var(--ink-soft); font-size:14px; }
+  .pd-empty-good{ background:linear-gradient(165deg, var(--mint) 0%, #e3f5ec 100%); border:1px solid rgba(18,128,90,0.2); border-radius:16px; padding:26px 22px; text-align:center; color:var(--ink-soft); font-size:14px; }
   .pd-empty-good strong{ display:block; color:var(--emerald); font-family:'Fraunces',serif; font-size:19px; font-weight:500; margin-bottom:6px; }
   @media (max-width:640px){ .pd-hero .pulse-ring{ width:180px; height:180px; } .pd-hero .pulse-ring .num{ font-size:42px; } .pd-action{ flex-wrap:wrap; } }
 
-  .vitals-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:34px 16px; margin-bottom:34px;}
-  .vital{ background:transparent; border:none; border-radius:0; padding:0; position:relative; box-shadow:none; text-align:center; }
-  .vital .v-value{font-family:'IBM Plex Mono',monospace; font-size:21px; font-weight:600; color:var(--ink); margin-bottom:14px;}
-  .v-ring{ width:132px; height:132px; margin:0 auto 16px; position:relative; }
+  .vitals-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:30px 16px; margin-bottom:34px;}
+  /* No card shell by design — these float directly on the page background.
+     Hover blooms a soft radial glow in the vital's own accent color behind
+     the ring, and tints the value/label/number text to match. */
+  .vital{ background:transparent; border:none; border-radius:0; padding:6px 4px 0; position:relative; box-shadow:none; text-align:center;
+    cursor:pointer; transition:transform .25s cubic-bezier(.16,1,.3,1);
+    opacity:0; transform:translateY(12px); animation:cardIn .55s cubic-bezier(.16,1,.3,1) forwards; }
+  .vital:nth-child(1){ animation-delay:.06s; } .vital:nth-child(2){ animation-delay:.11s; } .vital:nth-child(3){ animation-delay:.16s; }
+  .vital:nth-child(4){ animation-delay:.21s; } .vital:nth-child(5){ animation-delay:.26s; } .vital:nth-child(6){ animation-delay:.31s; }
+  .vital::before{ content:''; position:absolute; top:-4px; left:50%; width:150px; height:150px; margin-left:-75px;
+    border-radius:50%; background:radial-gradient(circle, var(--v-accent, var(--steel)) 0%, transparent 68%);
+    opacity:0; transition:opacity .35s ease; filter:blur(3px); z-index:0; pointer-events:none; }
+  .vital:not(.is-zero):hover{ transform:translateY(-3px); }
+  .vital:not(.is-zero):hover::before{ opacity:.14; }
+  .vital .v-value{font-family:'IBM Plex Mono',monospace; font-size:21px; font-weight:600; color:var(--ink); margin-bottom:14px; position:relative; z-index:1; transition:color .25s ease;}
+  .vital:not(.is-zero):hover .v-value{ color:var(--v-accent); }
+  .v-ring{ width:132px; height:132px; margin:0 auto 16px; position:relative; z-index:1; }
   .v-ring svg{ width:100%; height:100%; display:block; transform:rotate(-90deg); }
-  .v-ring .rv{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:22px; color:var(--ink); }
+  .v-ring .rv{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:22px; color:var(--ink); transition:color .25s ease; }
   .vital.is-zero .v-ring .rv{ color:var(--ink); }
-  .vital .v-top{ display:flex; align-items:center; justify-content:center; gap:7px; margin-bottom:7px; }
+  .vital:not(.is-zero):hover .v-ring .rv{ color:var(--v-accent); }
+  .vital .v-top{ display:flex; align-items:center; justify-content:center; gap:7px; margin-bottom:7px; position:relative; z-index:1; }
   .vital .v-dot{ width:6px; height:6px; border-radius:50%; background:var(--v-accent, var(--steel)); flex-shrink:0; }
-  .vital .v-label{font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600;}
-  .vital .v-score{font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:500; color:var(--steel);}
-  .vital{ cursor:pointer; transition:opacity .2s ease; }
-  .vital:hover{ opacity:0.72; }
+  .vital .v-label{font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600; transition:color .25s ease;}
+  .vital:not(.is-zero):hover .v-label{ color:var(--v-accent); }
+  .vital .v-score{font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:500; color:var(--steel); position:relative; z-index:1;}
   .vital.is-zero{ cursor:default; }
-  .vital.is-zero:hover{ opacity:1; }
 
   /* ---------- vital detail drawer ---------- */
   .detail-overlay{ position:fixed; inset:0; z-index:300; background:rgba(11,18,32,0.42); backdrop-filter:blur(2px);
@@ -165,17 +218,17 @@
   .detail-title{ font-family:'Fraunces',serif; font-weight:500; font-size:26px; letter-spacing:-0.01em; margin-bottom:4px; padding-right:40px; }
   .detail-sub{ font-size:13px; color:var(--steel); margin-bottom:22px; line-height:1.6; }
   .detail-stats{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:22px; }
-  .detail-stat{ background:var(--white); border:1px solid var(--line); border-radius:6px; padding:14px; }
+  .detail-stat{ background:linear-gradient(165deg, #ffffff 0%, #fafbfa 100%); border:1px solid var(--line); border-radius:12px; padding:14px; }
   .detail-stat .ds-label{ font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600; margin-bottom:6px; }
   .detail-stat .ds-value{ font-family:'IBM Plex Mono',monospace; font-size:17px; font-weight:600; }
 
   .aging-bar{ display:flex; gap:6px; margin-bottom:22px; }
-  .aging-seg{ flex:1; background:var(--white); border:1px solid var(--line); border-radius:6px; padding:10px 8px; text-align:center; }
+  .aging-seg{ flex:1; background:linear-gradient(165deg, #ffffff 0%, #fafbfa 100%); border:1px solid var(--line); border-radius:12px; padding:10px 8px; text-align:center; }
   .aging-seg .ag-b{ font-family:'IBM Plex Mono',monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--steel); font-weight:600; margin-bottom:4px; }
   .aging-seg .ag-v{ font-family:'IBM Plex Mono',monospace; font-size:12.5px; font-weight:600; }
   .aging-seg.hot{ border-color:var(--rose); background:var(--blush); }
 
-  .ledger-form{ background:var(--white); border:1px solid var(--line); border-radius:6px; padding:16px; margin-bottom:20px; }
+  .ledger-form{ background:linear-gradient(165deg, #ffffff 0%, #fafbfa 100%); border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:20px; }
   .ledger-form .lf-title{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600; margin-bottom:10px; }
   .ledger-form .lf-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px; }
   .ledger-form input{ width:100%; padding:9px 10px; border:1px solid var(--line-strong); border-radius:4px; font-family:'Manrope',sans-serif; font-size:13px; background:var(--white); color:var(--ink); }
@@ -184,8 +237,9 @@
   .ledger-form button:hover{ background:var(--emerald); }
   .ledger-form button:disabled{ opacity:.5; cursor:not-allowed; }
 
-  .ledger-list-title{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600; margin-bottom:10px; }
-  .ledger-row{ background:var(--white); border:1px solid var(--line); border-radius:6px; padding:12px 14px; margin-bottom:8px; display:flex; align-items:center; gap:10px; }
+  .ledger-list-title{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600; margin-bottom:2px; padding-top:8px; border-top:1px solid var(--line-strong); }
+  .ledger-row{ border-bottom:1px solid var(--line); padding:13px 4px; display:flex; align-items:center; gap:10px; }
+  .ledger-row:last-child{ border-bottom:none; }
   .ledger-row .lr-main{ flex:1; min-width:0; }
   .ledger-row .lr-party{ font-size:13.5px; font-weight:700; margin-bottom:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .ledger-row .lr-meta{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--steel); }
@@ -238,7 +292,7 @@
 
   .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
   label{display:block; font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--steel); margin-bottom:7px; text-transform:uppercase; letter-spacing:.06em; font-weight:600;}
-  input[type=number], input[type=text], select{ width:100%; padding:11px 12px; background:var(--white); border:1px solid var(--line-strong); border-radius:4px; color:var(--ink); font-family:'IBM Plex Mono',monospace; font-size:14px; margin-bottom:16px; transition:border-color .2s ease; }
+  input[type=number], input[type=text], select{ width:100%; padding:11px 14px; background:var(--white); border:1px solid var(--line-strong); border-radius:12px; color:var(--ink); font-family:'IBM Plex Mono',monospace; font-size:14px; margin-bottom:16px; transition:border-color .2s ease; }
   input:focus, select:focus{outline:none; border-color:var(--emerald);}
 
   .btn-row{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
@@ -528,22 +582,31 @@
   <div id="view-scores">
     <div class="pulse-wrap">
       <div class="pulse-score is-zero" id="pulseCard" role="button" tabindex="0" aria-label="Open Pulse Score detail">
-        <div class="p-label" id="pulseLabel">Pulse score — live</div>
-        <div class="pulse-ring">
-          <svg viewBox="0 0 100 100" aria-hidden="true">
-            <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="1.2"></circle>
-            <circle id="pulseArc" cx="50" cy="50" r="46" fill="none" stroke="#1FA374" stroke-width="2.4"
-                    stroke-linecap="round" stroke-dasharray="289.03" stroke-dashoffset="289.03"></circle>
-          </svg>
-          <div class="num" id="pulseNum">0</div>
+        <div class="pulse-main">
+          <div class="pulse-ring">
+            <svg viewBox="0 0 100 100" aria-hidden="true">
+              <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="1.2"></circle>
+              <circle id="pulseArc" cx="50" cy="50" r="46" fill="none" stroke="#1FA374" stroke-width="2.4"
+                      stroke-linecap="round" stroke-dasharray="289.03" stroke-dashoffset="289.03"></circle>
+            </svg>
+            <div class="num" id="pulseNum">0</div>
+          </div>
+          <div class="pulse-text">
+            <div class="p-label" id="pulseLabel">Pulse score — live</div>
+            <div class="pulse-row">
+              <span class="pulse-band-badge" id="pulseBandBadge"></span>
+              <span class="pulse-delta" id="pulseDelta"></span>
+              <span class="pulse-asof" id="pulseAsOf"></span>
+            </div>
+            <div class="pulse-tap-hint" id="pulseTapHint">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+              Tap for full breakdown &amp; action items
+            </div>
+          </div>
         </div>
-        <div class="pulse-band-badge" id="pulseBandBadge"></div>
-        <div class="pulse-delta" id="pulseDelta"></div>
-        <div class="pulse-asof" id="pulseAsOf"></div>
         <div class="spark" id="spark"></div>
-        <div class="pulse-tap-hint" id="pulseTapHint">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
-          Tap for full breakdown &amp; action items
+        <div class="pulse-expand" id="pulseExpand">
+          <div class="pulse-expand-inner" id="pulseExpandInner"></div>
         </div>
       </div>
     </div>
@@ -1007,7 +1070,7 @@ function renderScores(){
   const card = document.getElementById('pulseCard');
   card.classList.toggle('is-zero', !hasData);
   const pulseVal = hasData ? latest.pulse_score : 0;
-  document.getElementById('pulseNum').textContent = pulseVal;
+  countUp(document.getElementById('pulseNum'), pulseVal, 900);
 
   const band = hasData ? scoreBand(pulseVal) : { color:'#5C6B7A', label:'No data yet' };
   card.style.setProperty('--band-color', band.color);
@@ -1037,6 +1100,7 @@ function renderScores(){
   renderVitals(hasData ? (latest.vitals || ZERO_VITALS) : ZERO_VITALS, hasData);
   renderSpark(snapshots.slice().reverse().map(s => s.pulse_score));
   renderHistory(snapshots);
+  renderPulseExpand(hasData);
 
   const tapHint = document.getElementById('pulseTapHint');
   if(!hasData){
@@ -1044,7 +1108,7 @@ function renderScores(){
   } else {
     const n = buildActionItems().length;
     tapHint.innerHTML = n
-      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>' + n + (n===1?' item needs':' items need') + ' attention — tap to see which'
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>' + n + (n===1?' item needs':' items need') + ' attention — hover for a preview'
       : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>All clear — tap for the full breakdown';
   }
 
@@ -1060,6 +1124,70 @@ function renderScores(){
     idle.style.display = latest.briefing ? 'none' : 'block';
     text.textContent = latest.briefing || '';
   }
+}
+
+// Shared across the compact card's hover-preview and the full pd-action list.
+const TIER_META = {
+  high:  { label:'High impact',   color:'#C23B67', bg:'#FBD9E4' },
+  medium:{ label:'Medium impact', color:'#C97F1E', bg:'#FBE7C7' },
+  low:   { label:'Low impact',    color:'#5C6B7A', bg:'#E6E8EB' }
+};
+
+// Populates the panel that grows in below the compact Pulse card on hover —
+// the 3 most urgent named items (by tier, then amount), each jumping straight
+// to that vital's real ledger detail. "See full breakdown" opens the full
+// Pulse Detail page instead.
+function renderPulseExpand(hasData){
+  const host = document.getElementById('pulseExpandInner');
+  if(!hasData){ host.innerHTML = ''; return; }
+  const items = buildActionItems().slice().sort((a,b) => {
+    const order = { high:0, medium:1, low:2 };
+    return order[a.tier] - order[b.tier] || b.amount - a.amount;
+  });
+
+  if(!items.length){
+    host.innerHTML = '<div class="pulse-expand-label">Most urgent</div>' +
+      '<div class="pulse-all-clear">Nothing urgent flagged — all six vitals are within a healthy range right now.</div>' +
+      '<div class="pulse-more" data-full>See full breakdown →</div>';
+  } else {
+    const top3 = items.slice(0, 3);
+    host.innerHTML = '<div class="pulse-expand-label">Most urgent — tap any item for detail</div>' +
+      top3.map(it => {
+        const meta = TIER_META[it.tier];
+        return '<div class="pulse-action-row" style="--a-color:' + meta.color + '" data-idx="' + items.indexOf(it) + '">' +
+          '<span class="pulse-action-row-dot"></span>' +
+          '<span class="pulse-action-row-title">' + it.title + '</span>' +
+          '<span class="pulse-action-row-tag">' + it.group + '</span>' +
+          '<span class="pulse-action-row-arrow">→</span>' +
+        '</div>';
+      }).join('') +
+      '<div class="pulse-more" data-full>See full breakdown →</div>';
+
+    host.querySelectorAll('.pulse-action-row').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        items[Number(el.dataset.idx)].onClick();
+      });
+    });
+  }
+  const full = host.querySelector('[data-full]');
+  if(full) full.addEventListener('click', (e) => { e.stopPropagation(); renderPulseDetail(); showView('pulsedetail'); });
+}
+
+// Eased count-up for the headline numbers — small touch, but it's the
+// difference between numbers that "appear" and numbers that feel live.
+function countUp(node, target, dur){
+  if(!node) return;
+  target = Math.round(Number(target) || 0);
+  const start = performance.now();
+  function tick(now){
+    const p = Math.min(1, (now - start) / dur);
+    const eased = 1 - Math.pow(1 - p, 3);
+    node.textContent = Math.round(target * eased);
+    if(p < 1) requestAnimationFrame(tick);
+  }
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){ node.textContent = target; return; }
+  requestAnimationFrame(tick);
 }
 
 const RING_CIRC = 289.03;   // 2 * PI * r, where r = 46
@@ -1099,7 +1227,7 @@ function renderVitals(vitals, hasData){
       '<div class="v-score"></div>';
 
     el.querySelector('.v-value').textContent = main;
-    el.querySelector('.rv').textContent = Math.round(v.score);
+    countUp(el.querySelector('.rv'), v.score, 850);
     el.querySelector('.v-label').textContent = v.label;
     el.querySelector('.v-score').textContent =
       (suffix ? suffix + ' \u2022 ' : '') + Math.round(v.score) + '/100';
@@ -1189,7 +1317,7 @@ function renderPulseDetail(){
 
   const hero = document.getElementById('pdHero');
   hero.style.setProperty('--band-color', band.color);
-  document.getElementById('pdPulseNum').textContent = pulseVal;
+  countUp(document.getElementById('pdPulseNum'), pulseVal, 900);
   document.getElementById('pdBandBadge').textContent = band.label;
   document.getElementById('pdBandBadge').style.display = hasData ? 'inline-block' : 'none';
 
@@ -1394,7 +1522,7 @@ function renderPulseActions(){
     bucket.forEach(it => {
       flatItems.push(it);
       html += '<div class="pd-action" style="--action-color:' + meta.color + '; --action-bg:' + meta.bg + ';" data-idx="' + globalIdx + '">' +
-        '<div class="pd-action-icon">' + it.icon + '</div>' +
+        '<span class="pd-action-tick"></span>' +
         '<div class="pd-action-body">' +
           '<div class="pd-action-title">' + it.title + '<span class="pd-action-tag">' + it.group + '</span></div>' +
           '<div class="pd-action-detail">' + it.detail + '</div>' +
