@@ -86,10 +86,13 @@
   .kv .k{ font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600; }
   .kv .v{ font-weight:600; text-align:right; }
 
-  .pulse-wrap{ perspective:1400px; margin-bottom:34px; }
-  .pulse-score{ position:relative; text-align:center; padding:34px 28px 34px; border:none; border-radius:14px; background:var(--ink); box-shadow:0 40px 80px -30px rgba(11,18,32,0.45); transform-style:preserve-3d; will-change:transform; }
-  .pulse-score .p-label{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--emerald-bright); display:flex; align-items:center; justify-content:center; gap:7px; }
-  .pulse-score .p-label::before{ content:''; width:5px; height:5px; border-radius:50%; background:var(--emerald-bright); }
+  .pulse-wrap{ perspective:1400px; margin-bottom:8px; }
+  .pulse-score{ position:relative; text-align:center; padding:34px 28px 34px; border:none; border-radius:14px; background:var(--ink); box-shadow:0 40px 80px -30px rgba(11,18,32,0.45); transform-style:preserve-3d; will-change:transform; cursor:pointer; transition:transform .25s cubic-bezier(.16,1,.3,1), box-shadow .25s ease; }
+  .pulse-score:hover{ transform:translateY(-2px); box-shadow:0 46px 90px -28px rgba(11,18,32,0.55); }
+  .pulse-score:hover .pulse-tap-hint{ color:rgba(255,255,255,0.62); }
+  .pulse-score .p-label{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--band-color, var(--emerald-bright)); display:flex; align-items:center; justify-content:center; gap:7px; }
+  .pulse-score .p-label::before{ content:''; width:5px; height:5px; border-radius:50%; background:var(--band-color, var(--emerald-bright)); }
+  .pulse-band-badge{ display:inline-block; margin-top:12px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:4px 12px; border-radius:999px; background:var(--band-color, var(--emerald-bright)); color:#08130C; }
   .pulse-ring{ width:280px; height:280px; max-width:72vw; max-height:72vw; margin:22px auto 14px; position:relative; border-radius:50%; background:radial-gradient(circle at 50% 40%, rgba(255,255,255,0.055), rgba(255,255,255,0) 68%); }
   .pulse-ring svg{ width:100%; height:100%; display:block; transform:rotate(-90deg); }
   .pulse-ring .num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:62px; line-height:1; color:#FFFFFF; }
@@ -97,6 +100,38 @@
   .pulse-delta{ font-family:'Manrope',sans-serif; font-size:13px; font-weight:500; color:rgba(255,255,255,0.52); }
   .pulse-asof{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,0.34); margin-top:8px; }
   .spark{ margin-top:18px; }
+  .pulse-tap-hint{ margin-top:20px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,0.38); transition:color .2s ease; display:flex; align-items:center; justify-content:center; gap:5px; }
+  .pulse-tap-hint svg{ width:11px; height:11px; }
+
+  /* ---------- pulse detail page ---------- */
+  .pd-back{ background:none; border:none; color:var(--steel); font-family:'Manrope',sans-serif; font-size:13.5px; font-weight:700; cursor:pointer; margin-bottom:22px; padding:0; }
+  .pd-back:hover{ color:var(--ink); }
+  .pd-hero{ position:relative; text-align:center; padding:36px 28px; border-radius:14px; background:var(--ink); box-shadow:0 40px 80px -30px rgba(11,18,32,0.45); margin-bottom:28px; }
+  .pd-hero .pulse-ring{ width:220px; height:220px; }
+  .pd-hero .pulse-ring .num{ font-size:50px; }
+  .pd-summary{ font-size:14px; color:rgba(255,255,255,0.72); max-width:440px; margin:16px auto 0; line-height:1.6; }
+
+  .pd-section-title{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--steel); font-weight:700; margin:34px 0 14px; }
+  .pd-section-title:first-of-type{ margin-top:0; }
+
+  .pd-trend-card{ background:var(--white); border:1px solid var(--line); border-radius:8px; padding:20px 20px 8px; box-shadow:var(--shadow-sm); }
+  .pd-trend-empty{ font-size:13.5px; color:var(--steel); padding:28px 4px; text-align:center; line-height:1.6; }
+  .pd-trend-legend{ display:flex; gap:16px; flex-wrap:wrap; padding:10px 4px 16px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--steel); }
+  .pd-trend-legend span{ display:inline-flex; align-items:center; gap:6px; }
+  .pd-trend-legend i{ width:8px; height:8px; border-radius:2px; display:inline-block; }
+
+  .pd-action-list{ display:flex; flex-direction:column; gap:10px; }
+  .pd-action{ display:flex; gap:14px; align-items:flex-start; background:var(--white); border:1px solid var(--line); border-left:4px solid var(--action-color, var(--steel)); border-radius:8px; padding:16px 18px; box-shadow:var(--shadow-sm); cursor:pointer; transition:transform .18s ease, box-shadow .18s ease; }
+  .pd-action:hover{ transform:translateY(-1px); box-shadow:var(--shadow-md); }
+  .pd-action-icon{ width:34px; height:34px; border-radius:8px; background:var(--action-bg, var(--bg-dim)); color:var(--action-color, var(--steel)); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:13px; }
+  .pd-action-body{ flex:1; min-width:0; }
+  .pd-action-title{ font-size:14px; font-weight:700; margin-bottom:3px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .pd-action-tag{ font-family:'IBM Plex Mono',monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:.04em; font-weight:700; padding:2px 7px; border-radius:4px; background:var(--action-bg, var(--bg-dim)); color:var(--action-color, var(--steel)); }
+  .pd-action-detail{ font-size:13px; color:var(--steel); line-height:1.55; }
+  .pd-action-cta{ font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; color:var(--action-color, var(--emerald)); white-space:nowrap; align-self:center; }
+  .pd-empty-good{ background:var(--mint); border:1px solid rgba(18,128,90,0.25); border-radius:8px; padding:22px 20px; text-align:center; color:var(--ink-soft); font-size:14px; }
+  .pd-empty-good strong{ display:block; color:var(--emerald); font-family:'Fraunces',serif; font-size:19px; font-weight:500; margin-bottom:6px; }
+  @media (max-width:640px){ .pd-hero .pulse-ring{ width:180px; height:180px; } .pd-hero .pulse-ring .num{ font-size:42px; } .pd-action{ flex-wrap:wrap; } }
 
   .vitals-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:34px 16px; margin-bottom:34px;}
   .vital{ background:transparent; border:none; border-radius:0; padding:0; position:relative; box-shadow:none; text-align:center; }
@@ -489,8 +524,8 @@
   <!-- ---------- 3. SCORES ---------- -->
   <div id="view-scores">
     <div class="pulse-wrap">
-      <div class="pulse-score is-zero" id="pulseCard">
-        <div class="p-label">Pulse score — live</div>
+      <div class="pulse-score is-zero" id="pulseCard" role="button" tabindex="0" aria-label="Open Pulse Score detail">
+        <div class="p-label" id="pulseLabel">Pulse score — live</div>
         <div class="pulse-ring">
           <svg viewBox="0 0 100 100" aria-hidden="true">
             <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="1.2"></circle>
@@ -499,9 +534,14 @@
           </svg>
           <div class="num" id="pulseNum">0</div>
         </div>
+        <div class="pulse-band-badge" id="pulseBandBadge"></div>
         <div class="pulse-delta" id="pulseDelta"></div>
         <div class="pulse-asof" id="pulseAsOf"></div>
         <div class="spark" id="spark"></div>
+        <div class="pulse-tap-hint" id="pulseTapHint">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+          Tap for full breakdown &amp; action items
+        </div>
       </div>
     </div>
     <button class="methodology-link" id="methodologyLink">How this is calculated →</button>
@@ -520,6 +560,33 @@
       <div class="hint">Every snapshot you've recorded. Depth here is what makes the score meaningful over time.</div>
       <div id="historyList"></div>
     </div>
+  </div>
+
+  <!-- ---------- 3b. PULSE DETAIL ---------- -->
+  <div id="view-pulsedetail" class="hidden">
+    <button class="pd-back" id="pulseDetailBack">← Back to Scores</button>
+
+    <div class="pd-hero" id="pdHero">
+      <div class="p-label" id="pdLabel">Pulse score — live</div>
+      <div class="pulse-ring">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="1.2"></circle>
+          <circle id="pdPulseArc" cx="50" cy="50" r="46" fill="none" stroke="#1FA374" stroke-width="2.4"
+                  stroke-linecap="round" stroke-dasharray="289.03" stroke-dashoffset="289.03"></circle>
+        </svg>
+        <div class="num" id="pdPulseNum">0</div>
+      </div>
+      <div class="pulse-band-badge" id="pdBandBadge"></div>
+      <div class="pulse-delta" id="pdDelta"></div>
+      <div class="pulse-asof" id="pdAsOf"></div>
+      <div class="pd-summary" id="pdSummary"></div>
+    </div>
+
+    <div class="pd-section-title">Trend</div>
+    <div class="pd-trend-card" id="pdTrendCard"></div>
+
+    <div class="pd-section-title">What needs your attention</div>
+    <div class="pd-action-list" id="pdActionList"></div>
   </div>
 
   <!-- ---------- 4. METHODOLOGY ---------- -->
@@ -694,6 +761,15 @@ function fmtDay(iso){
 }
 function scoreClass(s){ return s >= 70 ? 'score-good' : s >= 40 ? 'score-warn' : 'score-bad'; }
 
+// Single source of truth for score → color mapping, used everywhere a pulse
+// score is shown so red always means bad, amber means caution, green means
+// good — never inconsistent between the banner, the ring, or the badge.
+function scoreBand(s){
+  if(s >= 70) return { cls:'good', color:'#1FA374', label:'Healthy' };
+  if(s >= 40) return { cls:'warn', color:'#C97F1E', label:'Caution' };
+  return { cls:'bad', color:'#C23B67', label:'At risk' };
+}
+
 // ---------- library loading ----------
 function loadScript(src){
   return new Promise((resolve, reject) => {
@@ -828,10 +904,10 @@ const REV_LABEL = { under_5cr:'Under ₹5 cr', '5_25cr':'₹5–25 cr', '25_50cr
   '50_100cr':'₹50–100 cr', '100_200cr':'₹100–200 cr', over_200cr:'Over ₹200 cr' };
 
 function showView(name){
-  ['profile','calculate','scores','methodology'].forEach(v => {
+  ['profile','calculate','scores','pulsedetail','methodology'].forEach(v => {
     document.getElementById('view-' + v).classList.toggle('hidden', v !== name);
   });
-  document.querySelector('.pagenav').classList.toggle('hidden', name === 'methodology');
+  document.querySelector('.pagenav').classList.toggle('hidden', name === 'methodology' || name === 'pulsedetail');
   document.querySelectorAll('.pagenav button').forEach(b => {
     b.classList.toggle('active', b.dataset.view === name);
   });
@@ -842,6 +918,11 @@ document.querySelectorAll('.pagenav button').forEach(b => {
 });
 document.getElementById('methodologyLink').addEventListener('click', () => showView('methodology'));
 document.getElementById('methodologyBack').addEventListener('click', () => showView('scores'));
+document.getElementById('pulseDetailBack').addEventListener('click', () => showView('scores'));
+document.getElementById('pulseCard').addEventListener('click', () => { renderPulseDetail(); showView('pulsedetail'); });
+document.getElementById('pulseCard').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); renderPulseDetail(); showView('pulsedetail'); }
+});
 
 // ---------- render ----------
 async function refreshAll(){
@@ -925,10 +1006,17 @@ function renderScores(){
   const pulseVal = hasData ? latest.pulse_score : 0;
   document.getElementById('pulseNum').textContent = pulseVal;
 
+  const band = hasData ? scoreBand(pulseVal) : { color:'#5C6B7A', label:'No data yet' };
+  card.style.setProperty('--band-color', band.color);
+  const badge = document.getElementById('pulseBandBadge');
+  badge.textContent = band.label;
+  badge.style.display = hasData ? 'inline-block' : 'none';
+
   const arc = document.getElementById('pulseArc');
   if(arc){
     const pct = Math.max(0, Math.min(100, pulseVal));
     arc.setAttribute('stroke-dashoffset', (RING_CIRC * (1 - pct / 100)).toFixed(2));
+    arc.setAttribute('stroke', band.color);
   }
 
   const deltaEl = document.getElementById('pulseDelta');
@@ -1017,9 +1105,12 @@ function renderSpark(series){
     const y = H - P - ((v - min) / span) * (H - 2*P);
     return x.toFixed(1) + ',' + y.toFixed(1);
   }).join(' ');
+  const lastPt = pts.split(' ').pop().split(',');
+  const color = scoreBand(series[series.length - 1]).color;
   host.innerHTML =
     '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="' + H + '" preserveAspectRatio="none" aria-label="Pulse score trend">' +
-    '<polyline points="' + pts + '" fill="none" stroke="#12805A" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+    '<polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>' +
+    '<circle cx="' + lastPt[0] + '" cy="' + lastPt[1] + '" r="3.2" fill="' + color + '"/></svg>';
 }
 
 function renderHistory(rows){
@@ -1071,6 +1162,216 @@ function payUrgency(dueDate){
   if(days <= 7) return { label:'due in ' + days + 'd', tag:'bad' };
   if(days <= 30) return { label:'due in ' + days + 'd', tag:'warn' };
   return { label:'due in ' + days + 'd', tag:'ok' };
+}
+
+// ---------- pulse detail page ----------
+// (reuses the global inr() / fmtDay2() helpers defined below with the vital detail drawer)
+
+function renderPulseDetail(){
+  const hasData = snapshots.length > 0;
+  const latest = hasData ? snapshots[0] : null;
+  const prev = snapshots[1];
+  const pulseVal = hasData ? latest.pulse_score : 0;
+  const band = hasData ? scoreBand(pulseVal) : { color:'#5C6B7A', label:'No data yet' };
+
+  const hero = document.getElementById('pdHero');
+  hero.style.setProperty('--band-color', band.color);
+  document.getElementById('pdPulseNum').textContent = pulseVal;
+  document.getElementById('pdBandBadge').textContent = band.label;
+  document.getElementById('pdBandBadge').style.display = hasData ? 'inline-block' : 'none';
+
+  const arc = document.getElementById('pdPulseArc');
+  const pct = Math.max(0, Math.min(100, pulseVal));
+  arc.setAttribute('stroke-dashoffset', (RING_CIRC * (1 - pct / 100)).toFixed(2));
+  arc.setAttribute('stroke', band.color);
+
+  const deltaEl = document.getElementById('pdDelta');
+  if(!hasData){
+    deltaEl.textContent = 'no snapshots yet — upload data to calculate'; deltaEl.className = 'pulse-delta';
+  } else if(prev){
+    const d = latest.pulse_score - prev.pulse_score;
+    deltaEl.textContent = d === 0 ? 'no change since last' : (d > 0 ? '▲ +' + d : '▼ ' + d) + ' since last';
+    deltaEl.className = 'pulse-delta ' + (d > 0 ? 'score-good' : d < 0 ? 'score-bad' : '');
+  } else {
+    deltaEl.textContent = 'first snapshot'; deltaEl.className = 'pulse-delta';
+  }
+  document.getElementById('pdAsOf').textContent = hasData ? 'as of ' + fmtDate(latest.created_at) : '';
+
+  document.getElementById('pdSummary').textContent = !hasData
+    ? 'Add a snapshot on the Upload & calculate tab to see your first score and a personalized breakdown.'
+    : band.cls === 'good'
+      ? 'Your financial vitals are in healthy territory. Keep an eye on the items below to stay there.'
+      : band.cls === 'warn'
+        ? 'A few vitals need attention before they become a bigger problem. Here\u2019s where to start.'
+        : 'This score signals real risk to cash and margin right now — the items below are the fastest ways to move it.';
+
+  renderPulseTrend();
+  renderPulseActions();
+}
+
+// Trend chart: a plain sparkline until there are 2+ snapshots, then a full
+// axis chart with red/amber/green reference bands so the shape of the line
+// against those bands is legible at a glance, not just its slope.
+function renderPulseTrend(){
+  const host = document.getElementById('pdTrendCard');
+  const rows = snapshots.slice().reverse(); // chronological
+  if(rows.length < 2){
+    host.innerHTML = '<div class="pd-trend-empty">' +
+      (rows.length === 1
+        ? 'You have one snapshot so far. Record another to start seeing a trend line here — it\u2019s the difference between a score and a story.'
+        : 'No snapshots yet. Once you add data on the Upload &amp; calculate tab, your trend will build here.') +
+      '</div>';
+    return;
+  }
+  const W = 640, H = 220, PL = 34, PR = 12, PT = 12, PB = 28;
+  const plotW = W - PL - PR, plotH = H - PT - PB;
+  const y = v => PT + plotH * (1 - Math.max(0, Math.min(100, v)) / 100);
+  const x = i => PL + (rows.length === 1 ? 0 : (i / (rows.length - 1)) * plotW);
+
+  const bandRect = (from, to, color) =>
+    '<rect x="' + PL + '" y="' + y(to).toFixed(1) + '" width="' + plotW + '" height="' + (y(from) - y(to)).toFixed(1) + '" fill="' + color + '" opacity="0.08"/>';
+  const gridLine = (v) =>
+    '<line x1="' + PL + '" y1="' + y(v).toFixed(1) + '" x2="' + (W - PR) + '" y2="' + y(v).toFixed(1) + '" stroke="rgba(11,18,32,0.12)" stroke-width="1" stroke-dasharray="3,3"/>' +
+    '<text x="' + (PL - 8) + '" y="' + (y(v) + 3).toFixed(1) + '" font-size="9" font-family="IBM Plex Mono, monospace" fill="#5C6B7A" text-anchor="end">' + v + '</text>';
+
+  const pts = rows.map((r,i) => x(i).toFixed(1) + ',' + y(r.pulse_score).toFixed(1));
+  const areaPts = 'M' + pts.map((p,i) => (i===0?'':'L') + p).join(' ') +
+    ' L' + x(rows.length-1).toFixed(1) + ',' + (H-PB) + ' L' + x(0).toFixed(1) + ',' + (H-PB) + ' Z';
+  const lineColor = scoreBand(rows[rows.length-1].pulse_score).color;
+
+  const dots = rows.map((r,i) => {
+    const c = scoreBand(r.pulse_score).color;
+    return '<circle cx="' + x(i).toFixed(1) + '" cy="' + y(r.pulse_score).toFixed(1) + '" r="3.4" fill="' + c + '" stroke="#fff" stroke-width="1.2"><title>' +
+      fmtDate(r.created_at) + ': ' + r.pulse_score + '</title></circle>';
+  }).join('');
+
+  const showEvery = rows.length > 8 ? Math.ceil(rows.length / 6) : 1;
+  const labels = rows.map((r,i) => {
+    if(i % showEvery !== 0 && i !== rows.length - 1) return '';
+    return '<text x="' + x(i).toFixed(1) + '" y="' + (H - 8) + '" font-size="9" font-family="IBM Plex Mono, monospace" fill="#5C6B7A" text-anchor="middle">' + fmtDay2short(r.created_at) + '</text>';
+  }).join('');
+
+  host.innerHTML =
+    '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="' + H + '" preserveAspectRatio="none" role="img" aria-label="Pulse score trend over time">' +
+      bandRect(0, 40, '#C23B67') + bandRect(40, 70, '#C97F1E') + bandRect(70, 100, '#1FA374') +
+      gridLine(0) + gridLine(40) + gridLine(70) + gridLine(100) +
+      '<path d="' + areaPts + '" fill="' + lineColor + '" opacity="0.10"/>' +
+      '<polyline points="' + pts.join(' ') + '" fill="none" stroke="' + lineColor + '" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>' +
+      dots + labels +
+    '</svg>' +
+    '<div class="pd-trend-legend">' +
+      '<span><i style="background:#C23B67"></i>0–39 at risk</span>' +
+      '<span><i style="background:#C97F1E"></i>40–69 caution</span>' +
+      '<span><i style="background:#1FA374"></i>70–100 healthy</span>' +
+    '</div>';
+}
+function fmtDay2short(iso){ return new Date(iso).toLocaleDateString('en-IN', { day:'numeric', month:'short' }); }
+
+// Action items: pull the vitals that are dragging the score down, plus the
+// specific ledger entries (top overdue receivables, most urgent payables)
+// a founder can actually act on today.
+function renderPulseActions(){
+  const host = document.getElementById('pdActionList');
+  const hasData = snapshots.length > 0;
+  if(!hasData){
+    host.innerHTML = '<div class="pd-trend-empty">Action items appear here once you have a snapshot — they\u2019re pulled straight from your vitals and open ledger.</div>';
+    return;
+  }
+  const latest = snapshots[0];
+  const items = [];
+
+  // GST / ITC leakage — single aggregate flag, not itemized.
+  const gstPayable = Number(latest.gst_payable) || 0;
+  const gstLeak = Number(latest.gst_leak) || 0;
+  const gstRatio = gstPayable > 0 ? gstLeak / gstPayable : 0;
+  if(gstLeak > 0 && gstRatio >= 0.15){
+    const sev = gstRatio >= 0.5 ? 'bad' : 'warn';
+    items.push({
+      sev, icon:'GST',
+      title:'GST/ITC leakage',
+      tag: sev === 'bad' ? 'High' : 'Watch',
+      detail: inr(gstLeak) + ' in input tax credit looks unclaimed — that\u2019s ' + (gstRatio*100).toFixed(0) + '% of your monthly GST payable sitting on the table. Reconcile against your GSTR-2B this cycle to claim it back.',
+      cta:'View vital →',
+      onClick: () => openVitalDetail('GST/ITC Leakage')
+    });
+  }
+
+  // Receivables — top overdue invoices by amount among those >30d overdue.
+  const overdueRecv = receivables
+    .map(r => ({ r, days: -(daysFromToday(r.due_date) ?? 0) }))
+    .filter(x => x.days > 30)
+    .sort((a,b) => b.r.amount - a.r.amount)
+    .slice(0, 3);
+  if(overdueRecv.length){
+    const total = overdueRecv.reduce((s,x) => s + Number(x.r.amount), 0);
+    const worst = overdueRecv[0];
+    const sev = worst.days > 90 ? 'bad' : 'warn';
+    items.push({
+      sev, icon:'AR',
+      title:'Receivables to chase',
+      tag: overdueRecv.length + (overdueRecv.length === 1 ? ' invoice' : ' invoices'),
+      detail: inr(total) + ' overdue across your top ' + overdueRecv.length + ': ' +
+        overdueRecv.map(x => escapeHtml(x.r.party_name) + ' (' + inr(x.r.amount) + ', ' + x.days + 'd)').join(', ') + '.',
+      cta:'View receivables →',
+      onClick: () => openVitalDetail('Receivables Aging')
+    });
+  }
+
+  // Payables — most urgent (overdue or due within 7 days).
+  const urgentPay = payables
+    .map(p => ({ p, days: daysFromToday(p.due_date) }))
+    .filter(x => x.days !== null && x.days <= 7)
+    .sort((a,b) => a.days - b.days)
+    .slice(0, 3);
+  if(urgentPay.length){
+    const total = urgentPay.reduce((s,x) => s + Number(x.p.amount), 0);
+    const overdueCount = urgentPay.filter(x => x.days < 0).length;
+    items.push({
+      sev: overdueCount > 0 ? 'bad' : 'warn',
+      icon:'AP',
+      title:'Payables due imminently',
+      tag: overdueCount > 0 ? overdueCount + ' overdue' : 'Due this week',
+      detail: inr(total) + ' owed to ' + urgentPay.length + (urgentPay.length===1?' vendor':' vendors') + ' — ' +
+        urgentPay.map(x => escapeHtml(x.p.party_name) + ' (' + inr(x.p.amount) + ', ' + (x.days < 0 ? (-x.days) + 'd overdue' : 'due in ' + x.days + 'd') + ')').join(', ') + '. Keep cash aside to avoid vendor friction.',
+      cta:'View payables →',
+      onClick: () => openVitalDetail('Payables Due (30d)')
+    });
+  }
+
+  // Runway / cash flag — only surface if genuinely tight.
+  const runwayVital = (latest.vitals || []).find(v => v.label === 'Working Capital Runway');
+  if(runwayVital && runwayVital.score < 40){
+    items.push({
+      sev:'bad', icon:'WC',
+      title:'Working capital runway is thin',
+      tag:'Low',
+      detail: 'At ' + runwayVital.value + ', your runway is below a safe margin. Prioritize collecting receivables and delaying non-critical payables to extend it.',
+      cta:'View vital →',
+      onClick: () => openVitalDetail('Working Capital Runway')
+    });
+  }
+
+  if(!items.length){
+    host.innerHTML = '<div class="pd-empty-good"><strong>Nothing urgent flagged</strong>All six vitals are within a healthy range against your ledger and benchmarks right now. Keep recording snapshots to track it.</div>';
+    return;
+  }
+
+  const sevColor = { bad:'#C23B67', warn:'#C97F1E' };
+  const sevBg = { bad:'#FBD9E4', warn:'#FBE7C7' };
+  host.innerHTML = items.map(it =>
+    '<div class="pd-action" style="--action-color:' + sevColor[it.sev] + '; --action-bg:' + sevBg[it.sev] + ';" data-idx="' + items.indexOf(it) + '">' +
+      '<div class="pd-action-icon">' + it.icon + '</div>' +
+      '<div class="pd-action-body">' +
+        '<div class="pd-action-title">' + it.title + '<span class="pd-action-tag">' + it.tag + '</span></div>' +
+        '<div class="pd-action-detail">' + it.detail + '</div>' +
+      '</div>' +
+      '<div class="pd-action-cta">' + it.cta + '</div>' +
+    '</div>'
+  ).join('');
+  host.querySelectorAll('.pd-action').forEach(el => {
+    const idx = Number(el.dataset.idx);
+    el.addEventListener('click', () => items[idx].onClick());
+  });
 }
 
 function openVitalDetail(label){
