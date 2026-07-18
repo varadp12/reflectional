@@ -135,12 +135,52 @@
   .instrument-tag{ flex:1; }
   .instrument-tag .it-label{ font-family:'IBM Plex Mono', monospace; font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:var(--steel); margin-bottom:5px; }
   .instrument-tag .it-val{ font-family:'IBM Plex Mono', monospace; font-size:15px; font-weight:600; }
+
+  /* hero card content switches on tab click (or a slow ambient auto-advance) —
+     a clean crossfade, not a flip; the tabs themselves are the interaction */
+  .instrument-content{ transition:opacity .28s ease; }
+  .instrument-content.is-switching{ opacity:0; }
+  @media (prefers-reduced-motion: reduce){ .instrument-content{ transition:none; } }
+  .instrument-tabs{ display:flex; gap:4px; margin-top:20px; border:1px solid var(--line); border-radius:999px; padding:4px; background:var(--bg); }
+  .instrument-tabs button{ flex:1; padding:8px 6px; text-align:center; cursor:pointer; background:transparent; color:var(--steel); font-size:11.5px; font-weight:700; font-family:'Manrope',sans-serif; transition:all .2s ease; border:none; border-radius:999px; }
+  .instrument-tabs button.active{ background:var(--ink); color:var(--white); }
   @media (max-width:960px){
     .hero-grid{ grid-template-columns:1fr; }
     .hero h1{ font-size:44px; }
     .hi-watermark{ display:none; }
   }
 
+  .market-mosaic{
+    display:grid; grid-template-columns:1.25fr 1fr 1fr; grid-template-rows:auto auto;
+    grid-template-areas:"a b c" "a d e";
+    gap:34px 32px; position:relative;
+  }
+  .mm-item{ position:relative; padding-top:22px; }
+  .mm-item::before{ content:''; position:absolute; top:0; left:0; width:30px; height:1px; background:var(--gold); }
+  .mm-num{ font-family:'Fraunces', serif; font-weight:500; letter-spacing:-0.02em; color:var(--ink); line-height:0.94; }
+  .mm-unit{ font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:var(--gold); font-weight:600; margin-top:4px; }
+  .mm-label{ font-size:14px; color:var(--steel); line-height:1.5; margin-top:10px; max-width:240px; }
+  .mm-a{ grid-area:a; display:flex; flex-direction:column; justify-content:flex-end; }
+  .mm-a .mm-num{ font-size:124px; }
+  .mm-a .mm-label{ font-size:16px; max-width:300px; }
+  .mm-b{ grid-area:b; }
+  .mm-b .mm-num{ font-size:46px; }
+  .mm-c{ grid-area:c; }
+  .mm-c .mm-num{ font-size:38px; }
+  .mm-d{ grid-area:d; }
+  .mm-d .mm-num{ font-size:42px; }
+  .mm-e{ grid-area:e; }
+  .mm-e .mm-num{ font-size:36px; }
+  .mm-source{ grid-column:1/-1; font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--steel); opacity:0.75; margin-top:8px; padding-top:20px; border-top:1px solid var(--line); }
+  @media (max-width:960px){
+    .market-mosaic{ grid-template-columns:1fr 1fr; grid-template-areas:"a a" "b c" "d e"; gap:28px; }
+    .mm-a .mm-num{ font-size:92px; }
+  }
+  @media (max-width:640px){
+    .market-mosaic{ grid-template-columns:1fr; grid-template-areas:"a" "b" "c" "d" "e"; }
+    .mm-a .mm-num{ font-size:80px; }
+    .mm-b .mm-num, .mm-c .mm-num, .mm-d .mm-num, .mm-e .mm-num{ font-size:44px; }
+  }
   .statement{ background:var(--white); border:1px solid var(--line); border-radius:6px; box-shadow:var(--shadow-sm); overflow:hidden; }
   .statement-head{ display:flex; justify-content:space-between; align-items:baseline; padding:22px 30px; border-bottom:2px solid var(--ink); }
   .statement-head .st-title{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:0.12em; color:var(--ink); font-weight:600; }
@@ -161,18 +201,31 @@
     .statement-foot{ padding:16px 20px; }
   }
 
-  .redline{ border-top:1.5px solid var(--ink); margin-top:8px; }
-  .redline-line{ display:grid; grid-template-columns:40px 1fr; gap:24px; align-items:baseline; padding:34px 0; border-bottom:1px solid var(--line); }
-  .redline-num{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--gold); font-weight:600; }
-  .redline-text{ font-family:'Fraunces', serif; font-size:30px; line-height:1.6; font-weight:500; }
-  .redline-text .was{ color:var(--rose); text-decoration:line-through; text-decoration-color:var(--rose); text-decoration-thickness:1.5px; opacity:0.6; }
-  .redline-text .mark{ display:inline-flex; vertical-align:middle; margin:0 14px; color:var(--gold); }
-  .redline-text .mark svg{ width:20px; height:14px; }
-  .redline-text .now{ color:var(--emerald); background-image:linear-gradient(120deg, var(--mint) 0%, var(--mint) 100%); background-repeat:no-repeat; background-size:100% 0.5em; background-position:0 88%; padding:0 2px; box-decoration-break:clone; -webkit-box-decoration-break:clone; }
+  .redline{ border-top:1.5px solid var(--ink); margin-top:8px; position:relative; padding-left:26px; }
+  .redline::before{ content:''; position:absolute; top:0; bottom:34px; left:2px; width:2px; background:var(--emerald-bright); opacity:0.4; }
+  .redline-line{ display:grid; grid-template-columns:40px 1fr; gap:24px; align-items:baseline; padding:34px 0; border-bottom:1px solid var(--line); position:relative; }
+  .redline-line::before{ content:''; position:absolute; left:-26px; top:41px; width:9px; height:9px; margin-left:-3.5px; border-radius:50%; background:var(--emerald-bright); box-shadow:0 0 0 4px var(--mint); }
+  .redline-line.is-pulse-hit::before{ animation:redlineArrive .5s ease; }
+  .redline-pulse-dot{ position:absolute; left:0; top:41px; margin-left:-4.5px; width:9px; height:9px; border-radius:50%; background:var(--emerald-bright); box-shadow:0 0 0 4px var(--mint), 0 0 12px rgba(31,163,116,0.55); opacity:0; z-index:3; pointer-events:none; transition:top .72s cubic-bezier(.45,0,.2,1), opacity .25s ease; }
+  .redline-pulse-dot.is-visible{ opacity:1; }
+  @keyframes redlineArrive{ 0%{ transform:scale(1); box-shadow:0 0 0 4px var(--mint); } 40%{ transform:scale(1.9); box-shadow:0 0 0 10px rgba(31,163,116,0.06); } 100%{ transform:scale(1); box-shadow:0 0 0 4px var(--mint); } }
+  @media (prefers-reduced-motion: reduce){ .redline-pulse-dot{ display:none; } }
+  .redline-num{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--gold); font-weight:600; }
+  .redline-text{ font-family:'Fraunces', serif; font-size:23px; line-height:1.5; font-weight:480; letter-spacing:-0.005em; white-space:nowrap; }
+  .redline-text .was{ color:var(--rose); text-decoration:line-through; text-decoration-color:var(--rose); text-decoration-thickness:1.5px; opacity:0.58; }
+  .redline-text .mark{ display:inline-flex; vertical-align:middle; margin:0 12px; color:var(--gold); }
+  .redline-text .mark svg{ width:17px; height:12px; }
+  .redline-text .now{ font-style:italic; color:var(--emerald); background-image:linear-gradient(120deg, var(--mint) 0%, var(--mint) 100%); background-repeat:no-repeat; background-size:0% 0.5em; background-position:0 88%; padding:0 2px; box-decoration-break:clone; -webkit-box-decoration-break:clone; transition:background-size 1s cubic-bezier(.16,1,.3,1) .2s; }
+  .redline-line.is-corrected .redline-text .now{ background-size:100% 0.5em; }
+  @media (prefers-reduced-motion: reduce){ .redline-text .now{ background-size:100% 0.5em !important; transition:none; } }
   .redline-note{ font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.12em; color:var(--steel); padding-top:24px; margin-top:8px; }
+  @media (max-width:1180px){ .redline-text{ white-space:normal; font-size:21px; } }
   @media (max-width:760px){
+    .redline{ padding-left:20px; }
+    .redline::before{ left:0; }
+    .redline-line::before{ left:-20px; top:33px; }
     .redline-line{ grid-template-columns:24px 1fr; gap:16px; }
-    .redline-text{ font-size:22px; }
+    .redline-text{ font-size:19px; white-space:normal; }
     .redline-text .mark{ display:block; margin:8px 0; }
   }
 
@@ -204,6 +257,39 @@
     .orbit-core{ position:static; transform:none; margin:0 auto 32px; }
     .bubble{ position:static; width:100% !important; height:auto !important; margin:0 0 14px 0 !important; border-radius:12px; flex-direction:row; justify-content:flex-start; gap:12px; padding:18px 20px; animation:none; text-align:left; }
   }
+
+  /* ---------- product demo: looping animated interaction, not a video file ---------- */
+  .demo-stage{ display:flex; flex-direction:column; align-items:center; }
+  .demo-frame{ width:100%; max-width:460px; background:var(--white); border:1px solid var(--line); border-radius:14px; box-shadow:0 40px 80px -30px rgba(11,18,32,0.22), var(--shadow-lg); overflow:hidden; }
+  .demo-frame-bar{ display:flex; align-items:center; gap:6px; padding:12px 16px; border-bottom:1px solid var(--line); background:var(--bg); }
+  .demo-dot{ width:8px; height:8px; border-radius:50%; opacity:0.85; }
+  .demo-frame-url{ margin-left:10px; font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--steel); }
+  .demo-screen{ position:relative; background:var(--bg); padding:26px 22px 22px; min-height:380px; overflow:visible; }
+  .demo-pulse{ display:flex; align-items:center; gap:14px; background:var(--ink); border-radius:12px; padding:14px 16px; margin-bottom:22px; }
+  .demo-pulse-ring{ width:44px; height:44px; border-radius:50%; border:2.5px solid var(--emerald-bright); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .demo-pulse-ring span{ font-family:'IBM Plex Mono', monospace; color:#fff; font-weight:600; font-size:14px; }
+  .demo-pulse-label{ font-family:'IBM Plex Mono', monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:0.08em; color:rgba(255,255,255,0.5); margin-bottom:4px; }
+  .demo-pulse-badge{ font-family:'IBM Plex Mono', monospace; font-size:10px; font-weight:700; color:#08130C; background:var(--emerald-bright); display:inline-block; padding:2px 9px; border-radius:999px; }
+  .demo-vitals{ display:flex; gap:12px; }
+  .demo-vital{ flex:1; background:var(--white); border:1px solid var(--line); border-radius:10px; padding:16px 8px; text-align:center; transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease; position:relative; z-index:1; }
+  .demo-vital i{ display:block; width:26px; height:26px; margin:0 auto 8px; border-radius:50%; border:2.5px solid var(--dv-accent); }
+  .demo-vital span{ font-family:'IBM Plex Mono', monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--steel); font-weight:600; }
+  .demo-vital.is-active{ transform:translateY(-3px); box-shadow:0 14px 30px -10px color-mix(in srgb, var(--dv-accent) 40%, transparent); border-color:var(--dv-accent); }
+  .demo-vital.is-active i{ background:var(--dv-accent); }
+  .demo-drawer{ position:absolute; left:22px; right:22px; bottom:22px; z-index:4; background:var(--white); border:1px solid var(--line); border-radius:12px; padding:16px 18px; box-shadow:var(--shadow-lg); transform:translateY(16px); opacity:0; pointer-events:none; transition:transform .4s cubic-bezier(.16,1,.3,1), opacity .35s ease; }
+  .demo-drawer.is-open{ transform:translateY(0); opacity:1; }
+  .demo-drawer-title{ font-family:'IBM Plex Mono', monospace; font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:var(--steel); font-weight:700; margin-bottom:10px; }
+  .demo-drawer-row{ display:flex; justify-content:space-between; font-size:12.5px; padding:7px 0; border-bottom:1px solid var(--line); }
+  .demo-drawer-row:last-child{ border-bottom:none; }
+  .demo-drawer-row b{ font-family:'IBM Plex Mono', monospace; font-weight:600; }
+  .demo-cursor{ position:absolute; top:52%; left:50%; width:20px; height:20px; margin:-2px 0 0 -2px; opacity:0; z-index:5; transition:top .9s cubic-bezier(.4,0,.2,1), left .9s cubic-bezier(.4,0,.2,1), opacity .3s ease; }
+  .demo-cursor svg{ width:100%; height:100%; filter:drop-shadow(0 2px 4px rgba(11,18,32,0.3)); }
+  .demo-cursor.is-visible{ opacity:1; }
+  .demo-cursor.is-clicking svg{ animation:demoClick .3s ease; }
+  @keyframes demoClick{ 0%,100%{ transform:scale(1); } 45%{ transform:scale(0.82); } }
+  .demo-caption{ margin-top:18px; font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--steel); text-align:center; max-width:380px; }
+  @media (prefers-reduced-motion: reduce){ .demo-cursor{ display:none; } .demo-drawer.is-open{ transition:none; } }
+  @media (max-width:640px){ .demo-screen{ padding:20px 16px 18px; min-height:270px; } .demo-vital i{ width:22px; height:22px; } }
 
   .timeline{ position:relative; display:grid; grid-template-columns:repeat(4,1fr); gap:0; }
   .timeline::before{ content:''; display:none; }
@@ -491,30 +577,34 @@
         <div class="hi-watermark"><div class="crescent"></div></div>
         <div class="instrument">
           <span class="tick tl"></span><span class="tick tr"></span><span class="tick bl"></span><span class="tick br"></span>
-          <div class="instrument-label">
-            <span>Net margin</span>
-            <span class="live">Live</span>
-          </div>
-          <div class="instrument-val">14.6%</div>
-          <div class="instrument-delta">▲ 2.1pp since last close</div>
-          <div class="instrument-chart">
-            <svg viewBox="0 0 300 60" style="width:100%; height:100%;" preserveAspectRatio="none">
-              <polyline points="0,46 30,42 60,48 90,30 120,34 150,16 180,20 210,8 240,12 270,4 300,6" fill="none" stroke="#C97F1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <polygon points="0,46 30,42 60,48 90,30 120,34 150,16 180,20 210,8 240,12 270,4 300,6 300,60 0,60" fill="#C97F1E" opacity="0.1"/>
-            </svg>
-          </div>
-          <div class="instrument-rule">
-            <div class="instrument-tag">
-              <div class="it-label">Receivables</div>
-              <div class="it-val">₹6.8L</div>
+          <div class="instrument-content" id="instrumentContent">
+            <div class="instrument-label">
+              <span>Net margin</span>
+              <span class="live">Live</span>
             </div>
-            <div class="instrument-tag" style="text-align:right;">
-              <div class="it-label">GST sync</div>
-              <div class="it-val" style="color:var(--emerald);">Live</div>
+            <div class="instrument-val">14.6%</div>
+            <div class="instrument-delta">▲ 2.1pp since last close</div>
+            <div class="instrument-chart">
+              <svg viewBox="0 0 300 60" style="width:100%; height:100%;" preserveAspectRatio="none">
+                <polyline points="0,46 30,42 60,48 90,30 120,34 150,16 180,20 210,8 240,12 270,4 300,6" fill="none" stroke="#C97F1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <polygon points="0,46 30,42 60,48 90,30 120,34 150,16 180,20 210,8 240,12 270,4 300,6 300,60 0,60" fill="#C97F1E" opacity="0.1"/>
+              </svg>
+            </div>
+            <div class="instrument-rule">
+              <div class="instrument-tag">
+                <div class="it-label">Receivables</div>
+                <div class="it-val">₹6.8L</div>
+              </div>
+              <div class="instrument-tag" style="text-align:right;">
+                <div class="it-label">GST sync</div>
+                <div class="it-val" style="color:var(--emerald);">Live</div>
+              </div>
             </div>
           </div>
+          <div class="instrument-tabs" id="instrumentTabs"></div>
         </div>
       </div>
+
     </div>
   </div>
 </div>
@@ -526,35 +616,29 @@
       <h2>The margin problem is bigger than any one business.</h2>
       <p>Indian SMEs aren't struggling because of bad decisions. They're struggling because the numbers arrive too late to act on.</p>
     </div>
-    <div class="statement reveal">
-      <div class="statement-head">
-        <span class="st-title">Margyn — Market Statement</span>
-        <span class="st-meta">FY2026 · Illustrative</span>
+    <div class="market-mosaic reveal">
+      <div class="mm-item mm-a">
+        <div class="mm-num" data-count-to="73" data-decimals="0" data-prefix="" data-suffix="">0</div>
+        <div class="mm-unit">days</div>
+        <div class="mm-label">average time an Indian SME waits to collect an invoice</div>
       </div>
-      <div class="statement-cols">
-        <span></span><span>Line item</span><span>Value</span>
+      <div class="mm-item mm-b">
+        <div class="mm-num" data-count-to="40" data-decimals="0" data-prefix="&lt;" data-suffix="%">&lt;0%</div>
+        <div class="mm-label">of MSMEs have access to formal credit</div>
       </div>
-      <div class="statement-row">
-        <span class="statement-idx">01</span>
-        <span class="statement-label">India's MSME credit gap</span>
-        <span class="statement-val">₹20–25L Cr</span>
+      <div class="mm-item mm-c">
+        <div class="mm-num" data-count-to="25" data-decimals="0" data-prefix="₹20–" data-suffix="L Cr">₹20–0L Cr</div>
+        <div class="mm-label">India's total MSME credit gap</div>
       </div>
-      <div class="statement-row">
-        <span class="statement-idx">02</span>
-        <span class="statement-label">Average invoice collection time</span>
-        <span class="statement-val">73 days</span>
+      <div class="mm-item mm-d">
+        <div class="mm-num" data-count-to="3.83" data-decimals="2" data-prefix="₹" data-suffix=" Cr">₹0.00 Cr</div>
+        <div class="mm-label">overdue receivables, average SME</div>
       </div>
-      <div class="statement-row">
-        <span class="statement-idx">03</span>
-        <span class="statement-label">Overdue receivables, average SME</span>
-        <span class="statement-val">₹3.83 Cr</span>
+      <div class="mm-item mm-e">
+        <div class="mm-num" data-count-to="1.2" data-decimals="1" data-prefix="₹" data-suffix="L">₹0.0L</div>
+        <div class="mm-label">unclaimed GST input credit, average SME per year</div>
       </div>
-      <div class="statement-row">
-        <span class="statement-idx">04</span>
-        <span class="statement-label">MSMEs with formal credit access</span>
-        <span class="statement-val">&lt;40%</span>
-      </div>
-      <div class="statement-foot">Sources: RBI Expert Committee on MSMEs · Recordent, Indian SME Receivables Report 2026 · Parliamentary Standing Committee on Finance</div>
+      <div class="mm-source">Sources: RBI Expert Committee on MSMEs · Recordent, Indian SME Receivables Report 2026 · Parliamentary Standing Committee on Finance · GSTN filing pattern analysis</div>
     </div>
   </div>
 </section>
@@ -579,6 +663,7 @@
         <span class="redline-num">03</span>
         <p class="redline-text"><span class="was">GST leakage gets caught at filing time</span><span class="mark"><svg viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h18M14 2l6 6-6 6"/></svg></span><span class="now">flagged the day it happens.</span></p>
       </div>
+      <div class="redline-pulse-dot" id="redlinePulseDot"></div>
     </div>
     <div class="redline-note">margyn.in — the correction, applied automatically.</div>
   </div>
@@ -617,6 +702,49 @@
       <div class="bubble b6" style="--accent:#12805A; --accent-bg:#CFEFDD;">
         <div class="b-tag">Net margin</div><div class="b-val">14.6%</div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="demo" class="panel">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="eyebrow">See it in action</div>
+      <h2>This is what checking your business actually feels like.</h2>
+      <p>No dashboards to interpret. Tap a vital, see exactly which customer or bill is behind it.</p>
+    </div>
+    <div class="demo-stage reveal">
+      <div class="demo-frame">
+        <div class="demo-frame-bar">
+          <span class="demo-dot" style="background:#D9662A"></span>
+          <span class="demo-dot" style="background:#C97F1E"></span>
+          <span class="demo-dot" style="background:#12805A"></span>
+          <span class="demo-frame-url">margyn.in/app</span>
+        </div>
+        <div class="demo-screen">
+          <div class="demo-pulse">
+            <div class="demo-pulse-ring"><span>74</span></div>
+            <div class="demo-pulse-text">
+              <div class="demo-pulse-label">Pulse score</div>
+              <div class="demo-pulse-badge">Healthy</div>
+            </div>
+          </div>
+          <div class="demo-vitals">
+            <div class="demo-vital" style="--dv-accent:#C97F1E"><i></i><span>Cash</span></div>
+            <div class="demo-vital is-target" id="demoTargetVital" style="--dv-accent:#C23B67"><i></i><span>Receivables</span></div>
+            <div class="demo-vital" style="--dv-accent:#5C6B7A"><i></i><span>Payables</span></div>
+          </div>
+          <div class="demo-drawer" id="demoDrawer">
+            <div class="demo-drawer-title">Receivables — by customer</div>
+            <div class="demo-drawer-row"><span>Anand Fabrics &amp; Sons</span><b>₹2.9L · 78d</b></div>
+            <div class="demo-drawer-row"><span>Nileshwar Garments</span><b>₹2.0L · 65d</b></div>
+          </div>
+          <div class="demo-cursor" id="demoCursor">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 2l16 6.5-6.7 2.3L11 18.5 4 2z" fill="#0B1220" stroke="#fff" stroke-width="1"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="demo-caption">An animated preview, not a screen recording — but this is exactly the tap-through in the real app.</div>
     </div>
   </div>
 </section>
@@ -809,12 +937,232 @@
     wrap.addEventListener('mouseleave', () => { instrument.style.transform = 'rotateX(0deg) rotateY(0deg)'; });
   }
 
+  // Hero card: three clickable tabs switch the metric with a clean crossfade.
+  // A slow ambient auto-advance keeps it feeling alive, but pauses the moment
+  // someone actually clicks a tab or hovers the card.
+  (function(){
+    const METRICS = [
+      {
+        tab:'Net margin', label:'Net margin', val:'14.6%', delta:'▲ 2.1pp since last close', deltaColor:'var(--emerald)',
+        chartColor:'#C97F1E', chartFill:'#C97F1E',
+        points:'0,46 30,42 60,48 90,30 120,34 150,16 180,20 210,8 240,12 270,4 300,6',
+        tag1:['Receivables','₹6.8L'], tag2:['GST sync','Live', true]
+      },
+      {
+        tab:'Cash', label:'Cash position', val:'₹42.1L', delta:'▲ ₹3.2L this month', deltaColor:'var(--emerald)',
+        chartColor:'#12805A', chartFill:'#12805A',
+        points:'0,50 30,44 60,46 90,36 120,38 150,26 180,28 210,18 240,20 270,10 300,8',
+        tag1:['Payables due','₹11.3L'], tag2:['Bank sync','Live', true]
+      },
+      {
+        tab:'Runway', label:'WC runway', val:'4.2 mo', delta:'▼ 0.3mo vs last close', deltaColor:'var(--rose)',
+        chartColor:'#C23B67', chartFill:'#C23B67',
+        points:'0,10 30,16 60,14 90,22 120,20 150,30 180,28 210,36 240,34 270,42 300,40',
+        tag1:['Pulse score','74 / 100'], tag2:['Trend','▲ +6', false]
+      }
+    ];
+    const contentEl = document.getElementById('instrumentContent');
+    const tabsEl = document.getElementById('instrumentTabs');
+    if(!contentEl || !tabsEl) return;
+
+    tabsEl.innerHTML = METRICS.map((m, i) => '<button data-i="' + i + '"' + (i===0?' class="active"':'') + '>' + m.tab + '</button>').join('');
+
+    function render(m){
+      contentEl.innerHTML =
+        '<div class="instrument-label"><span>' + m.label + '</span><span class="live">Live</span></div>' +
+        '<div class="instrument-val">' + m.val + '</div>' +
+        '<div class="instrument-delta" style="color:' + m.deltaColor + '">' + m.delta + '</div>' +
+        '<div class="instrument-chart"><svg viewBox="0 0 300 60" style="width:100%;height:100%;" preserveAspectRatio="none">' +
+          '<polyline points="' + m.points + '" fill="none" stroke="' + m.chartColor + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+          '<polygon points="' + m.points + ' 300,60 0,60" fill="' + m.chartFill + '" opacity="0.1"/>' +
+        '</svg></div>' +
+        '<div class="instrument-rule">' +
+          '<div class="instrument-tag"><div class="it-label">' + m.tag1[0] + '</div><div class="it-val">' + m.tag1[1] + '</div></div>' +
+          '<div class="instrument-tag" style="text-align:right;"><div class="it-label">' + m.tag2[0] + '</div><div class="it-val"' + (m.tag2[2] ? ' style="color:var(--emerald);"' : '') + '>' + m.tag2[1] + '</div></div>' +
+        '</div>';
+    }
+
+    let idx = 0, timer = null, paused = false;
+    function goTo(next){
+      if(next === idx) return;
+      idx = next;
+      contentEl.classList.add('is-switching');
+      setTimeout(() => {
+        render(METRICS[idx]);
+        contentEl.classList.remove('is-switching');
+        tabsEl.querySelectorAll('button').forEach((b, i) => b.classList.toggle('active', i === idx));
+      }, reduceMotion ? 0 : 220);
+    }
+    function tick(){ if(!paused) goTo((idx + 1) % METRICS.length); }
+    function start(){ if(!timer && !reduceMotion) timer = setInterval(tick, 6000); }
+
+    tabsEl.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+      paused = true;
+      goTo(Number(b.dataset.i));
+    }));
+    const hoverTarget = document.querySelector('.hero-instrument');
+    if(hoverTarget){
+      hoverTarget.addEventListener('mouseenter', () => paused = true);
+      hoverTarget.addEventListener('mouseleave', () => paused = false);
+    }
+    start();
+  })();
+
+  // Product demo: a scripted loop standing in for a real screen recording —
+  // cursor drifts to the Receivables vital, clicks, the vital highlights,
+  // and the customer-level drawer slides up. Runs only while in view.
+  (function(){
+    const screen = document.querySelector('.demo-screen');
+    const cursor = document.getElementById('demoCursor');
+    const target = document.getElementById('demoTargetVital');
+    const drawer = document.getElementById('demoDrawer');
+    if(!screen || !cursor || !target || !drawer) return;
+    let running = false, loopTimer = null;
+
+    function targetPos(){
+      const sRect = screen.getBoundingClientRect();
+      const tRect = target.getBoundingClientRect();
+      return {
+        left: tRect.left - sRect.left + tRect.width / 2,
+        top: tRect.top - sRect.top + tRect.height / 2
+      };
+    }
+
+    function playOnce(){
+      if(reduceMotion) return;
+      const startPos = { left: screen.clientWidth * 0.5, top: screen.clientHeight * 0.42 };
+      cursor.style.left = startPos.left + 'px';
+      cursor.style.top = startPos.top + 'px';
+      cursor.classList.remove('is-clicking');
+      cursor.classList.add('is-visible');
+      target.classList.remove('is-active');
+      drawer.classList.remove('is-open');
+
+      setTimeout(() => {
+        const p = targetPos();
+        cursor.style.left = p.left + 'px';
+        cursor.style.top = p.top + 'px';
+      }, 250);
+
+      setTimeout(() => {
+        cursor.classList.add('is-clicking');
+        target.classList.add('is-active');
+      }, 1250);
+
+      setTimeout(() => { drawer.classList.add('is-open'); }, 1550);
+      setTimeout(() => { cursor.classList.remove('is-visible'); }, 3800);
+      setTimeout(() => { drawer.classList.remove('is-open'); target.classList.remove('is-active'); }, 4400);
+    }
+
+    function loop(){ playOnce(); loopTimer = setTimeout(loop, 5800); }
+
+    const demoIO = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting && !running){ running = true; loop(); }
+        else if(!entry.isIntersecting && running){ running = false; clearTimeout(loopTimer); }
+      });
+    }, { threshold:0.4 });
+    demoIO.observe(screen);
+  })();
+
   const els = document.querySelectorAll('.reveal:not(.in)');
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { threshold:0.01, rootMargin:'0px 0px -40px 0px' });
   els.forEach(el=>io.observe(el));
   setTimeout(()=>{ els.forEach(el=>el.classList.add('in')); }, 2200);
+
+  // Count each market-stat number up from 0 once it scrolls into view, then
+  // keep it feeling live with a slow, staggered re-count every ~8s so the
+  // section doesn't go static after the first pass.
+  document.querySelectorAll('[data-count-to]').forEach((node, i) => {
+    const target = Number(node.dataset.countTo) || 0;
+    const decimals = Number(node.dataset.decimals) || 0;
+    const prefix = node.dataset.prefix || '';
+    const suffix = node.dataset.suffix || '';
+
+    function playCount(dur){
+      if(reduceMotion){ node.textContent = prefix + target.toFixed(decimals) + suffix; return; }
+      const start = performance.now();
+      function tick(now){
+        const p = Math.min(1, (now - start) / dur);
+        const eased = 1 - Math.pow(1 - p, 3);
+        node.textContent = prefix + (target * eased).toFixed(decimals) + suffix;
+        if(p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    const countIO = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(!entry.isIntersecting) return;
+        countIO.unobserve(node);
+        playCount(1100);
+        if(!reduceMotion){
+          setTimeout(() => setInterval(() => playCount(700), 8000), i * 350);
+        }
+      });
+    }, { threshold: 0.4 });
+    countIO.observe(node);
+  });
+
+  // Each "correction" line gets its highlighter sweep only once it's in view —
+  // makes the red-pen metaphor feel like it's happening as you read, not
+  // already-applied before you scrolled to it.
+  document.querySelectorAll('.redline-line').forEach((line, i) => {
+    const lineIO = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(!entry.isIntersecting) return;
+        lineIO.unobserve(line);
+        setTimeout(() => line.classList.add('is-corrected'), i * 120);
+      });
+    }, { threshold:0.5 });
+    lineIO.observe(line);
+  });
+
+  // The pulse itself travels down the margin line, visiting each correction
+  // in turn (1 → 2 → 3 → 1 → ...) and flashing that line's dot on arrival —
+  // the same traveling-pulse device used in the vitals section, reused here
+  // instead of three independent local heartbeats.
+  (function(){
+    const redline = document.querySelector('.redline');
+    const dot = document.getElementById('redlinePulseDot');
+    if(!redline || !dot) return;
+    const lines = Array.from(redline.querySelectorAll('.redline-line'));
+    if(!lines.length) return;
+
+    let running = false, i = 0, started = false, timer = null;
+    function topFor(line){ return line.offsetTop + 41; }
+
+    function loopStep(){
+      if(!running){ timer = setTimeout(loopStep, 700); return; }
+      if(reduceMotion){ return; }
+      if(!started){
+        dot.style.transition = 'none';
+        dot.style.top = topFor(lines[0]) + 'px';
+        dot.classList.add('is-visible');
+        void dot.offsetWidth;
+        dot.style.transition = '';
+        started = true;
+      } else {
+        i = (i + 1) % lines.length;
+        dot.style.top = topFor(lines[i]) + 'px';
+      }
+      timer = setTimeout(() => {
+        lines[i].classList.add('is-pulse-hit');
+        setTimeout(() => lines[i].classList.remove('is-pulse-hit'), 420);
+        timer = setTimeout(loopStep, 950);
+      }, 740);
+    }
+
+    const redlineIO = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting && !running){ running = true; loopStep(); }
+        else if(!entry.isIntersecting && running){ running = false; clearTimeout(timer); dot.classList.remove('is-visible'); started = false; }
+      });
+    }, { threshold:0.4 });
+    redlineIO.observe(redline);
+  })();
 
   const panels = document.querySelectorAll('.panel');
   if(panels.length && !reduceMotion){
