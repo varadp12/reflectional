@@ -121,6 +121,9 @@
   .pd-trend-legend i{ width:8px; height:8px; border-radius:2px; display:inline-block; }
 
   .pd-action-list{ display:flex; flex-direction:column; gap:10px; }
+  .pd-tier-header{ font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--tier-color, var(--steel)); margin:18px 0 2px; display:flex; align-items:center; gap:8px; }
+  .pd-tier-header:first-child{ margin-top:0; }
+  .pd-tier-header span{ background:var(--tier-color, var(--steel)); color:#fff; font-size:10px; border-radius:999px; padding:1px 7px; }
   .pd-action{ display:flex; gap:14px; align-items:flex-start; background:var(--white); border:1px solid var(--line); border-left:4px solid var(--action-color, var(--steel)); border-radius:8px; padding:16px 18px; box-shadow:var(--shadow-sm); cursor:pointer; transition:transform .18s ease, box-shadow .18s ease; }
   .pd-action:hover{ transform:translateY(-1px); box-shadow:var(--shadow-md); }
   .pd-action-icon{ width:34px; height:34px; border-radius:8px; background:var(--action-bg, var(--bg-dim)); color:var(--action-color, var(--steel)); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:13px; }
@@ -1270,6 +1273,9 @@ function fmtDay2short(iso){ return new Date(iso).toLocaleDateString('en-IN', { d
 // Action items: pull the vitals that are dragging the score down, plus the
 // specific ledger entries (top overdue receivables, most urgent payables)
 // a founder can actually act on today.
+// Action items: one row per actual thing to act on — a named receivable,
+// a named vendor bill, the GST leakage figure, a thin vital — bucketed into
+// High / Medium / Low impact so a founder knows what to hit first.
 function renderPulseActions(){
   const host = document.getElementById('pdActionList');
   const hasData = snapshots.length > 0;
@@ -1280,97 +1286,109 @@ function renderPulseActions(){
   const latest = snapshots[0];
   const items = [];
 
-  // GST / ITC leakage — single aggregate flag, not itemized.
+  // ---- Receivables: one item per invoice overdue, tiered by how overdue ----
+  receivables.forEach(r => {
+    const days = -(daysFromToday(r.due_date) ?? 0);
+    if(days <= 0) return; // not yet due — nothing to act on
+    const tier = days > 90 ? 'high' : days > 30 ? 'medium' : 'low';
+    items.push({
+      tier, icon:'AR', group:'Receivable',
+      title: escapeHtml(r.party_name),
+      detail: inr(r.amount) + ' overdue by ' + days + (days===1?' day':' days') + ' — follow up to collect.',
+      amount: Number(r.amount),
+      cta:'View →',
+      onClick: () => openVitalDetail('Receivables Aging')
+    });
+  });
+
+  // ---- Payables: one item per bill overdue or due within 30 days ----
+  payables.forEach(p => {
+    const days = daysFromToday(p.due_date);
+    if(days === null || days > 30) return;
+    const tier = days < 0 ? 'high' : days <= 7 ? 'medium' : 'low';
+    items.push({
+      tier, icon:'AP', group:'Payable',
+      title: escapeHtml(p.party_name),
+      detail: inr(p.amount) + (days < 0 ? ' — ' + (-days) + (days===-1?' day':' days') + ' overdue. Pay to avoid vendor friction.' : ' — due in ' + days + (days===1?' day':' days') + '.'),
+      amount: Number(p.amount),
+      cta:'View →',
+      onClick: () => openVitalDetail('Payables Due (30d)')
+    });
+  });
+
+  // ---- GST/ITC leakage: single aggregate figure (no itemized GST ledger yet) ----
   const gstPayable = Number(latest.gst_payable) || 0;
   const gstLeak = Number(latest.gst_leak) || 0;
   const gstRatio = gstPayable > 0 ? gstLeak / gstPayable : 0;
-  if(gstLeak > 0 && gstRatio >= 0.15){
-    const sev = gstRatio >= 0.5 ? 'bad' : 'warn';
+  if(gstLeak > 0 && gstRatio >= 0.05){
+    const tier = gstRatio >= 0.5 ? 'high' : gstRatio >= 0.15 ? 'medium' : 'low';
     items.push({
-      sev, icon:'GST',
-      title:'GST/ITC leakage',
-      tag: sev === 'bad' ? 'High' : 'Watch',
-      detail: inr(gstLeak) + ' in input tax credit looks unclaimed — that\u2019s ' + (gstRatio*100).toFixed(0) + '% of your monthly GST payable sitting on the table. Reconcile against your GSTR-2B this cycle to claim it back.',
-      cta:'View vital →',
+      tier, icon:'GST', group:'GST/ITC',
+      title:'Unclaimed input tax credit',
+      detail: inr(gstLeak) + ' — ' + (gstRatio*100).toFixed(0) + '% of your monthly GST payable. Reconcile against GSTR-2B this cycle to claim it. (Shown as one figure — GST isn\u2019t itemized by vendor yet.)',
+      amount: gstLeak,
+      cta:'View →',
       onClick: () => openVitalDetail('GST/ITC Leakage')
     });
   }
 
-  // Receivables — top overdue invoices by amount among those >30d overdue.
-  const overdueRecv = receivables
-    .map(r => ({ r, days: -(daysFromToday(r.due_date) ?? 0) }))
-    .filter(x => x.days > 30)
-    .sort((a,b) => b.r.amount - a.r.amount)
-    .slice(0, 3);
-  if(overdueRecv.length){
-    const total = overdueRecv.reduce((s,x) => s + Number(x.r.amount), 0);
-    const worst = overdueRecv[0];
-    const sev = worst.days > 90 ? 'bad' : 'warn';
+  // ---- Other vitals: only surface if genuinely below a healthy score ----
+  const vitalFlags = [
+    { label:'Working Capital Runway', icon:'WC', group:'Runway', tip:'Prioritize collecting receivables and delaying non-critical payables to extend it.' },
+    { label:'Net Margin', icon:'NM', group:'Margin', tip:'Review pricing and cost lines pulling margin below your industry benchmark.' },
+    { label:'Cash Position', icon:'CB', group:'Cash', tip:'Your cash-to-burn buffer is thin relative to the benchmark. Build it back up before committing to new spend.' }
+  ];
+  vitalFlags.forEach(vf => {
+    const v = (latest.vitals || []).find(x => x.label === vf.label);
+    if(!v || v.score >= 70) return;
+    const tier = v.score < 25 ? 'high' : v.score < 50 ? 'medium' : 'low';
     items.push({
-      sev, icon:'AR',
-      title:'Receivables to chase',
-      tag: overdueRecv.length + (overdueRecv.length === 1 ? ' invoice' : ' invoices'),
-      detail: inr(total) + ' overdue across your top ' + overdueRecv.length + ': ' +
-        overdueRecv.map(x => escapeHtml(x.r.party_name) + ' (' + inr(x.r.amount) + ', ' + x.days + 'd)').join(', ') + '.',
-      cta:'View receivables →',
-      onClick: () => openVitalDetail('Receivables Aging')
+      tier, icon:vf.icon, group:vf.group,
+      title: vf.label + ' — ' + v.value,
+      detail: vf.tip,
+      amount: 0,
+      cta:'View →',
+      onClick: () => openVitalDetail(vf.label)
     });
-  }
-
-  // Payables — most urgent (overdue or due within 7 days).
-  const urgentPay = payables
-    .map(p => ({ p, days: daysFromToday(p.due_date) }))
-    .filter(x => x.days !== null && x.days <= 7)
-    .sort((a,b) => a.days - b.days)
-    .slice(0, 3);
-  if(urgentPay.length){
-    const total = urgentPay.reduce((s,x) => s + Number(x.p.amount), 0);
-    const overdueCount = urgentPay.filter(x => x.days < 0).length;
-    items.push({
-      sev: overdueCount > 0 ? 'bad' : 'warn',
-      icon:'AP',
-      title:'Payables due imminently',
-      tag: overdueCount > 0 ? overdueCount + ' overdue' : 'Due this week',
-      detail: inr(total) + ' owed to ' + urgentPay.length + (urgentPay.length===1?' vendor':' vendors') + ' — ' +
-        urgentPay.map(x => escapeHtml(x.p.party_name) + ' (' + inr(x.p.amount) + ', ' + (x.days < 0 ? (-x.days) + 'd overdue' : 'due in ' + x.days + 'd') + ')').join(', ') + '. Keep cash aside to avoid vendor friction.',
-      cta:'View payables →',
-      onClick: () => openVitalDetail('Payables Due (30d)')
-    });
-  }
-
-  // Runway / cash flag — only surface if genuinely tight.
-  const runwayVital = (latest.vitals || []).find(v => v.label === 'Working Capital Runway');
-  if(runwayVital && runwayVital.score < 40){
-    items.push({
-      sev:'bad', icon:'WC',
-      title:'Working capital runway is thin',
-      tag:'Low',
-      detail: 'At ' + runwayVital.value + ', your runway is below a safe margin. Prioritize collecting receivables and delaying non-critical payables to extend it.',
-      cta:'View vital →',
-      onClick: () => openVitalDetail('Working Capital Runway')
-    });
-  }
+  });
 
   if(!items.length){
     host.innerHTML = '<div class="pd-empty-good"><strong>Nothing urgent flagged</strong>All six vitals are within a healthy range against your ledger and benchmarks right now. Keep recording snapshots to track it.</div>';
     return;
   }
 
-  const sevColor = { bad:'#C23B67', warn:'#C97F1E' };
-  const sevBg = { bad:'#FBD9E4', warn:'#FBE7C7' };
-  host.innerHTML = items.map(it =>
-    '<div class="pd-action" style="--action-color:' + sevColor[it.sev] + '; --action-bg:' + sevBg[it.sev] + ';" data-idx="' + items.indexOf(it) + '">' +
-      '<div class="pd-action-icon">' + it.icon + '</div>' +
-      '<div class="pd-action-body">' +
-        '<div class="pd-action-title">' + it.title + '<span class="pd-action-tag">' + it.tag + '</span></div>' +
-        '<div class="pd-action-detail">' + it.detail + '</div>' +
-      '</div>' +
-      '<div class="pd-action-cta">' + it.cta + '</div>' +
-    '</div>'
-  ).join('');
+  const TIER_META = {
+    high:  { label:'High impact',   color:'#C23B67', bg:'#FBD9E4' },
+    medium:{ label:'Medium impact', color:'#C97F1E', bg:'#FBE7C7' },
+    low:   { label:'Low impact',    color:'#5C6B7A', bg:'#E6E8EB' }
+  };
+
+  let html = '';
+  let globalIdx = 0;
+  const flatItems = [];
+  ['high','medium','low'].forEach(tierKey => {
+    const bucket = items.filter(it => it.tier === tierKey).sort((a,b) => b.amount - a.amount);
+    if(!bucket.length) return;
+    const meta = TIER_META[tierKey];
+    html += '<div class="pd-tier-header" style="--tier-color:' + meta.color + ';">' + meta.label + ' <span>' + bucket.length + '</span></div>';
+    bucket.forEach(it => {
+      flatItems.push(it);
+      html += '<div class="pd-action" style="--action-color:' + meta.color + '; --action-bg:' + meta.bg + ';" data-idx="' + globalIdx + '">' +
+        '<div class="pd-action-icon">' + it.icon + '</div>' +
+        '<div class="pd-action-body">' +
+          '<div class="pd-action-title">' + it.title + '<span class="pd-action-tag">' + it.group + '</span></div>' +
+          '<div class="pd-action-detail">' + it.detail + '</div>' +
+        '</div>' +
+        '<div class="pd-action-cta">' + it.cta + '</div>' +
+      '</div>';
+      globalIdx++;
+    });
+  });
+
+  host.innerHTML = html;
   host.querySelectorAll('.pd-action').forEach(el => {
     const idx = Number(el.dataset.idx);
-    el.addEventListener('click', () => items[idx].onClick());
+    el.addEventListener('click', () => flatItems[idx].onClick());
   });
 }
 
