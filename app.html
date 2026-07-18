@@ -86,7 +86,7 @@
   .kv .k{ font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--steel); font-weight:600; }
   .kv .v{ font-weight:600; text-align:right; }
 
-  .pulse-wrap{ perspective:1400px; margin-bottom:8px; }
+  .pulse-wrap{ perspective:1400px; margin-bottom:22px; }
   .pulse-score{ position:relative; text-align:center; padding:34px 28px 34px; border:none; border-radius:14px; background:var(--ink); box-shadow:0 40px 80px -30px rgba(11,18,32,0.45); transform-style:preserve-3d; will-change:transform; cursor:pointer; transition:transform .25s cubic-bezier(.16,1,.3,1), box-shadow .25s ease; }
   .pulse-score:hover{ transform:translateY(-2px); box-shadow:0 46px 90px -28px rgba(11,18,32,0.55); }
   .pulse-score:hover .pulse-tap-hint{ color:rgba(255,255,255,0.62); }
@@ -267,7 +267,7 @@
   }
 
   /* ---------- methodology link (small, under the pulse card) ---------- */
-  .methodology-link{ display:block; text-align:center; margin:-18px 0 34px; font-family:'IBM Plex Mono',monospace; font-size:11.5px;
+  .methodology-link{ display:block; text-align:center; margin:0 0 30px; font-family:'IBM Plex Mono',monospace; font-size:11.5px;
     color:var(--steel); cursor:pointer; font-weight:600; transition:color .2s ease; background:none; border:none; width:100%; }
   .methodology-link:hover{ color:var(--emerald); }
   .pagenav.hidden{ display:none; }
@@ -1038,6 +1038,16 @@ function renderScores(){
   renderSpark(snapshots.slice().reverse().map(s => s.pulse_score));
   renderHistory(snapshots);
 
+  const tapHint = document.getElementById('pulseTapHint');
+  if(!hasData){
+    tapHint.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>Tap for full breakdown &amp; action items';
+  } else {
+    const n = buildActionItems().length;
+    tapHint.innerHTML = n
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>' + n + (n===1?' item needs':' items need') + ' attention — tap to see which'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>All clear — tap for the full breakdown';
+  }
+
   const idle = document.getElementById('briefing-idle');
   const text = document.getElementById('briefing-text');
   const hint = document.getElementById('briefHint');
@@ -1276,13 +1286,11 @@ function fmtDay2short(iso){ return new Date(iso).toLocaleDateString('en-IN', { d
 // Action items: one row per actual thing to act on — a named receivable,
 // a named vendor bill, the GST leakage figure, a thin vital — bucketed into
 // High / Medium / Low impact so a founder knows what to hit first.
-function renderPulseActions(){
-  const host = document.getElementById('pdActionList');
-  const hasData = snapshots.length > 0;
-  if(!hasData){
-    host.innerHTML = '<div class="pd-trend-empty">Action items appear here once you have a snapshot — they\u2019re pulled straight from your vitals and open ledger.</div>';
-    return;
-  }
+// Shared builder: returns the flat list of actionable items (named
+// receivable/payable/etc). Used both for the full list on the Pulse Detail
+// page and for the small count preview on the main Pulse card.
+function buildActionItems(){
+  if(!snapshots.length) return [];
   const latest = snapshots[0];
   const items = [];
 
@@ -1351,6 +1359,18 @@ function renderPulseActions(){
       onClick: () => openVitalDetail(vf.label)
     });
   });
+
+  return items;
+}
+
+function renderPulseActions(){
+  const host = document.getElementById('pdActionList');
+  const hasData = snapshots.length > 0;
+  if(!hasData){
+    host.innerHTML = '<div class="pd-trend-empty">Action items appear here once you have a snapshot — they\u2019re pulled straight from your vitals and open ledger.</div>';
+    return;
+  }
+  const items = buildActionItems();
 
   if(!items.length){
     host.innerHTML = '<div class="pd-empty-good"><strong>Nothing urgent flagged</strong>All six vitals are within a healthy range against your ledger and benchmarks right now. Keep recording snapshots to track it.</div>';
