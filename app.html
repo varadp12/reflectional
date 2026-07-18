@@ -1873,7 +1873,12 @@ function handleFile(){
 }
 function sheetToRows(wb, name){
   const sheet = wb.Sheets[name];
-  return sheet ? XLSX.utils.sheet_to_json(sheet, { defval:0 }) : [];
+  // Every sheet in the Margyn template has its real header row at row 5
+  // (rows 1-4 are the brand mark + title + a blank spacer). Without pinning
+  // range:4, SheetJS uses row 1 of the sheet's used range as the header —
+  // and since row 1 is blank, every column comes back keyed as __EMPTY /
+  // __EMPTY_1 instead of 'Balance', 'Amount', etc., so nothing matches below.
+  return sheet ? XLSX.utils.sheet_to_json(sheet, { range:4, defval:0 }) : [];
 }
 
 document.getElementById('computeFromFile').addEventListener('click', async () => {
