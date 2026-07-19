@@ -325,6 +325,28 @@
     color:var(--steel); cursor:pointer; font-weight:600; transition:color .2s ease; background:none; border:none; width:100%; }
   .methodology-link:hover{ color:var(--emerald); }
   .pagenav.hidden{ display:none; }
+  .pagenav button{ position:relative; }
+  .nav-badge{ position:absolute; top:4px; right:8px; min-width:16px; height:16px; padding:0 4px; border-radius:999px; background:var(--rose); color:#fff; font-size:10px; font-weight:700; line-height:16px; text-align:center; font-family:'IBM Plex Mono',monospace; }
+  .nav-badge.hidden{ display:none; }
+
+  .fin-eligibility{ background:linear-gradient(165deg, var(--ink) 0%, var(--ink-soft) 100%); color:#fff; border-radius:20px; padding:28px 26px; margin-bottom:22px; box-shadow:var(--shadow-lg); }
+  .fin-eligibility .eyebrow{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--mint); margin-bottom:10px; font-weight:600; }
+  .fin-range{ font-family:'Fraunces',serif; font-size:34px; font-weight:500; letter-spacing:-0.01em; margin-bottom:6px; }
+  .fin-note{ font-size:13px; color:rgba(255,255,255,0.65); line-height:1.5; }
+  .fin-consent{ display:flex; gap:10px; align-items:flex-start; padding:16px; background:var(--bg-dim); border-radius:12px; margin:16px 0; font-size:13px; line-height:1.55; color:var(--steel); }
+  .fin-consent input{ width:auto; margin-top:2px; flex-shrink:0; }
+  .fin-confirm{ text-align:center; padding:32px 20px; }
+  .fin-confirm .check{ width:48px; height:48px; border-radius:50%; background:var(--mint); color:var(--emerald); display:flex; align-items:center; justify-content:center; margin:0 auto 14px; font-size:22px; }
+
+  @media print{
+    nav, .pagenav, .methodology-link, #generateBriefing, .btn-row, form, .app-actions, .gate{ display:none !important; }
+    body{ background:#fff; }
+    .wrap{ max-width:720px; padding:24px; }
+    .card{ box-shadow:none; border:1px solid #ccc; break-inside:avoid; }
+    .print-only{ display:block !important; }
+  }
+  .print-only{ display:none; }
+
 
   /* ---------- methodology page ---------- */
   .meth-back{ background:transparent; border:1px solid var(--line-strong); color:var(--steel); padding:8px 16px; border-radius:999px;
@@ -479,7 +501,8 @@
   <div class="pagenav">
     <button data-view="profile">Profile</button>
     <button data-view="calculate">Upload &amp; calculate</button>
-    <button data-view="scores" class="active">Scores</button>
+    <button data-view="scores" class="active">Scores<span class="nav-badge hidden" id="scoresBadge"></span></button>
+    <button data-view="financing">Financing</button>
   </div>
 
   <!-- ---------- 1. PROFILE ---------- -->
@@ -604,6 +627,15 @@
 
   <!-- ---------- 3. SCORES ---------- -->
   <div id="view-scores">
+    <div class="print-only" style="margin-bottom:20px; padding-bottom:14px; border-bottom:1px solid #ccc;">
+      <div style="font-family:'Fraunces',serif; font-size:20px; font-weight:600;" id="printCompanyName"></div>
+      <div style="font-size:12px; color:#666; margin-top:4px;" id="printGeneratedAt"></div>
+      <div style="font-size:11px; color:#999; margin-top:2px;">Prepared by Margyn — confidential, not a credit assessment or lending decision.</div>
+    </div>
+    <div class="app-actions" style="display:flex; gap:8px; justify-content:flex-end; margin-bottom:14px;">
+      <button class="nav-logout" id="copySummaryBtn" type="button">Copy summary</button>
+      <button class="nav-logout" id="downloadPdfBtn" type="button">Download PDF</button>
+    </div>
     <div class="pulse-wrap">
       <div class="pulse-score is-zero" id="pulseCard" role="button" tabindex="0" aria-label="Open Pulse Score detail">
         <div class="pulse-main">
@@ -649,6 +681,44 @@
       <h2>Previous scores</h2>
       <div class="hint">Every snapshot you've recorded. Depth here is what makes the score meaningful over time.</div>
       <div id="historyList"></div>
+    </div>
+  </div>
+
+  <!-- ---------- 3c. FINANCING ---------- -->
+  <div id="view-financing" class="hidden">
+    <div class="fin-eligibility">
+      <div class="eyebrow">Indicative working-capital eligibility</div>
+      <div class="fin-range" id="finRange">—</div>
+      <div class="fin-note" id="finNote">Upload or enter a snapshot to see an estimate.</div>
+    </div>
+
+    <div class="card" id="finLeadCard">
+      <h2>Get matched with a lender</h2>
+      <div class="hint">We don't broker this ourselves yet — express interest and we'll personally reach out once a lending partner is live. Your data is never shared without your consent.</div>
+      <form id="financingForm">
+        <div class="grid-2">
+          <div><label>Contact email</label><input type="email" id="finEmail" required></div>
+          <div><label>Phone (optional)</label><input type="tel" id="finPhone" placeholder="+91 98765 43210"></div>
+        </div>
+        <div><label>What kind of financing are you looking for? (optional)</label>
+          <input type="text" id="finPurpose" placeholder="e.g. working capital, inventory financing, invoice discounting"></div>
+        <label class="fin-consent">
+          <input type="checkbox" id="finConsent" required>
+          <span>I consent to Margyn Labs storing this business's financial summary (Pulse Score and vitals) and sharing it with a lending partner, only once one is onboarded and only for the purpose of a funding introduction, in line with the DPDPA, 2023. I can withdraw this consent at any time by emailing business@margyn.in.</span>
+        </label>
+        <div class="btn-row">
+          <button type="submit" class="primary" id="finSubmit">Express interest</button>
+          <span class="note" id="finFormNote"></span>
+        </div>
+      </form>
+    </div>
+
+    <div class="card hidden" id="finConfirmCard">
+      <div class="fin-confirm">
+        <div class="check">✓</div>
+        <h2 style="margin-bottom:8px;">You're on the list</h2>
+        <div class="hint" id="finConfirmText">We've recorded your interest. We'll reach out directly once a lending partner is live.</div>
+      </div>
     </div>
   </div>
 
@@ -1003,7 +1073,7 @@ const REV_LABEL = { under_5cr:'Under ₹5 cr', '5_25cr':'₹5–25 cr', '25_50cr
   '50_100cr':'₹50–100 cr', '100_200cr':'₹100–200 cr', over_200cr:'Over ₹200 cr' };
 
 function showView(name){
-  ['profile','calculate','scores','pulsedetail','methodology'].forEach(v => {
+  ['profile','calculate','scores','financing','pulsedetail','methodology'].forEach(v => {
     document.getElementById('view-' + v).classList.toggle('hidden', v !== name);
   });
   document.querySelector('.pagenav').classList.toggle('hidden', name === 'methodology' || name === 'pulsedetail');
@@ -1032,6 +1102,8 @@ async function refreshAll(){
   renderHeader();
   renderProfile();
   renderScores();
+  renderFinancing();
+  updateNavBadge();
 }
 
 function renderHeader(){
@@ -1337,6 +1409,127 @@ function renderHistory(rows){
     host.appendChild(row);
   });
 }
+
+// ---------- notifications: nav badge ----------
+function updateNavBadge(){
+  const badge = document.getElementById('scoresBadge');
+  if(!snapshots.length){ badge.classList.add('hidden'); return; }
+  const urgent = buildActionItems().filter(i => i.tier === 'high').length;
+  if(urgent > 0){
+    badge.textContent = urgent > 9 ? '9+' : String(urgent);
+    badge.classList.remove('hidden');
+  } else {
+    badge.classList.add('hidden');
+  }
+}
+
+// ---------- financing ----------
+// Indicative only — not an offer, not underwriting. A rough multiple of
+// monthly revenue, scaled by Pulse Score band, until real lender
+// eligibility rules are wired in via a signed LSP partner.
+function computeFinancingEligibility(){
+  if(!snapshots.length) return null;
+  const latest = snapshots[0];
+  const monthlyRevenue = Number(latest.revenue) || 0;
+  if(monthlyRevenue <= 0) return null;
+  const band = scoreBand(latest.pulse_score);
+  const multiplier = latest.pulse_score >= 70 ? 3 : latest.pulse_score >= 40 ? 2 : 1;
+  const mid = monthlyRevenue * multiplier;
+  return { low: Math.round(mid * 0.8), high: Math.round(mid * 1.2), band };
+}
+
+function renderFinancing(){
+  const range = document.getElementById('finRange');
+  const note = document.getElementById('finNote');
+  const elig = computeFinancingEligibility();
+  if(!elig){
+    range.textContent = '—';
+    note.textContent = 'Upload or enter a snapshot with monthly revenue to see an estimate.';
+  } else {
+    range.textContent = inr(elig.low) + ' – ' + inr(elig.high);
+    note.textContent = 'A rough working-capital estimate based on your revenue and Pulse Score band (' + elig.band.label + '). This isn\u2019t a credit decision or a lender offer — actual eligibility depends on full underwriting.';
+  }
+
+  const already = !!currentProfile.financing_interest_at;
+  document.getElementById('finLeadCard').classList.toggle('hidden', already);
+  document.getElementById('finConfirmCard').classList.toggle('hidden', !already);
+  if(already){
+    document.getElementById('finConfirmText').textContent =
+      'We recorded your interest on ' + fmtDate(currentProfile.financing_interest_at) + '. We\u2019ll reach out directly once a lending partner is live.';
+  }
+  document.getElementById('finEmail').value = currentUser ? currentUser.email : '';
+}
+
+document.getElementById('financingForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('finSubmit');
+  const note = document.getElementById('finFormNote');
+  if(!document.getElementById('finConsent').checked){
+    note.className = 'note bad'; note.textContent = 'Consent is required to proceed.';
+    return;
+  }
+  btn.disabled = true; note.className = 'note'; note.textContent = 'Saving…';
+  try {
+    const elig = computeFinancingEligibility();
+    const latest = snapshots[0];
+    const payload = {
+      user_id: currentUser.id,
+      company_name: currentProfile.company_name,
+      email: document.getElementById('finEmail').value.trim(),
+      phone: document.getElementById('finPhone').value.trim() || null,
+      purpose: document.getElementById('finPurpose').value.trim() || null,
+      pulse_score: latest ? latest.pulse_score : null,
+      vitals: latest ? latest.vitals : null,
+      eligibility_low: elig ? elig.low : null,
+      eligibility_high: elig ? elig.high : null,
+      consent: true,
+      consent_text: document.querySelector('#financingForm .fin-consent span').textContent
+    };
+    const res = await fetch('/api/financing-lead', {
+      method:'POST', headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || 'Could not save your interest.');
+    const patch = { id: currentUser.id, financing_interest_at: new Date().toISOString() };
+    await sbClient.from('profiles').update(patch).eq('id', currentUser.id);
+    currentProfile.financing_interest_at = patch.financing_interest_at;
+    renderFinancing();
+  } catch(err){
+    console.error('[margyn] financing lead:', err);
+    note.className = 'note bad'; note.textContent = err.message || 'Could not save. Try again.';
+  } finally { btn.disabled = false; }
+});
+
+// ---------- export & share ----------
+document.getElementById('downloadPdfBtn').addEventListener('click', () => {
+  const latest = snapshots[0];
+  document.getElementById('printCompanyName').textContent = currentProfile.company_name || 'Margyn scorecard';
+  document.getElementById('printGeneratedAt').textContent = 'Generated ' + new Date().toLocaleString('en-IN') +
+    (latest ? ' \u00b7 snapshot ' + freshnessText(latest) : '');
+  window.print();
+});
+
+document.getElementById('copySummaryBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('copySummaryBtn');
+  const latest = snapshots[0];
+  if(!latest){ btn.textContent = 'No data yet'; setTimeout(() => btn.textContent = 'Copy summary', 1800); return; }
+  const lines = [
+    currentProfile.company_name || 'Margyn scorecard',
+    'Pulse Score: ' + latest.pulse_score + ' (' + scoreBand(latest.pulse_score).label + ')',
+    freshnessText(latest),
+    ''
+  ];
+  (latest.vitals || []).forEach(v => lines.push(v.label + ': ' + v.value));
+  if(latest.briefing){ lines.push('', 'Briefing:', latest.briefing); }
+  try {
+    await navigator.clipboard.writeText(lines.join('\n'));
+    btn.textContent = 'Copied ✓';
+  } catch(e){
+    btn.textContent = 'Could not copy';
+  }
+  setTimeout(() => btn.textContent = 'Copy summary', 1800);
+});
 
 // ---------- vital detail drawer ----------
 const inr = n => '₹' + Math.round(Number(n)||0).toLocaleString('en-IN');
