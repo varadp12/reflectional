@@ -897,6 +897,18 @@ let payables = [];
 let cashTx = [];
 let bootError = null;
 
+// ---------- usage events (analytics) ----------
+// Fire-and-forget: never awaited by callers, never throws into the UI.
+// Write-only from the client (RLS allows insert where auth.uid() = user_id,
+// no select) — this is instrumentation for us to query from Supabase
+// directly, not user-facing data.
+function logEvent(name, data){
+  if(!sbClient || !currentUser) return;
+  sbClient.from('usage_events').insert({
+    user_id: currentUser.id, event_name: name, event_data: data || null
+  }).then(({ error }) => { if(error) console.error('[margyn] logEvent:', name, error); });
+}
+
 // ---------- helpers ----------
 function showAuthError(msg){
   const f = document.querySelector('.auth-form.active');
@@ -1001,6 +1013,7 @@ async function routeFor(session){
   currentUser = session.user;
   document.getElementById('userEmail').textContent = currentUser.email;
   document.getElementById('authGate').classList.add('hidden');
+  logEvent('session_start');
 
   currentProfile = await loadProfile();
   if(!currentProfile){
@@ -1080,6 +1093,7 @@ function showView(name){
   document.querySelectorAll('.pagenav button').forEach(b => {
     b.classList.toggle('active', b.dataset.view === name);
   });
+  logEvent('view_tab', { tab: name });
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 document.querySelectorAll('.pagenav button').forEach(b => {
@@ -1494,6 +1508,7 @@ document.getElementById('financingForm').addEventListener('submit', async (e) =>
     const patch = { id: currentUser.id, financing_interest_at: new Date().toISOString() };
     await sbClient.from('profiles').update(patch).eq('id', currentUser.id);
     currentProfile.financing_interest_at = patch.financing_interest_at;
+    logEvent('financing_interest_submitted', { eligibility_low: elig ? elig.low : null, eligibility_high: elig ? elig.high : null });
     renderFinancing();
   } catch(err){
     console.error('[margyn] financing lead:', err);
@@ -1507,6 +1522,7 @@ document.getElementById('downloadPdfBtn').addEventListener('click', () => {
   document.getElementById('printCompanyName').textContent = currentProfile.company_name || 'Margyn scorecard';
   document.getElementById('printGeneratedAt').textContent = 'Generated ' + new Date().toLocaleString('en-IN') +
     (latest ? ' \u00b7 snapshot ' + freshnessText(latest) : '');
+  logEvent('export_pdf');
   window.print();
 });
 
@@ -1525,6 +1541,7 @@ document.getElementById('copySummaryBtn').addEventListener('click', async () => 
   try {
     await navigator.clipboard.writeText(lines.join('\n'));
     btn.textContent = 'Copied ✓';
+    logEvent('export_copy');
   } catch(e){
     btn.textContent = 'Could not copy';
   }
@@ -1798,6 +1815,7 @@ function openVitalDetail(label){
   const overlay = document.getElementById('detailOverlay');
   overlay.classList.remove('hidden');
   renderDetailFor(label);
+  logEvent('vital_opened', { label });
 }
 function closeVitalDetail(){
   document.getElementById('detailOverlay').classList.add('hidden');
@@ -1960,6 +1978,7 @@ async function collectReceivable(r){
     receivables = await loadReceivables();
     await applyCashDelta(Number(r.amount), 'receivable_collected', 'Collected from ' + r.party_name);
     renderDetailFor('Receivables Aging');
+    logEvent('receivable_collected', { amount: Number(r.amount) });
   } catch(err){
     console.error('[margyn] collect receivable:', err);
     alert('Could not mark as received: ' + (err.message || 'unknown error'));
@@ -1973,6 +1992,7 @@ async function deleteReceivable(r){
     await saveLedgerSnapshot();
     renderScores();
     renderDetailFor('Receivables Aging');
+    logEvent('receivable_deleted', { amount: Number(r.amount) });
   } catch(err){
     console.error('[margyn] delete receivable:', err);
     alert('Could not delete: ' + (err.message || 'unknown error'));
@@ -2050,6 +2070,7 @@ async function payPayable(p){
     payables = await loadPayables();
     await applyCashDelta(-Number(p.amount), 'payable_paid', 'Paid to ' + p.party_name);
     renderDetailFor('Payables Due (30d)');
+    logEvent('payable_paid', { amount: Number(p.amount) });
   } catch(err){
     console.error('[margyn] pay payable:', err);
     alert('Could not mark as paid: ' + (err.message || 'unknown error'));
@@ -2063,6 +2084,7 @@ async function deletePayable(p){
     await saveLedgerSnapshot();
     renderScores();
     renderDetailFor('Payables Due (30d)');
+    logEvent('payable_deleted', { amount: Number(p.amount) });
   } catch(err){
     console.error('[margyn] delete payable:', err);
     alert('Could not delete: ' + (err.message || 'unknown error'));
@@ -2126,6 +2148,7 @@ async function saveLedgerSnapshot(){
   const { data, error } = await sbClient.from('snapshots').insert(row).select().single();
   if(error){ console.error('[margyn] saveLedgerSnapshot:', error); return; }
   snapshots.unshift(data);
+  logEvent('snapshot_saved', { source:'ledger', pulse_score: pulse });
 }
 
 // ---------- auth ----------
@@ -2427,6 +2450,7 @@ async function saveLedgerSnapshotWithPL(revenue, netProfit, burn, gstLeak, gstPa
   };
   const { error } = await withTimeout(sbClient.from('snapshots').insert(row), 20000, 'Saving snapshot');
   if(error) throw error;
+  logEvent('snapshot_saved', { source: source || 'manual', pulse_score: pulse });
 }
 
 // ---------- briefing ----------
@@ -2450,6 +2474,7 @@ document.getElementById('generateBriefing').addEventListener('click', async () =
     document.getElementById('briefing-idle').style.display = 'none';
     await sbClient.from('snapshots').update({ briefing:data.briefing }).eq('id', latest.id);
     latest.briefing = data.briefing;
+    logEvent('briefing_generated', { pulse_score: latest.pulse_score });
   } catch(err){
     out.innerHTML = '<div class="error-box">Could not generate briefing: ' + err.message + '</div>';
   } finally { btn.disabled = false; }
