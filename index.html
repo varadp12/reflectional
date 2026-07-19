@@ -307,6 +307,30 @@
   @media (prefers-reduced-motion: reduce){ .demo-cursor{ display:none; } .demo-drawer.is-open{ transition:none; } }
   @media (max-width:640px){ .demo-screen{ padding:18px 16px 16px; min-height:250px; } .demo-vital i{ width:22px; height:22px; } }
 
+  /* ---- Opening Bell / Closing Bell (WhatsApp section) ---- */
+  .wa-grid{ display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; }
+  .wa-points{ list-style:none; margin:22px 0 0; padding:0; display:flex; flex-direction:column; gap:12px; }
+  .wa-points li{ display:flex; align-items:flex-start; gap:10px; font-size:14.5px; color:var(--ink-soft); line-height:1.5; }
+  .wa-point-dot{ flex-shrink:0; width:6px; height:6px; border-radius:50%; background:var(--emerald-bright); margin-top:7px; }
+  .wa-badge{ margin-top:26px; display:inline-flex; align-items:center; gap:8px; font-family:'IBM Plex Mono', monospace; font-size:11px; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; color:var(--steel); background:var(--white); border:1px solid var(--line); border-radius:999px; padding:8px 16px; }
+  .wa-phone-wrap{ display:flex; justify-content:center; }
+  .wa-phone{ width:100%; max-width:320px; background:var(--ink); border-radius:32px; padding:10px; box-shadow:0 40px 80px -30px rgba(11,18,32,0.32), var(--shadow-lg); }
+  .wa-phone-notch{ width:80px; height:5px; background:rgba(255,255,255,0.18); border-radius:99px; margin:4px auto 10px; }
+  .wa-phone-head{ display:flex; align-items:center; gap:10px; padding:4px 10px 14px; }
+  .wa-phone-name{ font-family:'Fraunces', serif; font-weight:600; font-size:14.5px; color:#fff; }
+  .wa-phone-sub{ font-family:'IBM Plex Mono', monospace; font-size:10px; color:rgba(255,255,255,0.45); margin-top:1px; }
+  .wa-phone-body{ background:var(--bg); border-radius:22px; padding:16px 12px 18px; min-height:340px; }
+  .wa-chip{ text-align:center; font-family:'IBM Plex Mono', monospace; font-size:10px; color:var(--steel); background:rgba(11,18,32,0.06); display:inline-block; padding:3px 10px; border-radius:99px; margin:0 auto 10px; display:table; }
+  .wa-bubble{ background:var(--white); border:1px solid var(--line); border-radius:14px; border-top-left-radius:4px; padding:12px 14px 10px; margin-bottom:16px; box-shadow:var(--shadow-sm); max-width:92%; }
+  .wa-bubble-title{ font-weight:700; font-size:13.5px; margin-bottom:6px; }
+  .wa-bubble-line{ font-size:12.5px; color:var(--ink-soft); line-height:1.5; }
+  .wa-bubble-line b{ font-family:'IBM Plex Mono', monospace; }
+  .wa-up{ color:var(--emerald); font-family:'IBM Plex Mono', monospace; font-size:11px; font-weight:700; }
+  .wa-bubble-time{ text-align:right; font-family:'IBM Plex Mono', monospace; font-size:9.5px; color:var(--steel); margin-top:6px; }
+  .wa-quick-replies{ display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+  .wa-qr{ font-size:11.5px; font-weight:600; color:var(--emerald); border:1px solid var(--mint); background:var(--mint); border-radius:999px; padding:5px 12px; }
+  @media (max-width:900px){ .wa-grid{ grid-template-columns:1fr; gap:40px; } .wa-phone-wrap{ order:-1; } .head[style]{ text-align:center !important; } .wa-points{ align-items:center; } .wa-points li{ text-align:left; } }
+
   .timeline{ position:relative; display:grid; grid-template-columns:repeat(4,1fr); gap:0; }
   .timeline::before{ content:''; display:none; }
   .timeline-pulse{ position:absolute; top:-10px; left:0; width:100%; height:44px; z-index:1; pointer-events:none; }
@@ -566,6 +590,7 @@
       <a href="#correction">The correction</a>
       <a href="#vitals">Vitals</a>
       <a href="#demo">See it in action</a>
+      <a href="#whatsapp">On WhatsApp</a>
       <a href="#how">How it works</a>
       <a class="nav-cta" href="/app.html">Try the app</a>
     </div>
@@ -766,6 +791,58 @@
         </div>
       </div>
       <div class="demo-caption">An animated preview, not a screen recording — but this is exactly the tap-through in the real app.</div>
+    </div>
+  </div>
+</section>
+
+<section id="whatsapp" class="panel">
+  <div class="wrap">
+    <div class="wa-grid">
+      <div class="head reveal" style="text-align:left; margin:0;">
+        <div class="eyebrow">No login required</div>
+        <h2>Your briefing finds you.<br>Twice a day, on WhatsApp.</h2>
+        <p>Opening Bell lands every morning with your Pulse Score movement and today's most urgent action. Closing Bell checks in at day's end — did it get done? Margyn is built to be read, not logged into.</p>
+        <ul class="wa-points">
+          <li><span class="wa-point-dot"></span>Every message flags exactly how fresh your data is — never a guess.</li>
+          <li><span class="wa-point-dot"></span>Tap to mark an action done, snooze it, or tell us what you want to see next.</li>
+          <li><span class="wa-point-dot"></span>No new app to open. It's the WhatsApp you already check all day.</li>
+        </ul>
+        <div class="wa-badge">Coming soon · connecting to the WhatsApp Business API</div>
+      </div>
+
+      <div class="wa-phone-wrap reveal stagger-2">
+        <div class="wa-phone">
+          <div class="wa-phone-notch"></div>
+          <div class="wa-phone-head">
+            <div class="crescent" style="width:30px;height:30px;"></div>
+            <div>
+              <div class="wa-phone-name">Margyn</div>
+              <div class="wa-phone-sub">Business account</div>
+            </div>
+          </div>
+          <div class="wa-phone-body">
+            <div class="wa-chip">Today, 8:02 AM</div>
+            <div class="wa-bubble">
+              <div class="wa-bubble-title">☀️ Opening Bell</div>
+              <div class="wa-bubble-line">Pulse Score <b>74</b> <span class="wa-up">▲ 2pts</span> since yesterday.</div>
+              <div class="wa-bubble-line">Synced 6 hrs ago.</div>
+              <div class="wa-bubble-line" style="margin-top:8px;">Top item today — ₹2.9L overdue 78 days, Anand Fabrics &amp; Sons.</div>
+              <div class="wa-bubble-time">8:02 AM</div>
+            </div>
+            <div class="wa-chip">Today, 8:31 PM</div>
+            <div class="wa-bubble">
+              <div class="wa-bubble-title">🌙 Closing Bell</div>
+              <div class="wa-bubble-line">Did you follow up with Anand Fabrics &amp; Sons?</div>
+              <div class="wa-quick-replies">
+                <span class="wa-qr">Done</span>
+                <span class="wa-qr">Not yet</span>
+                <span class="wa-qr">Remind me</span>
+              </div>
+              <div class="wa-bubble-time">8:31 PM</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
