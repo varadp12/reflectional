@@ -1079,14 +1079,13 @@ document.getElementById('whatsappForm').addEventListener('submit', async (e) => 
   note.className = 'note'; note.textContent = 'Saving…';
   btn.disabled = true;
   try {
-    const row = {
-      id: currentUser.id,
+    const patch = {
       whatsapp_number: document.getElementById('waNumber').value.trim() || null,
       whatsapp_opt_in: document.getElementById('waOptIn').checked
     };
-    const { error } = await withTimeout(sbClient.from('profiles').upsert(row), 20000, 'Saving WhatsApp preferences');
+    const { error } = await withTimeout(sbClient.from('profiles').update(patch).eq('id', currentUser.id), 20000, 'Saving WhatsApp preferences');
     if(error) throw error;
-    currentProfile = { ...currentProfile, ...row };
+    currentProfile = { ...currentProfile, ...patch };
     note.className = 'note ok'; note.textContent = 'Saved. We\'ll text you the day this goes live.';
     setTimeout(() => { note.textContent = ''; note.className = 'note'; }, 3500);
   } catch(err){
