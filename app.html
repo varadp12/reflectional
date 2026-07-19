@@ -531,6 +531,26 @@
         </div>
       </form>
     </div>
+
+    <div class="card">
+      <h2>WhatsApp briefings</h2>
+      <div class="hint">Opening Bell every morning, Closing Bell every evening — your Pulse Score and top action items, delivered straight to WhatsApp. <span class="mono" style="font-size:11px;">Coming soon — we're connecting this to the WhatsApp Business API. Save your number now to be first in line.</span></div>
+      <form id="whatsappForm">
+        <div class="grid-2">
+          <div><label>WhatsApp number</label><input type="tel" id="waNumber" placeholder="+91 98765 43210"></div>
+          <div style="display:flex; align-items:flex-end;">
+            <label style="display:flex; align-items:center; gap:8px; font-weight:500; cursor:pointer;">
+              <input type="checkbox" id="waOptIn" style="width:auto;">
+              Send me Opening Bell &amp; Closing Bell
+            </label>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button type="submit" class="primary" id="waSave">Save WhatsApp preferences</button>
+          <span class="note" id="waNote"></span>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- ---------- 2. UPLOAD & CALCULATE ---------- -->
@@ -1021,6 +1041,9 @@ function renderProfile(){
   document.getElementById('pfRevenue').value = currentProfile.revenue_range || '';
   document.getElementById('pfIndustry').value = currentProfile.industry || '';
   document.getElementById('pfCity').value = currentProfile.city || '';
+
+  document.getElementById('waNumber').value = currentProfile.whatsapp_number || '';
+  document.getElementById('waOptIn').checked = !!currentProfile.whatsapp_opt_in;
 }
 
 document.getElementById('profileForm').addEventListener('submit', async (e) => {
@@ -1045,6 +1068,29 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
     setTimeout(() => { note.textContent = ''; note.className = 'note'; }, 2500);
   } catch(err){
     console.error('[margyn] profile save:', err);
+    note.className = 'note bad'; note.textContent = err.message || 'Could not save.';
+  } finally { btn.disabled = false; }
+});
+
+document.getElementById('whatsappForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('waSave');
+  const note = document.getElementById('waNote');
+  note.className = 'note'; note.textContent = 'Saving…';
+  btn.disabled = true;
+  try {
+    const row = {
+      id: currentUser.id,
+      whatsapp_number: document.getElementById('waNumber').value.trim() || null,
+      whatsapp_opt_in: document.getElementById('waOptIn').checked
+    };
+    const { error } = await withTimeout(sbClient.from('profiles').upsert(row), 20000, 'Saving WhatsApp preferences');
+    if(error) throw error;
+    currentProfile = { ...currentProfile, ...row };
+    note.className = 'note ok'; note.textContent = 'Saved. We\'ll text you the day this goes live.';
+    setTimeout(() => { note.textContent = ''; note.className = 'note'; }, 3500);
+  } catch(err){
+    console.error('[margyn] whatsapp save:', err);
     note.className = 'note bad'; note.textContent = err.message || 'Could not save.';
   } finally { btn.disabled = false; }
 });
