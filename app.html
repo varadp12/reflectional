@@ -445,6 +445,8 @@
         </select></div>
       <div class="auth-field"><label for="obCity">City</label>
         <input type="text" id="obCity" placeholder="Mumbai"></div>
+      <div class="auth-field"><label for="obGst">GSTIN <span style="font-weight:400; color:var(--steel);">(optional, add later if you don't have it handy)</span></label>
+        <input type="text" id="obGst" class="mono" placeholder="27ABCDE1234F1Z5" maxlength="15" style="text-transform:uppercase;"></div>
       <button type="submit" class="auth-submit" id="obSubmit">Continue</button>
       <div class="auth-error" id="obError"></div>
     </form>
@@ -524,6 +526,8 @@
               <option value="Other / Generalized">Other</option>
             </select></div>
           <div><label>City</label><input type="text" id="pfCity"></div>
+          <div><label>GSTIN <span style="font-weight:400; color:var(--steel); font-size:12px;">(used to verify data once GST sync goes live)</span></label>
+            <input type="text" id="pfGst" class="mono" placeholder="27ABCDE1234F1Z5" maxlength="15" style="text-transform:uppercase;"></div>
         </div>
         <div class="btn-row">
           <button type="submit" class="primary" id="pfSave">Save changes</button>
@@ -776,7 +780,7 @@
       <div class="meth-fn-row"><span class="meth-fn-num">01</span><span class="meth-fn-text"><b>Liquidity thresholds</b> — drawn from the RBI's Tandon Committee framework, the reference standard Indian banks have used to assess working-capital lending since 1975, plus cash-reserve conventions widely used by CFOs and advisors.</span></div>
       <div class="meth-fn-row"><span class="meth-fn-num">02</span><span class="meth-fn-text"><b>Profitability benchmarks</b> — published net-margin ranges by industry, cross-checked against India Inc-wide averages.</span></div>
       <div class="meth-fn-row"><span class="meth-fn-num">03</span><span class="meth-fn-text"><b>Trade-credit norms</b> — the receivables and payables thresholds reflect standard practice for invoice aging and near-term liquidity coverage.</span></div>
-      <div class="meth-fn-row is-open"><span class="meth-fn-num">04</span><span class="meth-fn-text"><b>GST/ITC leakage</b> — <i>no published benchmark exists yet for this one.</i> We use a reasoned placeholder until real data gives us a better one. We'd rather tell you that than hide it.</span></div>
+      <div class="meth-fn-row is-open"><span class="meth-fn-num">04</span><span class="meth-fn-text"><b>GST/ITC leakage</b> — scored as unclaimed input tax credit against your monthly GST payable, entered from your own records today. There's no line-item GSTR-2B reconciliation yet, so treat this vital as self-reported until GST sync goes live — every other vital in this build already carries a source tag for the same reason.</span></div>
     </div>
 
     <div class="meth-section-label">Built for your industry</div>
@@ -838,6 +842,14 @@ function withTimeout(p, ms, label){
   return Promise.race([ p, new Promise((_, rej) => setTimeout(() => rej(new Error(
     label + ' timed out after ' + (ms/1000) + 's. The Supabase project may be paused — check your dashboard.'
   )), ms)) ]);
+}
+const SOURCE_LABEL = { upload:'Excel upload', manual:'manual entry', ledger:'ledger update' };
+function freshnessText(snap){
+  if(!snap) return '';
+  const days = Math.floor((Date.now() - new Date(snap.created_at).getTime()) / 86400000);
+  const rel = days <= 0 ? 'today' : days === 1 ? '1 day ago' : days + ' days ago';
+  const src = SOURCE_LABEL[snap.source] || 'manual entry';
+  return 'synced ' + rel + ' \u00b7 ' + src;
 }
 function fmtDate(iso){
   return new Date(iso).toLocaleString('en-IN', { day:'numeric', month:'short', year:'numeric', hour:'numeric', minute:'2-digit' });
@@ -972,7 +984,8 @@ document.getElementById('onboardForm').addEventListener('submit', async (e) => {
       company_name: document.getElementById('obCompany').value.trim(),
       revenue_range: document.getElementById('obRevenue').value,
       industry: document.getElementById('obIndustry').value.trim() || null,
-      city: document.getElementById('obCity').value.trim() || null
+      city: document.getElementById('obCity').value.trim() || null,
+      gst_number: document.getElementById('obGst').value.trim().toUpperCase() || null
     };
     const { error } = await withTimeout(sbClient.from('profiles').upsert(row), 20000, 'Saving profile');
     if(error) throw error;
@@ -1041,6 +1054,7 @@ function renderProfile(){
   document.getElementById('pfRevenue').value = currentProfile.revenue_range || '';
   document.getElementById('pfIndustry').value = currentProfile.industry || '';
   document.getElementById('pfCity').value = currentProfile.city || '';
+  document.getElementById('pfGst').value = currentProfile.gst_number || '';
 
   document.getElementById('waNumber').value = currentProfile.whatsapp_number || '';
   document.getElementById('waOptIn').checked = !!currentProfile.whatsapp_opt_in;
@@ -1058,7 +1072,8 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
       company_name: document.getElementById('pfCompany').value.trim(),
       revenue_range: document.getElementById('pfRevenue').value,
       industry: document.getElementById('pfIndustry').value.trim() || null,
-      city: document.getElementById('pfCity').value.trim() || null
+      city: document.getElementById('pfCity').value.trim() || null,
+      gst_number: document.getElementById('pfGst').value.trim().toUpperCase() || null
     };
     const { error } = await withTimeout(sbClient.from('profiles').upsert(row), 20000, 'Saving profile');
     if(error) throw error;
@@ -1141,7 +1156,8 @@ function renderScores(){
     deltaEl.textContent = 'first snapshot'; deltaEl.className = 'pulse-delta';
   }
 
-  document.getElementById('pulseAsOf').textContent = hasData ? 'as of ' + fmtDate(latest.created_at) : '';
+  document.getElementById('pulseAsOf').textContent = hasData ? freshnessText(latest) : '';
+  document.getElementById('pulseAsOf').title = hasData ? 'as of ' + fmtDate(latest.created_at) : '';
   renderVitals(hasData ? (latest.vitals || ZERO_VITALS) : ZERO_VITALS, hasData);
   renderSpark(snapshots.slice().reverse().map(s => s.pulse_score));
   renderHistory(snapshots);
@@ -2109,7 +2125,7 @@ document.getElementById('computeFromFile').addEventListener('click', async () =>
 
     receivables = await loadReceivables();
     payables = await loadPayables();
-    await saveLedgerSnapshotWithPL(revenue, netProfit, burn, gstLeak, gstPayable);
+    await saveLedgerSnapshotWithPL(revenue, netProfit, burn, gstLeak, gstPayable, 'upload');
     note.textContent = '';
     await refreshAll();
     showView('scores');
@@ -2129,7 +2145,7 @@ document.getElementById('computeFromManual').addEventListener('click', async () 
     const { error: eCash } = await sbClient.from('profiles').update({ cash_balance:cash }).eq('id', currentUser.id);
     if(eCash) throw eCash;
     currentProfile.cash_balance = cash;
-    await saveLedgerSnapshotWithPL(v('m-rev'), v('m-profit'), v('m-burn') || 1, v('m-gst'), v('m-gstpay'));
+    await saveLedgerSnapshotWithPL(v('m-rev'), v('m-profit'), v('m-burn') || 1, v('m-gst'), v('m-gstpay'), 'manual');
     note.textContent = '';
     await refreshAll();
     showView('scores');
@@ -2202,7 +2218,7 @@ function computeVitals(d){
 
 // Same as saveLedgerSnapshot(), but takes P&L/GST figures explicitly instead
 // of carrying them forward — used right after a manual entry or upload.
-async function saveLedgerSnapshotWithPL(revenue, netProfit, burn, gstLeak, gstPayable){
+async function saveLedgerSnapshotWithPL(revenue, netProfit, burn, gstLeak, gstPayable, source){
   const recvTotal = receivables.reduce((s,r) => s + Number(r.amount), 0);
   const recv90 = receivables.reduce((s,r) => { const d = daysFromToday(r.due_date); return (d !== null && -d > 90) ? s + Number(r.amount) : s; }, 0);
   const paySoon = payables.reduce((s,p) => { const d = daysFromToday(p.due_date); return (d === null || d <= 30) ? s + Number(p.amount) : s; }, 0);
@@ -2211,7 +2227,7 @@ async function saveLedgerSnapshotWithPL(revenue, netProfit, burn, gstLeak, gstPa
 
   const { pulse, vitals } = computeVitals({ cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak, gstPayable, industry });
   const row = {
-    user_id:currentUser.id, source:'manual',
+    user_id:currentUser.id, source: source || 'manual',
     cash, recv_total:recvTotal, recv_90:recv90, pay_soon:paySoon,
     revenue, net_profit:netProfit, burn, gst_leak:gstLeak, gst_payable:gstPayable,
     pulse_score:pulse, vitals
