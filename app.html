@@ -254,6 +254,9 @@
   .lr-btn.danger{ color:var(--rose); }
   .lr-btn.danger:hover{ border-color:var(--rose); }
   .ledger-empty{ font-size:13px; color:var(--steel); padding:20px 0; text-align:center; }
+  .ledger-search{ margin-bottom:12px; }
+  .ledger-search input{ width:100%; padding:9px 12px; border:1px solid var(--line-strong); border-radius:999px; font-family:'Manrope',sans-serif; font-size:13px; background:var(--white); color:var(--ink); }
+  .ledger-search input:focus{ outline:none; border-color:var(--emerald); }
   .detail-note{ font-size:12px; margin-top:6px; min-height:16px; }
   .detail-note.ok{ color:var(--emerald); }
   .detail-note.bad{ color:var(--rose); }
@@ -353,6 +356,12 @@
     cursor:pointer; font-size:12.5px; font-weight:700; font-family:'Manrope',sans-serif; transition:all .2s ease; margin-bottom:30px; }
   .meth-back:hover{ border-color:var(--ink); color:var(--ink); }
 
+  .meth-pillars{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:34px; }
+  .meth-pillar{ background:var(--white); border:1px solid var(--line); border-top:3px solid var(--p-color); border-radius:10px; padding:16px 16px 14px; }
+  .meth-pillar .mp-name{ display:block; font-family:'Fraunces',serif; font-weight:500; font-size:15px; margin-bottom:4px; }
+  .meth-pillar .mp-pct{ display:block; font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:700; color:var(--p-color); margin-bottom:6px; }
+  .meth-pillar .mp-sub{ display:block; font-size:11.5px; color:var(--steel); line-height:1.4; }
+  @media (max-width:640px){ .meth-pillars{ grid-template-columns:1fr 1fr; } }
   .meth-waterline{ margin:56px 0 8px; }
   .meth-wl-bar{ display:flex; align-items:stretch; height:1px; background:var(--line-strong); position:relative; }
   .meth-wl-seg{ position:relative; height:1px; }
@@ -399,6 +408,45 @@
     .meth-footer .mf-note{ text-align:left; }
     .meth-row .mr-name{ font-size:17px; }
   }
+
+  /* ---------- onboarding checklist ---------- */
+  .checklist{ background:linear-gradient(165deg, #ffffff 0%, #fafbfa 100%); border:1px solid var(--line); border-radius:16px; padding:24px 26px; margin-bottom:24px; box-shadow:var(--shadow-sm); }
+  .checklist-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; gap:14px; }
+  .checklist-head h2{ font-family:'Fraunces',serif; font-weight:500; font-size:19px; }
+  .checklist-progress{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--steel); font-weight:600; white-space:nowrap; }
+  .checklist-bar{ height:5px; border-radius:999px; background:var(--bg-dim); overflow:hidden; margin-bottom:18px; }
+  .checklist-bar-fill{ height:100%; background:var(--emerald-bright); border-radius:999px; transition:width .5s cubic-bezier(.16,1,.3,1); }
+  .checklist-items{ display:flex; flex-direction:column; gap:2px; }
+  .checklist-item{ display:flex; align-items:center; gap:12px; padding:11px 4px; border-bottom:1px solid var(--line); cursor:pointer; transition:background .15s ease; border-radius:6px; }
+  .checklist-item:last-child{ border-bottom:none; }
+  .checklist-item:hover{ background:rgba(11,18,32,0.02); }
+  .checklist-check{ width:20px; height:20px; border-radius:50%; border:1.5px solid var(--line-strong); flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all .2s ease; }
+  .checklist-item.is-done .checklist-check{ background:var(--emerald); border-color:var(--emerald); }
+  .checklist-item.is-done .checklist-check svg{ opacity:1; }
+  .checklist-check svg{ width:11px; height:11px; color:#fff; opacity:0; }
+  .checklist-item-text{ flex:1; min-width:0; }
+  .checklist-item-title{ font-size:13.5px; font-weight:700; }
+  .checklist-item.is-done .checklist-item-title{ color:var(--steel); text-decoration:line-through; text-decoration-color:var(--line-strong); }
+  .checklist-item-sub{ font-size:12px; color:var(--steel); margin-top:1px; }
+  .checklist-item-arrow{ color:var(--steel); flex-shrink:0; }
+  .checklist-dismiss{ background:none; border:none; color:var(--steel); font-family:'IBM Plex Mono',monospace; font-size:11px; cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
+  .checklist-dismiss:hover{ color:var(--ink); }
+
+  /* ---------- freshness banner ---------- */
+  .stale-banner{ display:flex; align-items:center; gap:14px; background:var(--amber); border:1px solid rgba(201,127,30,0.28); border-radius:14px; padding:14px 18px; margin-bottom:20px; }
+  .stale-banner .sb-icon{ width:30px; height:30px; border-radius:50%; background:rgba(201,127,30,0.16); color:var(--gold); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .stale-banner .sb-text{ flex:1; font-size:13px; color:var(--ink-soft); line-height:1.5; }
+  .stale-banner .sb-text b{ color:var(--ink); }
+  .stale-banner .sb-cta{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; font-weight:700; color:var(--gold); white-space:nowrap; cursor:pointer; background:none; border:none; text-decoration:underline; text-underline-offset:2px; }
+
+  /* ---------- benchmark chip on vitals ---------- */
+  .v-bench{ font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--steel); margin-top:4px; position:relative; z-index:1; }
+  .v-bench.above{ color:var(--emerald); }
+  .v-bench.below{ color:var(--rose); }
+
+  /* ---------- import summary toast ---------- */
+  .import-summary{ background:var(--mint); border:1px solid rgba(18,128,90,0.22); border-radius:12px; padding:14px 16px; margin-top:14px; font-size:13px; color:var(--ink-soft); line-height:1.6; }
+  .import-summary b{ color:var(--emerald); }
 </style>
 </head>
 <body>
@@ -603,6 +651,7 @@
         <button class="primary" id="computeFromFile" disabled>Compute &amp; save</button>
         <span class="note" id="noteUpload"></span>
       </div>
+      <div class="import-summary hidden" id="importSummaryUpload"></div>
     </div>
 
     <div class="panel" id="panel-manual">
@@ -632,8 +681,28 @@
       <div style="font-size:12px; color:#666; margin-top:4px;" id="printGeneratedAt"></div>
       <div style="font-size:11px; color:#999; margin-top:2px;">Prepared by Margyn — confidential, not a credit assessment or lending decision.</div>
     </div>
+
+    <div class="checklist hidden" id="onboardChecklist">
+      <div class="checklist-head">
+        <h2>Get set up</h2>
+        <span class="checklist-progress" id="checklistProgress">0 of 4</span>
+      </div>
+      <div class="checklist-bar"><div class="checklist-bar-fill" id="checklistBarFill" style="width:0%;"></div></div>
+      <div class="checklist-items" id="checklistItems"></div>
+      <div style="text-align:right; margin-top:12px;"><button class="checklist-dismiss" id="checklistDismiss">Hide this</button></div>
+    </div>
+
+    <div class="stale-banner hidden" id="staleBanner">
+      <div class="sb-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      </div>
+      <div class="sb-text" id="staleBannerText"></div>
+      <button class="sb-cta" id="staleBannerCta">Add a snapshot →</button>
+    </div>
+
     <div class="app-actions" style="display:flex; gap:8px; justify-content:flex-end; margin-bottom:14px;">
       <button class="nav-logout" id="copySummaryBtn" type="button">Copy summary</button>
+      <button class="nav-logout" id="downloadCsvBtn" type="button">Export CSV</button>
       <button class="nav-logout" id="downloadPdfBtn" type="button">Download PDF</button>
     </div>
     <div class="pulse-wrap">
@@ -756,8 +825,15 @@
     <header>
       <div class="app-eyebrow">Methodology — v2.0</div>
       <div class="app-title">How your Pulse Score is calculated</div>
-      <div class="app-sub">Four pillars — Liquidity, Efficiency, Profitability, Compliance — built from your actual open invoices, not a single blended ratio.</div>
+      <div class="app-sub">Four pillars — Liquidity, Efficiency, Profitability, Compliance — expressed as six vitals, benchmarked against published lending and accounting standards, not arbitrary thresholds.</div>
     </header>
+
+    <div class="meth-pillars">
+      <div class="meth-pillar" style="--p-color:#C97F1E;"><span class="mp-name">Liquidity</span><span class="mp-pct">30%</span><span class="mp-sub">Cash Position + WC Runway</span></div>
+      <div class="meth-pillar" style="--p-color:#C23B67;"><span class="mp-name">Efficiency</span><span class="mp-pct">35%</span><span class="mp-sub">Receivables + Payables</span></div>
+      <div class="meth-pillar" style="--p-color:#12805A;"><span class="mp-name">Profitability</span><span class="mp-pct">20%</span><span class="mp-sub">Net Margin</span></div>
+      <div class="meth-pillar" style="--p-color:#D9662A;"><span class="mp-name">Compliance</span><span class="mp-pct">15%</span><span class="mp-sub">GST/ITC Leakage</span></div>
+    </div>
 
     <div class="meth-waterline">
       <div class="meth-wl-bar">
@@ -786,12 +862,6 @@
       </div>
     </div>
 
-    <div class="meth-section-label">Four pillars</div>
-    <p class="meth-industry-line" style="margin-bottom:10px;">
-      <span class="mi-name">Liquidity 30%</span><span class="mi-dot">·</span><span class="mi-name">Efficiency 35%</span><span class="mi-dot">·</span><span class="mi-name">Profitability 20%</span><span class="mi-dot">·</span><span class="mi-name">Compliance 15%</span>
-      — Efficiency carries the largest share deliberately: for Indian SMEs, trouble in receivables and payables shows up earliest, ahead of profitability or a cash squeeze.
-    </p>
-
     <div class="meth-section-label">The six vitals</div>
     <div class="meth-ledger">
 
@@ -800,8 +870,8 @@
         <span class="mr-weight" style="color:#C97F1E;">15%</span>
       </div>
       <div class="meth-note">
-        <div class="mn-ratio">cash ÷ monthly operating expense</div>
-        <div class="mn-why">Liquidity pillar. Running out of cash — not unprofitability — is what actually kills most SMEs.</div>
+        <div class="mn-ratio">cash ÷ monthly operating expense, mapped on a 3–6 month curve</div>
+        <div class="mn-why">Part of the 30% Liquidity pillar — running out of cash, not unprofitability, is what actually kills most SMEs.</div>
       </div>
 
       <div class="meth-row">
@@ -809,8 +879,8 @@
         <span class="mr-weight" style="color:#2E6FA8;">15%</span>
       </div>
       <div class="meth-note">
-        <div class="mn-ratio">(cash + risk-adjusted receivables − payables due 30d) ÷ burn</div>
-        <div class="mn-why">Liquidity pillar. Uses receivables discounted for collection risk (see below), not face value — so runway isn't overstated by money that's unlikely to actually land.</div>
+        <div class="mn-ratio">(cash + risk-adjusted receivables − payables) ÷ burn</div>
+        <div class="mn-why">The other half of Liquidity. As of v2.0, this uses <b>risk-adjusted</b> receivables, not face value — see below — so runway can't be inflated by invoices unlikely to ever be collected.</div>
       </div>
 
       <div class="meth-row">
@@ -818,8 +888,8 @@
         <span class="mr-weight" style="color:#C23B67;">17.5%</span>
       </div>
       <div class="meth-note">
-        <div class="mn-ratio">invoice-level expected-loss aging (0/5/15/40/75/95% by age bucket) + customer concentration check</div>
-        <div class="mn-why">Efficiency pillar. Every open invoice is aged individually and risk-weighted the way a statutory auditor provisions doubtful debts — not a single blended "days outstanding" figure. A score is also capped if more than 40% of your receivables sit with your top 3 customers, since one customer's trouble can undo an otherwise-healthy book.</div>
+        <div class="mn-ratio">expected-credit-loss aging, invoice by invoice — plus a concentration cap</div>
+        <div class="mn-why">Part of the 35% Efficiency pillar. Every open invoice is aged individually and risk-weighted on a simplified Ind AS 109-style expected-credit-loss curve (0% loss under 30 days, rising to 95% past a year), then rolled up into one score — a sharper read than a single "% over 90 days" ratio. If your top three customers hold 40%+ of what you're owed, the score is capped at 65 regardless of aging, since concentration risk doesn't show up in aging alone.</div>
       </div>
 
       <div class="meth-row">
@@ -827,8 +897,8 @@
         <span class="mr-weight" style="color:#5C6B7A;">17.5%</span>
       </div>
       <div class="meth-note">
-        <div class="mn-ratio">payables due in 30 days ÷ cash, penalized for invoices already overdue</div>
-        <div class="mn-why">Efficiency pillar. Tests whether liquid cash covers what's coming due, and separately penalizes bills already past their due date — not just the ones about to arrive.</div>
+        <div class="mn-ratio">cash coverage of payables due in 30 days, minus an overdue penalty</div>
+        <div class="mn-why">The other half of Efficiency. Coverage (payables due ÷ cash) sets the base score; anything already overdue against its own due date subtracts further, since an unpaid bill is a sharper signal than a merely upcoming one.</div>
       </div>
 
       <div class="meth-row">
@@ -836,8 +906,8 @@
         <span class="mr-weight" style="color:#12805A;">20%</span>
       </div>
       <div class="meth-note">
-        <div class="mn-ratio">net profit ÷ revenue, against an industry anchor</div>
-        <div class="mn-why">Profitability pillar. Matters, but it's a lagging indicator — a business survives low margin longer than it survives no cash, which is why Liquidity and Efficiency together outweigh it.</div>
+        <div class="mn-ratio">net profit ÷ revenue, against an industry benchmark</div>
+        <div class="mn-why">The full 20% Profitability pillar. Weighted up in v2.0 — profitability is still a lagging indicator, but it's the clearest read we have on whether the business model itself works, not just whether this month's cash holds.</div>
       </div>
 
       <div class="meth-row">
@@ -846,18 +916,22 @@
       </div>
       <div class="meth-note">
         <div class="mn-ratio">unclaimed ITC ÷ monthly GST payable</div>
-        <div class="mn-why">Compliance pillar. A real cash leak worth surfacing. We'd like to score this against eligible ITC directly (GSTR-2B) rather than your GST payable — that upgrade is waiting on GST sync, see footnote below.</div>
+        <div class="mn-why">The full 15% Compliance pillar. A real cash leak worth surfacing on its own — not a solvency risk like the other five, which is why it stands alone as its own pillar rather than folding into Liquidity.</div>
       </div>
 
     </div>
+
+    <div class="meth-section-label">Known gaps, on purpose</div>
+    <p class="meth-industry-line" style="margin-bottom:28px;">
+      v2.0 is more precise where the underlying ledger supports it, and deliberately not fancier than the data allows everywhere else. Payables scoring stops at cash-coverage and an overdue penalty rather than the full MSMED Act 45-day compliance check, because that needs vendors tagged as MSME-registered — not yet captured. GST/ITC is scored against your monthly GST payable, not eligible ITC from GSTR-2B, since eligible ITC isn't its own field yet. Cash Position uses one reconciled balance, so multi-account concentration isn't scoreable. Net Margin only has net profit, so a gross/operating decomposition isn't scoreable. Each of these is a sequencing choice, not an oversight — they'll sharpen as the underlying ledgers do.
+    </p>
 
     <div class="meth-section-label">Where the benchmarks come from</div>
     <div class="meth-footnotes">
       <div class="meth-fn-row"><span class="meth-fn-num">01</span><span class="meth-fn-text"><b>Liquidity thresholds</b> — drawn from the RBI's Tandon Committee framework, the reference standard Indian banks have used to assess working-capital lending since 1975, plus cash-reserve conventions widely used by CFOs and advisors.</span></div>
       <div class="meth-fn-row"><span class="meth-fn-num">02</span><span class="meth-fn-text"><b>Profitability benchmarks</b> — published net-margin ranges by industry, cross-checked against India Inc-wide averages.</span></div>
-      <div class="meth-fn-row"><span class="meth-fn-num">03</span><span class="meth-fn-text"><b>Receivables aging weights</b> — adapted from the expected-credit-loss provisioning matrix under Ind AS 109, the same framework your auditor already uses to provision doubtful debts. The exact percentages are a starting point pending calibration against real portfolios.</span></div>
-      <div class="meth-fn-row"><span class="meth-fn-num">04</span><span class="meth-fn-text"><b>Payables scoring</b> — today this checks cash coverage and overdue status only. A full compliance check against the MSMED Act's 45-day payment rule and Section 43B(h) tax-disallowance exposure is designed but not live yet — it needs vendors tagged as MSME-registered, which isn't captured in your ledger today.</span></div>
-      <div class="meth-fn-row is-open"><span class="meth-fn-num">05</span><span class="meth-fn-text"><b>GST/ITC leakage</b> — scored as unclaimed input tax credit against your monthly GST payable, entered from your own records today. There's no line-item GSTR-2B reconciliation yet, so treat this vital as self-reported until GST sync goes live — every other vital in this build already carries a source tag for the same reason.</span></div>
+      <div class="meth-fn-row"><span class="meth-fn-num">03</span><span class="meth-fn-text"><b>Receivables aging curve</b> — a simplified expected-credit-loss weighting in the spirit of Ind AS 109, the accounting standard Indian companies already use to provision for doubtful debts, adapted here into a live scoring curve rather than a period-end provision.</span></div>
+      <div class="meth-fn-row is-open"><span class="meth-fn-num">04</span><span class="meth-fn-text"><b>GST/ITC leakage</b> — scored as unclaimed input tax credit against your monthly GST payable, entered from your own records today. There's no line-item GSTR-2B reconciliation yet, so treat this vital as self-reported until GST sync goes live — every other vital in this build already carries a source tag for the same reason.</span></div>
     </div>
 
     <div class="meth-section-label">Built for your industry</div>
@@ -1255,6 +1329,8 @@ function renderScores(){
   renderSpark(snapshots.slice().reverse().map(s => s.pulse_score));
   renderHistory(snapshots);
   renderPulseExpand(hasData);
+  renderChecklist();
+  renderStaleBanner(hasData ? latest : null);
 
   const tapHint = document.getElementById('pulseTapHint');
   if(!hasData){
@@ -1279,6 +1355,77 @@ function renderScores(){
     text.textContent = latest.briefing || '';
   }
 }
+
+// ---------- onboarding checklist ----------
+// A first-run guide so a founder never lands on a wall of zeros without
+// knowing what to do next. Steps track real state (not a stored flag), so
+// the checklist is always honest about where the account actually stands.
+// Dismissal is per-browser (localStorage) — this is guidance, not a gate.
+function checklistSteps(){
+  const hasData = snapshots.length > 0;
+  const latest = hasData ? snapshots[0] : null;
+  return [
+    { key:'profile', done: !!(currentProfile && currentProfile.company_name && currentProfile.revenue_range),
+      title:'Complete your business profile', sub:'Company name, revenue range, industry — powers your benchmark.',
+      go: () => showView('profile') },
+    { key:'snapshot', done: hasData,
+      title:'Add your first snapshot', sub:'Upload a Tally export or enter figures manually.',
+      go: () => showView('calculate') },
+    { key:'ledger', done: hasData && (receivables.length > 0 || payables.length > 0),
+      title:'Add a receivable or payable', sub:'Open a vital on the Scores tab and log a real invoice or bill.',
+      go: () => { if(hasData) openVitalDetail('Receivables Aging'); else showView('calculate'); } },
+    { key:'briefing', done: hasData && !!latest.briefing,
+      title:'Generate your first AI briefing', sub:'A CFO-style read on what your numbers mean, in plain language.',
+      go: () => { document.getElementById('generateBriefing') && document.getElementById('generateBriefing').click(); } }
+  ];
+}
+function checklistDismissed(){
+  try { return localStorage.getItem('margyn_checklist_dismissed') === '1'; } catch(e){ return false; }
+}
+function renderChecklist(){
+  const host = document.getElementById('onboardChecklist');
+  const steps = checklistSteps();
+  const doneCount = steps.filter(s => s.done).length;
+  if(checklistDismissed() || doneCount === steps.length){
+    host.classList.add('hidden');
+    return;
+  }
+  host.classList.remove('hidden');
+  document.getElementById('checklistProgress').textContent = doneCount + ' of ' + steps.length;
+  document.getElementById('checklistBarFill').style.width = Math.round((doneCount / steps.length) * 100) + '%';
+  const list = document.getElementById('checklistItems');
+  list.innerHTML = '';
+  steps.forEach(s => {
+    const row = document.createElement('div');
+    row.className = 'checklist-item' + (s.done ? ' is-done' : '');
+    row.innerHTML =
+      '<span class="checklist-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>' +
+      '<span class="checklist-item-text"><span class="checklist-item-title">' + s.title + '</span>' +
+      '<span class="checklist-item-sub">' + s.sub + '</span></span>' +
+      (s.done ? '' : '<span class="checklist-item-arrow">→</span>');
+    if(!s.done) row.addEventListener('click', s.go);
+    list.appendChild(row);
+  });
+}
+document.getElementById('checklistDismiss').addEventListener('click', () => {
+  try { localStorage.setItem('margyn_checklist_dismissed', '1'); } catch(e){}
+  document.getElementById('onboardChecklist').classList.add('hidden');
+});
+
+// ---------- data freshness banner ----------
+// The push-not-pull thesis falls apart quietly if a founder's last snapshot
+// is six weeks old and nothing on screen says so louder than the small
+// "synced N days ago" caption. This banner is the loud version.
+function renderStaleBanner(latest){
+  const banner = document.getElementById('staleBanner');
+  if(!latest){ banner.classList.add('hidden'); return; }
+  const days = Math.floor((Date.now() - new Date(latest.created_at).getTime()) / 86400000);
+  if(days < 14){ banner.classList.add('hidden'); return; }
+  banner.classList.remove('hidden');
+  document.getElementById('staleBannerText').innerHTML =
+    'Your last snapshot is <b>' + days + ' days old</b>. Everything below — including your Pulse Score — is only as fresh as your last upload.';
+}
+document.getElementById('staleBannerCta').addEventListener('click', () => showView('calculate'));
 
 // Shared across the compact card's hover-preview and the full pd-action list.
 const TIER_META = {
@@ -1354,14 +1501,30 @@ function splitValue(raw){
                   : { main:String(raw).slice(0,i), suffix:String(raw).slice(i+1) };
 }
 
+// Industry net-margin anchors (see computeVitals below) doubles as a
+// founder-facing benchmark line under the Net Margin vital — "how do I
+// compare", answered inline instead of buried in the methodology page.
+function benchmarkNote(label, latest){
+  if(!latest || label !== 'Net Margin') return null;
+  const anchor = INDUSTRY_MARGIN_ANCHOR[currentProfile && currentProfile.industry] || UNIVERSAL_MARGIN_ANCHOR;
+  const actual = latest.revenue > 0 ? latest.net_profit / latest.revenue : 0;
+  const diff = actual - anchor;
+  const industryLabel = (currentProfile && currentProfile.industry) || 'cross-industry';
+  const dirClass = diff >= 0 ? 'above' : 'below';
+  const dirWord = diff >= 0 ? 'above' : 'below';
+  return { cls:dirClass, text:'vs ' + (anchor*100).toFixed(0) + '% ' + industryLabel + ' benchmark · ' + dirWord };
+}
+
 function renderVitals(vitals, hasData){
   const grid = document.getElementById('vitalsGrid');
   grid.innerHTML = '';
+  const latest = hasData ? snapshots[0] : null;
   vitals.forEach(v => {
     const accent = VITAL_ACCENTS[v.label] || '#5C6B7A';
     const pct = Math.max(0, Math.min(100, v.score || 0));
     const offset = RING_CIRC * (1 - pct / 100);
     const { main, suffix } = splitValue(v.value);
+    const bench = benchmarkNote(v.label, latest);
 
     const el = document.createElement('div');
     el.className = 'vital' + (hasData ? '' : ' is-zero');
@@ -1378,7 +1541,8 @@ function renderVitals(vitals, hasData){
         '<div class="rv"></div>' +
       '</div>' +
       '<div class="v-top"><span class="v-dot"></span><span class="v-label"></span></div>' +
-      '<div class="v-score"></div>';
+      '<div class="v-score"></div>' +
+      (bench ? '<div class="v-bench ' + bench.cls + '">' + bench.text + '</div>' : '');
 
     el.querySelector('.v-value').textContent = main;
     countUp(el.querySelector('.rv'), v.score, 850);
@@ -1555,6 +1719,35 @@ document.getElementById('copySummaryBtn').addEventListener('click', async () => 
   setTimeout(() => btn.textContent = 'Copy summary', 1800);
 });
 
+// Downloadable CSV of every snapshot on record — the raw numbers behind the
+// Pulse Score, for anyone who wants to pivot-table it themselves (an
+// accountant, a lender's analyst) rather than read a formatted PDF.
+function csvEscape(v){
+  const s = String(v == null ? '' : v);
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+document.getElementById('downloadCsvBtn').addEventListener('click', () => {
+  if(!snapshots.length){
+    const btn = document.getElementById('downloadCsvBtn');
+    btn.textContent = 'No data yet'; setTimeout(() => btn.textContent = 'Export CSV', 1800);
+    return;
+  }
+  const headers = ['date','pulse_score','band','cash','receivables_total','receivables_over_90d','payables_due_30d','revenue','net_profit','monthly_burn','gst_leak','gst_payable','source'];
+  const rows = snapshots.slice().reverse().map(s => [
+    fmtDate(s.created_at), s.pulse_score, scoreBand(s.pulse_score).label, s.cash, s.recv_total, s.recv_90,
+    s.pay_soon, s.revenue, s.net_profit, s.burn, s.gst_leak, s.gst_payable, s.source
+  ]);
+  const csv = [headers.join(','), ...rows.map(r => r.map(csvEscape).join(','))].join('\n');
+  const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = (currentProfile.company_name || 'margyn') + '_snapshots.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  logEvent('export_csv');
+});
+
 // ---------- vital detail drawer ----------
 const inr = n => '₹' + Math.round(Number(n)||0).toLocaleString('en-IN');
 const fmtDay2 = iso => iso ? new Date(iso).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : '—';
@@ -1715,6 +1908,20 @@ function buildActionItems(){
     });
   });
 
+  // ---- Receivables concentration: flagged whenever it's actively capping
+  // the score (same >=40% threshold the v2.0 scoring engine uses) ----
+  const conc = computeReceivablesConcentration(receivables);
+  if(conc.pct >= 40){
+    items.push({
+      tier: conc.pct >= 60 ? 'high' : 'medium', icon:'AR', group:'Concentration',
+      title:'Receivables concentrated in ' + (conc.names.split(', ').length > 1 ? 'a few customers' : 'one customer'),
+      detail: conc.pct.toFixed(0) + '% of what you\u2019re owed sits with ' + escapeHtml(conc.names) + ' — this caps your Receivables score even if aging looks fine, since losing one of these customers would hit disproportionately hard.',
+      amount: 0,
+      cta:'View →',
+      onClick: () => openVitalDetail('Receivables Aging')
+    });
+  }
+
   // ---- Payables: one item per bill overdue or due within 30 days ----
   payables.forEach(p => {
     const days = daysFromToday(p.due_date);
@@ -1765,19 +1972,6 @@ function buildActionItems(){
       onClick: () => openVitalDetail(vf.label)
     });
   });
-
-  // ---- Receivables concentration: a whole-book flag, not tied to one invoice ----
-  if(latest.recv_concentration_pct && latest.recv_concentration_pct >= 40){
-    items.push({
-      tier: latest.recv_concentration_pct >= 60 ? 'high' : 'medium',
-      icon:'AR', group:'Concentration',
-      title: 'Receivables concentrated in ' + (latest.recv_top_customers || 'a few customers'),
-      detail: latest.recv_concentration_pct.toFixed(0) + '% of what you\u2019re owed sits with your top 3 customers — one of them slipping puts a large share of your book at risk at once.',
-      amount: 0,
-      cta:'View →',
-      onClick: () => openVitalDetail('Receivables Aging')
-    });
-  }
 
   return items;
 }
@@ -1926,16 +2120,11 @@ function renderReceivablesDetail(host){
     else buckets.d90p += Number(r.amount);
   });
 
-  const conc = computeReceivablesConcentration(receivables);
-
   host.innerHTML =
     '<div class="detail-eyebrow">Vital</div><div class="detail-title">Receivables Aging</div>' +
-    '<div class="detail-sub">Money owed to you by customers. Mark an invoice as collected once the payment lands — that amount moves straight into your Cash Position. Scored using an expected-loss aging model, the same style your auditor uses to provision doubtful debts — every invoice is aged and weighted individually, not blended into one average.</div>' +
+    '<div class="detail-sub">Money owed to you by customers. Mark an invoice as collected once the payment lands — that amount moves straight into your Cash Position.</div>' +
     '<div class="detail-stats"><div class="detail-stat"><div class="ds-label">Total outstanding</div><div class="ds-value">' + inr(total) + '</div></div>' +
     '<div class="detail-stat"><div class="ds-label">Over 90 days</div><div class="ds-value">' + inr(over90) + '</div></div></div>' +
-    (conc.pct >= 40
-      ? '<div class="detail-stats"><div class="detail-stat" style="grid-column:1 / -1; border-color:var(--rose);"><div class="ds-label" style="color:var(--rose);">Concentration risk</div><div class="ds-value" style="color:var(--rose); font-size:14px;">' + conc.pct.toFixed(0) + '% of receivables sit with ' + escapeHtml(conc.names) + '</div></div></div>'
-      : '') +
     '<div class="aging-bar">' +
       '<div class="aging-seg"><div class="ag-b">Not due</div><div class="ag-v">' + inr(buckets.notdue) + '</div></div>' +
       '<div class="aging-seg"><div class="ag-b">1–30d</div><div class="ag-v">' + inr(buckets.d30) + '</div></div>' +
@@ -1947,9 +2136,12 @@ function renderReceivablesDetail(host){
     '<input type="number" id="recvAmt" placeholder="Amount (₹)"></div>' +
     '<div class="lf-grid"><input type="date" id="recvDue"><span></span></div>' +
     '<button id="recvAddBtn">Add to ledger</button><div class="detail-note" id="recvAddNote"></div></div>' +
-    '<div class="ledger-list-title">Open invoices (' + receivables.length + ')</div><div id="recvList"></div>';
+    '<div class="ledger-list-title">Open invoices (<span id="recvCountLabel">' + receivables.length + '</span>)</div>' +
+    '<div class="ledger-search"><input type="text" id="recvSearch" placeholder="Search by customer name…"></div>' +
+    '<div id="recvList"></div>';
 
-  renderReceivablesList(host);
+  renderReceivablesList(host, '');
+  host.querySelector('#recvSearch').addEventListener('input', (e) => renderReceivablesList(host, e.target.value));
 
   host.querySelector('#recvAddBtn').addEventListener('click', async () => {
     const party = host.querySelector('#recvParty').value.trim();
@@ -1974,14 +2166,18 @@ function renderReceivablesDetail(host){
   });
 }
 
-function renderReceivablesList(host){
+function renderReceivablesList(host, query){
   const list = host.querySelector('#recvList');
-  if(!receivables.length){
-    list.innerHTML = '<div class="ledger-empty">No open receivables. Add one above.</div>';
+  const q = (query || '').trim().toLowerCase();
+  const rows = q ? receivables.filter(r => (r.party_name || '').toLowerCase().includes(q)) : receivables;
+  const countLabel = host.querySelector('#recvCountLabel');
+  if(countLabel) countLabel.textContent = q ? rows.length + ' of ' + receivables.length : receivables.length;
+  if(!rows.length){
+    list.innerHTML = '<div class="ledger-empty">' + (q ? 'No receivables match "' + escapeHtml(query) + '".' : 'No open receivables. Add one above.') + '</div>';
     return;
   }
   list.innerHTML = '';
-  receivables.forEach(r => {
+  rows.forEach(r => {
     const b = recvBucket(r.due_date);
     const row = document.createElement('div');
     row.className = 'ledger-row';
@@ -2028,24 +2224,23 @@ async function deleteReceivable(r){
 function renderPayablesDetail(host){
   const total = payables.reduce((s,p) => s + Number(p.amount), 0);
   const soon = payables.reduce((s,p) => { const d = daysFromToday(p.due_date); return (d === null || d <= 30) ? s + Number(p.amount) : s; }, 0);
-  const overdue = payables.reduce((s,p) => { const d = daysFromToday(p.due_date); return (d !== null && d < 0) ? s + Number(p.amount) : s; }, 0);
 
   host.innerHTML =
     '<div class="detail-eyebrow">Vital</div><div class="detail-title">Payables Due</div>' +
-    '<div class="detail-sub">Money you owe suppliers and vendors. Mark a bill as paid once you\u2019ve settled it — that amount comes straight out of your Cash Position. Scored on cash coverage of what\u2019s due soon, penalized for anything already overdue. (A full MSMED 45-day compliance check is designed but needs vendors tagged MSME-registered — not captured in this ledger yet.)</div>' +
+    '<div class="detail-sub">Money you owe suppliers and vendors. Mark a bill as paid once you\u2019ve settled it — that amount comes straight out of your Cash Position.</div>' +
     '<div class="detail-stats"><div class="detail-stat"><div class="ds-label">Total outstanding</div><div class="ds-value">' + inr(total) + '</div></div>' +
     '<div class="detail-stat"><div class="ds-label">Due within 30 days</div><div class="ds-value">' + inr(soon) + '</div></div></div>' +
-    (overdue > 0
-      ? '<div class="detail-stats"><div class="detail-stat" style="grid-column:1 / -1; border-color:var(--rose);"><div class="ds-label" style="color:var(--rose);">Already overdue</div><div class="ds-value" style="color:var(--rose);">' + inr(overdue) + '</div></div></div>'
-      : '') +
     '<div class="ledger-form"><div class="lf-title">Add payable</div>' +
     '<div class="lf-grid"><input type="text" id="payParty" placeholder="Vendor name">' +
     '<input type="number" id="payAmt" placeholder="Amount (₹)"></div>' +
     '<div class="lf-grid"><input type="date" id="payDue"><span></span></div>' +
     '<button id="payAddBtn">Add to ledger</button><div class="detail-note" id="payAddNote"></div></div>' +
-    '<div class="ledger-list-title">Open bills (' + payables.length + ')</div><div id="payList"></div>';
+    '<div class="ledger-list-title">Open bills (<span id="payCountLabel">' + payables.length + '</span>)</div>' +
+    '<div class="ledger-search"><input type="text" id="paySearch" placeholder="Search by vendor name…"></div>' +
+    '<div id="payList"></div>';
 
-  renderPayablesList(host);
+  renderPayablesList(host, '');
+  host.querySelector('#paySearch').addEventListener('input', (e) => renderPayablesList(host, e.target.value));
 
   host.querySelector('#payAddBtn').addEventListener('click', async () => {
     const party = host.querySelector('#payParty').value.trim();
@@ -2070,14 +2265,18 @@ function renderPayablesDetail(host){
   });
 }
 
-function renderPayablesList(host){
+function renderPayablesList(host, query){
   const list = host.querySelector('#payList');
-  if(!payables.length){
-    list.innerHTML = '<div class="ledger-empty">No open payables. Add one above.</div>';
+  const q = (query || '').trim().toLowerCase();
+  const rows = q ? payables.filter(p => (p.party_name || '').toLowerCase().includes(q)) : payables;
+  const countLabel = host.querySelector('#payCountLabel');
+  if(countLabel) countLabel.textContent = q ? rows.length + ' of ' + payables.length : payables.length;
+  if(!rows.length){
+    list.innerHTML = '<div class="ledger-empty">' + (q ? 'No payables match "' + escapeHtml(query) + '".' : 'No open payables. Add one above.') + '</div>';
     return;
   }
   list.innerHTML = '';
-  payables.forEach(p => {
+  rows.forEach(p => {
     const u = payUrgency(p.due_date);
     const row = document.createElement('div');
     row.className = 'ledger-row';
@@ -2132,16 +2331,15 @@ function renderReadOnlyDetail(host, label){
     body = 'GST input tax credit sitting unclaimed reduces cash you\u2019re entitled to. Scored as a share of your monthly GST payable, not a flat rupee figure. Update both figures from the Upload &amp; calculate tab — a line-item GST ledger is on the roadmap.';
   } else if(label === 'Net Margin'){
     const margin = latest.revenue > 0 ? (latest.net_profit / latest.revenue) * 100 : 0;
+    const anchor = INDUSTRY_MARGIN_ANCHOR[currentProfile.industry] || UNIVERSAL_MARGIN_ANCHOR;
     stats = '<div class="detail-stat"><div class="ds-label">Revenue</div><div class="ds-value">' + inr(latest.revenue) + '</div></div>' +
       '<div class="detail-stat"><div class="ds-label">Net profit</div><div class="ds-value">' + inr(latest.net_profit) + '</div></div>';
-    body = 'Net margin is net profit divided by revenue (' + margin.toFixed(1) + '% currently), scored against a benchmark for your selected industry where one exists — set on your Profile tab. Update revenue and net profit from the Upload &amp; calculate tab.';
+    body = 'Net margin is net profit divided by revenue (' + margin.toFixed(1) + '% currently), scored against a ' + (anchor*100).toFixed(0) + '% benchmark for ' + (currentProfile.industry || 'a cross-industry default') + ' — set your industry on the Profile tab if this looks off. Update revenue and net profit from the Upload &amp; calculate tab.';
   } else {
-    const conc = computeReceivablesConcentration(receivables);
-    const recvAdj = computeReceivablesECL(receivables).riskAdjustedTotal;
-    const runway = latest.burn > 0 ? (latest.cash + recvAdj - latest.pay_soon) / latest.burn : 0;
-    stats = '<div class="detail-stat"><div class="ds-label">Cash + risk-adj. receivables − payables</div><div class="ds-value">' + inr(latest.cash + recvAdj - latest.pay_soon) + '</div></div>' +
+    const runway = latest.burn > 0 ? (latest.cash + latest.recv_total - latest.pay_soon) / latest.burn : 0;
+    stats = '<div class="detail-stat"><div class="ds-label">Cash + receivables − payables</div><div class="ds-value">' + inr(latest.cash + latest.recv_total - latest.pay_soon) + '</div></div>' +
       '<div class="detail-stat"><div class="ds-label">Monthly burn</div><div class="ds-value">' + inr(latest.burn) + '</div></div>';
-    body = 'Runway estimates how many months of operating expenses your current cash position would cover, using receivables discounted for collection risk rather than face value — currently ' + runway.toFixed(1) + ' months. It updates automatically as your ledger changes.';
+    body = 'Runway estimates how many months of operating expenses your current cash position (adjusted for the receivables and payables ledger) would cover — currently ' + runway.toFixed(1) + ' months. It updates automatically as your ledger changes.';
   }
   host.innerHTML =
     '<div class="detail-eyebrow">Vital</div><div class="detail-title">' + label + '</div>' +
@@ -2169,13 +2367,15 @@ async function saveLedgerSnapshot(){
   const gstPayable = latest ? Number(latest.gst_payable) || 0 : 0;
   const industry = currentProfile.industry || '';
 
-  const { pulse, vitals, meta } = computeVitals({ cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak, gstPayable, industry, receivablesList:receivables, payablesList:payables });
+  const { pulse, vitals } = computeVitals({
+    cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak, gstPayable, industry,
+    receivablesList: receivables, payablesList: payables
+  });
   const row = {
     user_id:currentUser.id, source:'ledger',
     cash, recv_total:recvTotal, recv_90:recv90, pay_soon:paySoon,
     revenue, net_profit:netProfit, burn, gst_leak:gstLeak, gst_payable:gstPayable,
-    pulse_score:pulse, vitals,
-    recv_concentration_pct: meta.concentrationPct, recv_top_customers: meta.concentrationNames
+    pulse_score:pulse, vitals
   };
   const { data, error } = await sbClient.from('snapshots').insert(row).select().single();
   if(error){ console.error('[margyn] saveLedgerSnapshot:', error); return; }
@@ -2295,6 +2495,7 @@ function handleFile(){
   const file = fileInput.files[0];
   if(!file) return;
   const note = document.getElementById('noteUpload');
+  document.getElementById('importSummaryUpload').classList.add('hidden');
   if(typeof XLSX === 'undefined'){
     note.className = 'note bad';
     note.textContent = 'Spreadsheet library failed to load — use manual entry, or reload.';
@@ -2303,8 +2504,16 @@ function handleFile(){
   document.getElementById('fileName').textContent = file.name;
   const reader = new FileReader();
   reader.onload = (e) => {
-    workbookData = XLSX.read(new Uint8Array(e.target.result), { type:'array', cellDates:true });
-    document.getElementById('computeFromFile').disabled = false;
+    try {
+      workbookData = XLSX.read(new Uint8Array(e.target.result), { type:'array', cellDates:true });
+      document.getElementById('computeFromFile').disabled = false;
+      note.className = 'note ok'; note.textContent = 'File read — review and click Compute & save.';
+    } catch(err){
+      console.error('[margyn] workbook parse:', err);
+      note.className = 'note bad';
+      note.textContent = 'Could not read this file. Confirm it\u2019s a valid .xlsx/.csv saved from the template.';
+      document.getElementById('computeFromFile').disabled = true;
+    }
   };
   reader.readAsArrayBuffer(file);
 }
@@ -2321,6 +2530,8 @@ function sheetToRows(wb, name){
 document.getElementById('computeFromFile').addEventListener('click', async () => {
   if(!workbookData) return;
   const note = document.getElementById('noteUpload');
+  const summaryBox = document.getElementById('importSummaryUpload');
+  summaryBox.classList.add('hidden');
   note.className = 'note'; note.textContent = 'Saving…';
   try {
     const bank = sheetToRows(workbookData, 'Bank Accounts');
@@ -2328,6 +2539,16 @@ document.getElementById('computeFromFile').addEventListener('click', async () =>
     const pay  = sheetToRows(workbookData, 'Payables');
     const pl   = sheetToRows(workbookData, 'P&L Summary');
     const gst  = sheetToRows(workbookData, 'GST ITC');
+
+    // Missing-sheet check: a template with sheets renamed or removed silently
+    // produces zero rows everywhere, which used to look identical to "this
+    // business genuinely has no receivables." Flag it explicitly instead.
+    const missingSheets = [];
+    if(!workbookData.Sheets['Bank Accounts']) missingSheets.push('Bank Accounts');
+    if(!workbookData.Sheets['Receivables']) missingSheets.push('Receivables');
+    if(!workbookData.Sheets['Payables']) missingSheets.push('Payables');
+    if(!workbookData.Sheets['P&L Summary']) missingSheets.push('P&L Summary');
+    if(!workbookData.Sheets['GST ITC']) missingSheets.push('GST ITC');
 
     const cash = bank.reduce((s,r) => s + (Number(r['Balance'])||0), 0);
 
@@ -2375,6 +2596,18 @@ document.getElementById('computeFromFile').addEventListener('click', async () =>
     payables = await loadPayables();
     await saveLedgerSnapshotWithPL(revenue, netProfit, burn, gstLeak, gstPayable, 'upload');
     note.textContent = '';
+
+    // Import summary: exactly what got written, so a founder never has to
+    // wonder whether the upload "actually did anything."
+    let summaryHtml = '<b>Imported:</b> cash set to ' + inr(cash) + ', ' +
+      recvInserts.length + ' receivable' + (recvInserts.length===1?'':'s') + ', ' +
+      payInserts.length + ' payable' + (payInserts.length===1?'':'s') + ', revenue ' + inr(revenue) + ', net profit ' + inr(netProfit) + '.';
+    if(missingSheets.length){
+      summaryHtml += '<br><b style="color:var(--rose);">Heads up:</b> could not find sheet' + (missingSheets.length===1?'':'s') + ' named ' + missingSheets.map(s => '"' + s + '"').join(', ') + ' in this file — those figures were treated as zero. Check the sheet names match the template exactly.';
+    }
+    summaryBox.innerHTML = summaryHtml;
+    summaryBox.classList.remove('hidden');
+
     await refreshAll();
     showView('scores');
   } catch(err){
@@ -2570,13 +2803,15 @@ async function saveLedgerSnapshotWithPL(revenue, netProfit, burn, gstLeak, gstPa
   const cash = Number(currentProfile.cash_balance) || 0;
   const industry = currentProfile.industry || '';
 
-  const { pulse, vitals, meta } = computeVitals({ cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak, gstPayable, industry, receivablesList:receivables, payablesList:payables });
+  const { pulse, vitals } = computeVitals({
+    cash, recvTotal, recv90, paySoon, revenue, netProfit, burn, gstLeak, gstPayable, industry,
+    receivablesList: receivables, payablesList: payables
+  });
   const row = {
     user_id:currentUser.id, source: source || 'manual',
     cash, recv_total:recvTotal, recv_90:recv90, pay_soon:paySoon,
     revenue, net_profit:netProfit, burn, gst_leak:gstLeak, gst_payable:gstPayable,
-    pulse_score:pulse, vitals,
-    recv_concentration_pct: meta.concentrationPct, recv_top_customers: meta.concentrationNames
+    pulse_score:pulse, vitals
   };
   const { error } = await withTimeout(sbClient.from('snapshots').insert(row), 20000, 'Saving snapshot');
   if(error) throw error;
@@ -2605,6 +2840,7 @@ document.getElementById('generateBriefing').addEventListener('click', async () =
     await sbClient.from('snapshots').update({ briefing:data.briefing }).eq('id', latest.id);
     latest.briefing = data.briefing;
     logEvent('briefing_generated', { pulse_score: latest.pulse_score });
+    renderChecklist();
   } catch(err){
     out.innerHTML = '<div class="error-box">Could not generate briefing: ' + err.message + '</div>';
   } finally { btn.disabled = false; }
