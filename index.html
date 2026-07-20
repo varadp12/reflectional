@@ -6,8 +6,37 @@
 <meta name="description" content="Real-time financial health for Indian SME founders. Margyn connects Tally, your bank, and GST into one live scorecard — cash, receivables, payables, margin, and runway.">
 <meta name="theme-color" content="#F0F1F3">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://margyn.in/">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<!-- Open Graph / social preview -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Margyn">
+<meta property="og:title" content="Margyn — Your margin, live.">
+<meta property="og:description" content="Real-time financial health for Indian SME founders. Connect Tally, your bank, and GST into one live Pulse Score.">
+<meta property="og:url" content="https://margyn.in/">
+<meta property="og:image" content="https://margyn.in/og-image.png">
+<meta property="og:locale" content="en_IN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Margyn — Your margin, live.">
+<meta name="twitter:description" content="Real-time financial health for Indian SME founders — cash, receivables, payables, margin, and runway, in one live score.">
+<meta name="twitter:image" content="https://margyn.in/og-image.png">
+<meta name="robots" content="index, follow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340..600&family=Manrope:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Margyn",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Web",
+  "description": "Real-time financial health scorecard for Indian SMEs, connecting Tally, bank, and GST data into one live Pulse Score.",
+  "url": "https://margyn.in/",
+  "publisher": { "@type": "Organization", "name": "Margyn Labs Pvt Ltd" }
+}
+</script>
 <style>
   :root{
     --ink:#0B1220;
@@ -46,6 +75,7 @@
   .mono{ font-family:'IBM Plex Mono', monospace; }
   .wrap{ max-width:1280px; margin:0 auto; padding:0 48px; }
   a{ color:inherit; text-decoration:none; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible{ outline:2px solid var(--emerald); outline-offset:2px; }
   .reveal{ opacity:0; transform:translateY(28px); transition:opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
   .reveal.in{ opacity:1; transform:translateY(0); }
   .stagger-1.in{ transition-delay:.05s; } .stagger-2.in{ transition-delay:.12s; } .stagger-3.in{ transition-delay:.19s; } .stagger-4.in{ transition-delay:.26s; }
@@ -73,7 +103,7 @@
   .nav-indicator svg{ width:100%; height:100%; }
   nav:hover .nav-indicator, nav:focus-within .nav-indicator{ transform:rotate(180deg); opacity:0.4; }
   .nav-links{ display:flex; align-items:center; gap:0; font-size:14px; color:var(--steel); font-weight:600; max-width:0; opacity:0; overflow:hidden; white-space:nowrap; transition:max-width .45s cubic-bezier(.16,1,.3,1), opacity .3s ease, gap .45s ease; }
-  nav:hover .nav-links, nav:focus-within .nav-links{ max-width:900px; opacity:1; gap:30px; }
+  nav:hover .nav-links, nav:focus-within .nav-links{ max-width:900px; opacity:1; gap:26px; }
   .nav-links a{ display:flex; align-items:center; white-space:nowrap; }
   .nav-links a:not(.nav-cta):hover{ color:var(--ink); }
   .nav-cta{ background:var(--ink); color:var(--white); padding:8px 20px; border-radius:999px; font-size:13.5px; font-weight:700; transition:all .25s ease; display:flex; align-items:center; justify-content:center; height:auto; min-height:38px; white-space:nowrap; flex-shrink:0; }
@@ -95,9 +125,9 @@
     nav{ left:16px; right:16px; transform:none; margin:0 auto; width:fit-content; backdrop-filter:none; background:rgba(255,255,255,0.96); }
     /* Mobile keeps its own full-screen drawer — reset the desktop hover-collapse
        so the drawer's own open/close transform is what controls visibility. */
-    .nav-links{ max-width:none; opacity:1; overflow:visible; position:fixed; top:0; right:0; height:100vh; width:min(78vw,320px); background:var(--white); flex-direction:column; align-items:stretch; gap:0; padding:88px 28px 28px; box-shadow:var(--shadow-lg); transform:translateX(100%); transition:transform .3s cubic-bezier(.16,1,.3,1); z-index:99; }
+    .nav-links{ max-width:none; opacity:1; overflow:visible; position:fixed; top:0; right:0; height:100vh; width:min(78vw,320px); background:var(--white); flex-direction:column; align-items:stretch; gap:0; padding:88px 28px 28px; box-shadow:var(--shadow-lg); transform:translateX(100%); transition:transform .3s cubic-bezier(.16,1,.3,1); z-index:99; overflow-y:auto; }
     body.nav-open .nav-links{ transform:translateX(0); }
-    .nav-links a{ padding:16px 4px; border-bottom:1px solid var(--line); font-size:16px; }
+    .nav-links a{ padding:14px 4px; border-bottom:1px solid var(--line); font-size:16px; }
     .nav-links a.nav-cta{ margin-top:20px; text-align:center; border-bottom:none; padding:14px 20px; }
   }
 
@@ -346,6 +376,57 @@
     .timeline-num{ position:absolute; left:0; top:-2px; }
   }
 
+  /* ---------- security & trust ---------- */
+  .trust-cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-bottom:40px; }
+  .trust-card{ background:var(--white); border:1px solid var(--line); border-radius:14px; padding:26px 24px; box-shadow:var(--shadow-sm); }
+  .trust-card .tc-icon{ width:38px; height:38px; border-radius:10px; background:var(--mint); color:var(--emerald); display:flex; align-items:center; justify-content:center; margin-bottom:16px; }
+  .trust-card h4{ font-family:'Fraunces', serif; font-weight:500; font-size:17px; margin-bottom:8px; }
+  .trust-card p{ font-size:13.5px; color:var(--steel); line-height:1.6; }
+  .trust-badges{ display:flex; flex-wrap:wrap; gap:12px; }
+  .trust-badge{ display:inline-flex; align-items:center; gap:7px; font-family:'IBM Plex Mono', monospace; font-size:11.5px; font-weight:600; color:var(--ink-soft); background:var(--white); border:1px solid var(--line); border-radius:999px; padding:9px 16px; }
+  .trust-badge svg{ color:var(--emerald); flex-shrink:0; }
+  @media (max-width:900px){ .trust-cards{ grid-template-columns:1fr; } }
+
+  /* ---------- early validation ---------- */
+  .validation-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-bottom:22px; }
+  .validation-card{ background:var(--white); border:1px solid var(--line); border-radius:16px; padding:26px 24px; box-shadow:var(--shadow-sm); }
+  .validation-card .vc-icon{ width:38px; height:38px; border-radius:10px; background:var(--sky-light); color:var(--sky); display:flex; align-items:center; justify-content:center; margin-bottom:16px; }
+  .validation-card .vc-sector{ font-family:'IBM Plex Mono', monospace; font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--emerald); margin-bottom:10px; }
+  .validation-card p{ font-size:13.5px; color:var(--steel); line-height:1.65; }
+  .validation-foot{ font-size:12.5px; color:var(--steel); line-height:1.6; max-width:640px; }
+  @media (max-width:900px){ .validation-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- pricing ---------- */
+  .pricing-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; align-items:stretch; }
+  .price-card{ background:var(--white); border:1px solid var(--line); border-radius:18px; padding:30px 28px; display:flex; flex-direction:column; box-shadow:var(--shadow-sm); position:relative; }
+  .price-card.is-featured{ border-color:var(--emerald); box-shadow:0 24px 50px -20px rgba(18,128,90,0.28); }
+  .price-featured-badge{ position:absolute; top:-13px; left:28px; background:var(--emerald); color:#fff; font-family:'IBM Plex Mono', monospace; font-size:10.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; padding:5px 14px; border-radius:999px; }
+  .price-name{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:0.08em; color:var(--steel); font-weight:700; margin-bottom:14px; }
+  .price-val{ font-family:'Fraunces', serif; font-weight:500; font-size:34px; letter-spacing:-0.01em; margin-bottom:6px; }
+  .price-val span{ font-size:14px; color:var(--steel); font-family:'Manrope',sans-serif; font-weight:600; }
+  .price-sub{ font-size:13px; color:var(--steel); margin-bottom:22px; line-height:1.5; min-height:38px; }
+  .price-feats{ list-style:none; display:flex; flex-direction:column; gap:11px; margin-bottom:26px; flex:1; }
+  .price-feats li{ display:flex; align-items:flex-start; gap:9px; font-size:13.5px; color:var(--ink-soft); line-height:1.5; }
+  .price-feats svg{ color:var(--emerald); flex-shrink:0; margin-top:2px; }
+  .price-cta{ text-align:center; padding:12px 20px; border-radius:999px; font-size:13.5px; font-weight:700; border:1.5px solid var(--line-strong); transition:all .2s ease; }
+  .price-card.is-featured .price-cta{ background:var(--ink); color:#fff; border-color:var(--ink); }
+  .price-cta:hover{ border-color:var(--ink); }
+  .price-card.is-featured .price-cta:hover{ background:var(--emerald); border-color:var(--emerald); }
+  .pricing-foot{ text-align:center; margin-top:36px; font-size:13.5px; color:var(--steel); }
+  @media (max-width:900px){ .pricing-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- FAQ ---------- */
+  .faq-list{ max-width:760px; }
+  .faq-item{ border-bottom:1px solid var(--line); }
+  .faq-item:first-child{ border-top:1px solid var(--line-strong); }
+  .faq-q{ width:100%; text-align:left; background:none; border:none; padding:22px 4px; display:flex; align-items:center; justify-content:space-between; gap:20px; cursor:pointer; font-family:'Fraunces', serif; font-size:18px; font-weight:500; color:var(--ink); }
+  .faq-q .faq-plus{ flex-shrink:0; width:22px; height:22px; border-radius:50%; border:1.5px solid var(--line-strong); display:flex; align-items:center; justify-content:center; color:var(--steel); transition:transform .3s cubic-bezier(.16,1,.3,1), background .2s ease, border-color .2s ease; }
+  .faq-item.is-open .faq-q .faq-plus{ transform:rotate(135deg); background:var(--ink); border-color:var(--ink); color:#fff; }
+  .faq-a{ max-height:0; overflow:hidden; transition:max-height .35s cubic-bezier(.16,1,.3,1); }
+  .faq-item.is-open .faq-a{ max-height:260px; }
+  .faq-a p{ padding:0 4px 22px; font-size:14.5px; color:var(--steel); line-height:1.7; max-width:640px; }
+  @media (prefers-reduced-motion: reduce){ .faq-a{ transition:none; } }
+
   .cta-panel{ background:var(--bg); position:relative; overflow:hidden; border-top:1px solid var(--line); }
   .cta-watermark{ position:absolute; top:50%; right:-8%; transform:translateY(-50%); width:520px; height:520px; opacity:0.06; pointer-events:none; }
   .cta-panel .wrap{ position:relative; z-index:1; }
@@ -406,10 +487,31 @@
   .trust-marks{ display:flex; gap:38px; flex-wrap:wrap; }
   .trust-mark{ font-size:14.5px; font-weight:600; color:var(--steel); }
 
-  footer{ border-top:1px solid var(--line); padding:32px 0; background:var(--bg); position:relative; z-index:1; }
-  .footer-inner{ display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--steel); flex-wrap:wrap; gap:12px; }
-  .footer-brand{ display:flex; align-items:center; gap:8px; font-weight:600; }
-  .footer-brand .crescent{ width:16px; height:16px; }
+  /* ---------- cookie / consent notice (DPDPA) ---------- */
+  .cookie-bar{ position:fixed; left:16px; right:16px; bottom:16px; z-index:150; max-width:620px; margin:0 auto; background:var(--ink); color:#fff; border-radius:16px; padding:18px 20px; box-shadow:var(--shadow-lg); display:flex; align-items:center; gap:16px; flex-wrap:wrap; transform:translateY(140%); transition:transform .4s cubic-bezier(.16,1,.3,1); }
+  .cookie-bar.is-visible{ transform:translateY(0); }
+  .cookie-bar p{ flex:1; min-width:220px; font-size:12.5px; line-height:1.55; color:rgba(255,255,255,0.78); }
+  .cookie-bar p a{ text-decoration:underline; color:#fff; }
+  .cookie-bar-btns{ display:flex; gap:8px; flex-shrink:0; }
+  .cookie-btn{ font-family:'Manrope',sans-serif; font-size:12.5px; font-weight:700; padding:9px 16px; border-radius:999px; cursor:pointer; border:1px solid rgba(255,255,255,0.25); background:transparent; color:#fff; white-space:nowrap; }
+  .cookie-btn.primary{ background:var(--emerald-bright); border-color:var(--emerald-bright); color:#08130C; }
+  @media (max-width:640px){ .cookie-bar{ flex-direction:column; align-items:stretch; } .cookie-bar-btns{ justify-content:flex-end; } }
+
+  /* ---------- footer ---------- */
+  footer{ border-top:1px solid var(--line); padding:52px 0 32px; background:var(--bg); position:relative; z-index:1; }
+  .footer-grid{ display:grid; grid-template-columns:1.4fr repeat(3, 1fr); gap:40px; padding-bottom:36px; margin-bottom:28px; border-bottom:1px solid var(--line); }
+  .footer-brand{ display:flex; align-items:center; gap:8px; font-weight:600; margin-bottom:12px; font-family:'Fraunces',serif; font-size:17px; }
+  .footer-brand .crescent{ width:18px; height:18px; }
+  .footer-col p.footer-desc{ font-size:13px; color:var(--steel); line-height:1.6; max-width:280px; }
+  .footer-col h5{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--steel); font-weight:700; margin-bottom:14px; }
+  .footer-col ul{ list-style:none; display:flex; flex-direction:column; gap:10px; }
+  .footer-col ul a{ font-size:13.5px; color:var(--ink-soft); }
+  .footer-col ul a:hover{ color:var(--emerald); }
+  .footer-inner{ display:flex; justify-content:space-between; align-items:center; font-size:12.5px; color:var(--steel); flex-wrap:wrap; gap:12px; }
+  .footer-legal{ display:flex; gap:20px; flex-wrap:wrap; }
+  .footer-legal a:hover{ color:var(--ink); }
+  @media (max-width:760px){ .footer-grid{ grid-template-columns:1fr 1fr; gap:32px 24px; } }
+  @media (max-width:480px){ .footer-grid{ grid-template-columns:1fr; } }
 
   /* ═══════════════════════════════════════════════════════════ */
   /* MOBILE OPTIMIZATION                                         */
@@ -587,11 +689,11 @@
     </span>
     <div class="nav-links" id="navLinks">
       <a href="#market">Why it matters</a>
-      <a href="#correction">The correction</a>
       <a href="#vitals">Vitals</a>
       <a href="#demo">See it in action</a>
-      <a href="#whatsapp">On WhatsApp</a>
-      <a href="#how">How it works</a>
+      <a href="#security">Security</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
       <a class="nav-cta" href="/app.html">Try the app</a>
     </div>
     <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
@@ -889,6 +991,153 @@
   </div>
 </section>
 
+<section id="security" class="panel">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="eyebrow">Security &amp; trust</div>
+      <h2>Your books stay yours.</h2>
+      <p>Margyn reads your data to build the score. It never trades it, never sells it, and never shares it without your explicit, revocable consent.</p>
+    </div>
+    <div class="trust-cards reveal">
+      <div class="trust-card">
+        <div class="tc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <h4>Read-only, always</h4>
+        <p>Bank and GST connections use RBI Account Aggregator and GSP rails in read-only mode — Margyn can see your data, never move it.</p>
+      </div>
+      <div class="trust-card">
+        <div class="tc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V6l8-4z"/></svg></div>
+        <h4>DPDPA-aligned by design</h4>
+        <p>Every data-sharing action — including any future lender introduction — is opt-in, logged, and revocable in line with the DPDPA, 2023.</p>
+      </div>
+      <div class="trust-card">
+        <div class="tc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg></div>
+        <h4>Not a lending marketplace</h4>
+        <p>Margyn isn't a broker. Your verified data is a credential you can choose to use — capital access is an outcome you control, not a service sold around you.</p>
+      </div>
+    </div>
+    <div class="trust-badges reveal stagger-2">
+      <span class="trust-badge"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Encrypted in transit &amp; at rest</span>
+      <span class="trust-badge"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>RBI Account Aggregator framework</span>
+      <span class="trust-badge"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>GSP-based GST access</span>
+      <span class="trust-badge"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Hosted in India</span>
+      <span class="trust-badge"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Consent revocable any time</span>
+    </div>
+  </div>
+</section>
+
+<section id="validation" class="panel">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="eyebrow">Early validation</div>
+      <h2>Tested with real finance teams before a single line of marketing copy.</h2>
+      <p>We're too early for case studies with numbers attached — here's the honest version instead: who we've actually sat down with, and what held up.</p>
+    </div>
+    <div class="validation-grid reveal">
+      <div class="validation-card">
+        <div class="vc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/></svg></div>
+        <div class="vc-sector">Textile manufacturer</div>
+        <p>Walked through a live Pulse Score against their own Tally export and bank statement — receivables aging matched what their own accountant tracked manually in a separate sheet.</p>
+      </div>
+      <div class="validation-card">
+        <div class="vc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l3 4v16H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></div>
+        <div class="vc-sector">Apparel manufacturer</div>
+        <p>Confirmed that GST/ITC leakage and working-capital runway were the two numbers their finance team wanted surfaced first — both are weighted vitals in the Pulse Score as a direct result.</p>
+      </div>
+      <div class="validation-card">
+        <div class="vc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l1 4h4v4l-3 1v9H5v-9l-3-1V7h4z"/></svg></div>
+        <div class="vc-sector">Pharmaceutical company</div>
+        <p>Validated the push-not-pull premise directly — their finance lead said the dashboards they'd tried before all required someone to remember to log in, which is exactly the gap Opening &amp; Closing Bell is built to close.</p>
+      </div>
+    </div>
+    <p class="validation-foot">These are early concierge-phase conversations, not paid case studies — we're not naming the businesses without their sign-off, and we'll add named references as that permission comes in.</p>
+  </div>
+</section>
+
+<section id="pricing" class="panel">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="eyebrow">Pricing</div>
+      <h2>Free while we build this with you.</h2>
+      <p>We're in a concierge pilot with a small group of SME founders — full access, no cost, in exchange for the kind of direct feedback that shapes the product. Paid tiers follow once the core scorecard is proven.</p>
+    </div>
+    <div class="pricing-grid reveal">
+      <div class="price-card">
+        <div class="price-name">Pilot</div>
+        <div class="price-val">Free<span> / during early access</span></div>
+        <div class="price-sub">For SME founders trying Margyn for the first time.</div>
+        <ul class="price-feats">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Full Pulse Score &amp; six vitals</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Tally upload &amp; manual entry</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>AI executive briefing</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Unlimited snapshots &amp; history</li>
+        </ul>
+        <a class="price-cta" href="/app.html">Start free</a>
+      </div>
+      <div class="price-card is-featured">
+        <div class="price-featured-badge">Coming next</div>
+        <div class="price-name">Growth</div>
+        <div class="price-val">TBD<span> / month</span></div>
+        <div class="price-sub">Live bank &amp; GST sync, once Account Aggregator integration goes live.</div>
+        <ul class="price-feats">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Everything in Pilot</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Live bank feed via Account Aggregator</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Automatic GSTR-2B reconciliation</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Opening Bell &amp; Closing Bell on WhatsApp</li>
+        </ul>
+        <a class="price-cta" href="#faq">Get notified</a>
+      </div>
+      <div class="price-card">
+        <div class="price-name">For CAs &amp; advisors</div>
+        <div class="price-val">Let's talk</div>
+        <div class="price-sub">A co-branded view for CA firms and CFO advisors managing several clients.</div>
+        <ul class="price-feats">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Multi-client scorecards</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Straight SaaS pricing — no fee-sharing</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Co-branded client reports</li>
+        </ul>
+        <a class="price-cta" href="mailto:business@margyn.in?subject=Margyn%20for%20CA%20firms">Email us</a>
+      </div>
+    </div>
+    <div class="pricing-foot">Questions about pricing? <a href="mailto:business@margyn.in" style="color:var(--emerald); font-weight:600;">business@margyn.in</a></div>
+  </div>
+</section>
+
+<section id="faq" class="panel">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="eyebrow">Questions</div>
+      <h2>Before you ask, we'd rather just tell you.</h2>
+      <p>The things founders usually want to know before connecting their books to anything.</p>
+    </div>
+    <div class="faq-list reveal" id="faqList">
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">Is Margyn a lender, or does it broker loans?<span class="faq-plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span></button>
+        <div class="faq-a"><p>No. Margyn is a financial health scorecard, not a lender or a loan marketplace. We don't hold an RBI credit-information or NBFC license, and we don't take a cut of any loan. If a lending partner is ever added, it's a referral you opt into — your data moves only with your explicit, revocable consent.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">Can Margyn move money out of my accounts?<span class="faq-plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span></button>
+        <div class="faq-a"><p>No. Bank and GST connections are read-only, via the RBI Account Aggregator framework and a licensed GSP — Margyn can see your data to calculate your score, but has no ability to initiate a payment, transfer, or filing on your behalf.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">Do I need Tally to use Margyn?<span class="faq-plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span></button>
+        <div class="faq-a"><p>No. You can start with our Excel template or manual entry today — Tally connects your existing export, it doesn't require any new setup in Tally itself. A direct Tally connector (ODBC/XML) is next on our integration roadmap.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">Is the Pulse Score the same as a CIBIL or credit score?<span class="faq-plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span></button>
+        <div class="faq-a"><p>No — and this matters. CIBIL's MSME Rank is a lagging indicator built from your credit and repayment history. The Pulse Score is a leading indicator built from your live Tally, bank, and GST data, meant to show operating health today, not creditworthiness after the fact. We don't hold a credit-information license and don't call it a credit score.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">What happens to my data if I stop using Margyn?<span class="faq-plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span></button>
+        <div class="faq-a"><p>You can request deletion any time by emailing business@margyn.in. We only ever retain what's needed to calculate your score and briefing — nothing is sold or shared with third parties outside a lending introduction you've explicitly consented to.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">How much does Margyn cost?<span class="faq-plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span></button>
+        <div class="faq-a"><p>Free during our current concierge pilot with early SME founders. We'll announce paid tiers once live bank and GST sync are ready — pilot users get advance notice and, in most cases, grandfathered pricing.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="panel cta-panel">
   <div class="cta-watermark"><div class="crescent" style="width:100%;height:100%; background:var(--emerald-bright);"></div></div>
   <div class="wrap">
@@ -896,7 +1145,7 @@
       <div class="reveal">
         <div class="cta-eyebrow">Start today</div>
         <h2>See your margin<br>in 90 seconds.</h2>
-        <p>Free 14-day trial. No credit card. Upload your Tally export to start.</p>
+        <p>Free during our concierge pilot. No credit card. Upload your Tally export to start.</p>
         <a class="btn-primary" href="/app.html">
           Try the app
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -939,14 +1188,55 @@
 </section>
 
 <footer>
-  <div class="wrap footer-inner">
-    <div class="footer-brand">
-      <div class="crescent"></div>
-      <span>Margyn 1.0 · margyn.in</span>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-brand"><div class="crescent"></div><span>margyn</span></div>
+        <p class="footer-desc">Real-time financial health for Indian SME founders. Margyn Labs Pvt Ltd, built for businesses that already run on Tally.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <ul>
+          <li><a href="#vitals">Six vitals</a></li>
+          <li><a href="#security">Security &amp; trust</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="/app.html">Try the app</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#validation">Early validation</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="mailto:business@margyn.in">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Get in touch</h5>
+        <ul>
+          <li><a href="mailto:business@margyn.in">business@margyn.in</a></li>
+          <li><a href="#" id="footerWaitlistLink">Join the waitlist</a></li>
+        </ul>
+      </div>
     </div>
-    <div>Margyn Labs · Built for Indian SMEs</div>
+    <div class="footer-inner">
+      <div>© 2026 Margyn Labs Pvt Ltd · Built for Indian SMEs</div>
+      <div class="footer-legal">
+        <a href="/privacy.html">Privacy policy</a>
+        <a href="/terms.html">Terms of use</a>
+        <a href="mailto:business@margyn.in">business@margyn.in</a>
+      </div>
+    </div>
   </div>
 </footer>
+
+<div class="cookie-bar" id="cookieBar" role="dialog" aria-label="Cookie notice">
+  <p>We use essential cookies to run this site and analytics cookies to understand usage. No data is sold. See our <a href="/privacy.html">privacy policy</a> for details, in line with the DPDPA, 2023.</p>
+  <div class="cookie-bar-btns">
+    <button class="cookie-btn" id="cookieDecline">Essential only</button>
+    <button class="cookie-btn primary" id="cookieAccept">Accept all</button>
+  </div>
+</div>
 
 <script>
   document.body.classList.add('loaded');
@@ -971,6 +1261,10 @@
     function markJoined(){
       try { localStorage.setItem(STORAGE_KEY, 'joined'); } catch(e){}
     }
+    function openGate(){
+      backdrop.classList.remove('gate-closed');
+      document.body.style.overflow = 'hidden';
+    }
     function closeGate(){
       backdrop.classList.add('gate-closed');
       document.body.style.overflow = '';
@@ -985,6 +1279,16 @@
     closeBtn.addEventListener('click', closeGate);
     backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeGate(); });
     window.addEventListener('keydown', (e) => { if(e.key === 'Escape' && !backdrop.classList.contains('gate-closed')) closeGate(); });
+
+    const footerLink = document.getElementById('footerWaitlistLink');
+    if(footerLink){
+      footerLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        formWrap.style.display = '';
+        successEl.classList.remove('show');
+        openGate();
+      });
+    }
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -1021,6 +1325,31 @@
         submitBtn.textContent = 'Join the waitlist';
       }
     });
+  })();
+
+  // ---------- FAQ accordion ----------
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const btn = item.querySelector('.faq-q');
+    btn.addEventListener('click', () => {
+      const willOpen = !item.classList.contains('is-open');
+      document.querySelectorAll('.faq-item').forEach(i => { i.classList.remove('is-open'); i.querySelector('.faq-q').setAttribute('aria-expanded','false'); });
+      if(willOpen){ item.classList.add('is-open'); btn.setAttribute('aria-expanded','true'); }
+    });
+  });
+
+  // ---------- DPDPA cookie notice ----------
+  (function(){
+    const KEY = 'margyn_cookie_consent';
+    const bar = document.getElementById('cookieBar');
+    const accept = document.getElementById('cookieAccept');
+    const decline = document.getElementById('cookieDecline');
+    function existing(){ try { return localStorage.getItem(KEY); } catch(e){ return null; } }
+    function set(v){ try { localStorage.setItem(KEY, v); } catch(e){} bar.classList.remove('is-visible'); }
+    if(!existing()){
+      setTimeout(() => bar.classList.add('is-visible'), 1400);
+    }
+    accept.addEventListener('click', () => set('all'));
+    decline.addEventListener('click', () => set('essential'));
   })();
 
   const instrument = document.querySelector('.instrument');
